@@ -18,8 +18,10 @@ energía solar.
 
 LosZombiesSonVeganos es un grupo de desarrolladores del grado de Drllo. de Videojuegos
 de la Universidad Complutense de Madrid (España). Los miembros de este grupo son:
-Ansón Alcolea, Alejandro
-Faouaz Santillana, Dany
+
+- Ansón Alcolea, Alejandro
+
+- Faouaz Santillana, Dany
 
 Nuestro lema es: "Zombie muerto, abono pa' mi huerto"
 Les invitamos a jugar a nuestro juego, y que lo disfruten.
