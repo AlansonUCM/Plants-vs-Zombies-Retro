@@ -1,21 +1,30 @@
-![Plants vs Zombies: 8 bits](readme_src/PvZ_8BITS_LOGO.png)
-***
-<center>Coming Soon!</center>
-***
+<h1 align="center">
+  <img src="readme_src/PvZ_8BITS_LOGO.png" alt="Plants vs Zombies: 8 bits" />
+</h1>
+<h2 align ="center">
+  Coming Soon!
+</h2>
+
 Plants vs Zombies: 8 bits es una adaptación del famoso juego Plants vs Zombies con una estética retro,
 cuya idea será desarrollada por LosZombiesSonVeganos para la asignatura de PVLI.
 
-###Features
-<div class="pull-left" src="readme_src/PvZ_GAMEPLAY_EX.png"alt="Este es el ejemplo de un texto alternativo" width="400" height="300"></div>
-- Tower Defense
-- TopDown view
-- Simple, fun and just **AMAZING**
-######<center>*Features subject to changes.*<\center>
+<h2>Features</h2>
+<div>
+  <img align="right" src="readme_src/PvZ_GAMEPLAY_EX.PNG" alt="GameplayExample" width="400" height="300"/>  
+</div>
+<ul>
+  <li>Tower Defense</li>
+  <li>TopDown view</li>
+  <li>Simple, fun and just <b>AMAZING</b></li>
+</ul>
+<sub><i>Features subject to changes</i></sub>
+
 <br>
-###How to Play
+<h2>How to Play</h2>
 *Work In Progress*
 <br>
-###Developers
+
+## Developers
 - Ansón Alcolea, Alejandro
 - Faouaz Santillana, Dany
 <br>
