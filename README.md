@@ -1,27 +1,89 @@
-# Plants vs Zombies: 8 bits
+<h1 align="center">
+  <img src="readme_src/PvZ_8BITS_LOGO.png" alt="Plants vs Zombies: 8 bits" />
+</h1>
 
+<h2 align ="center">
+  Coming Soon!
+</h2>
+
+<p>
+  Plants vs Zombies: 8 bits is an adaptation of the famous game Plants vs Zombies with a retro aesthetic,
+  whose idea will be developed by LosZombiesSonVeganos.
+</p>
+
+<div>
+  <img align="left" src="readme_src/PvZ_GAMEPLAY_EX.PNG" alt="GameplayExample" width="370" height="280"/>  
+</div>
+
+<h2>Features</h2>
+<ul>
+  <li>Tower Defense</li>
+  <li>TopDown view</li>
+  <li>Plant your defenses 🌻</li>
+  <li>Wave based Survival Zombie game 🧟‍</li>
+  <li>Simple, fun and just <b>AMAZING</b></li>
+</ul>
+<br>
+<sub><i>*Features subject to changes</i></sub>
+
+<br>
+
+<h2>How to Play</h2>
+<ul>
+  <li>Choose your plants</li>
+  <li>Place your defenses</li>
+  <li>Keep the zombies away</li>
+</ul>
+
+<h2>Developers</h2>
+<ul>
+  <li>Ansón Alcolea, Alejandro</li>
+  <li>Faouaz Santillana, Dany</li>
+<ul>
+<br>
+
+***
+
+<h1 align="center">
+  <img src="readme_src/PvZ_8BITS_LOGO.png" alt="Plants vs Zombies: 8 bits" />
+</h1>
+
+<h2 align ="center">
+  Próximamente!
+</h2>
+
+<p>
 Plants vs Zombies: 8 bits es una adaptación del famoso juego Plants vs Zombies con una estética retro,
-cuya idea será desarrollada por LosZombiesSonVeganos para la asignatura de PVLI.
+cuya idea será desarrollada por LosZombiesSonVeganos.
+</p>
 
-Este juego es un Tower Defense cuyas torres son plantas (como lanzaGuisantes, girasoles, nueces...)
-que tu como jugador colocas en tu jardín, dividido por cuadrículas. 
-Serás atacado por diferentes estilos de zombies cuyo objetivo es llegar hasta ti,
-que estás escondido en una caravana.
+<div>
+  <img align="left" src="readme_src/PvZ_GAMEPLAY_EX.PNG" alt="GameplayExample" width="370" height="280"/>  
+</div>
 
-A diferencia del clásico Plants vs Zombies, esta adaptación tendrá la perspectiva 
-conocida como TopDown, donde el jugador podrá ver el espacio de juego por completo 
-desde un punto elevado.
-Al igual que en la version clásica del juego, todos los enemigos vendrás desde el 
-lado derecho de la pantalla y atacarán a las plantas que estén en medio de su camino
-hasta alcanzar al jugador. Como forma de pago, para poder plantar tus defensas, tendrás que usar 
-energía solar.
+<h2>Caraterísticas</h2>
+<ul>
+  <li>Tower Defense </li>
+  <li>Vista TopDown</li>
+  <li>Planta tus defensas 🌻</li>
+  <li>Juego de Supervivencia Zombie en oleadas 🧟‍</li>
+  <li>Fácil, divertido y simplemente <b>INCREIBLE</b></li>
+</ul>
+<br>
+<sub><i>*Características sujetas a cambios</i></sub>
 
-LosZombiesSonVeganos es un grupo de desarrolladores del grado de Drllo. de Videojuegos
-de la Universidad Complutense de Madrid (España). Los miembros de este grupo son:
+<br><br>
 
-- Ansón Alcolea, Alejandro
+<h2>Cómo se juega</h2>
+<ul>
+  <li>Elige tus plantas</li>
+  <li>Coloca tus defensas</li>
+  <li>Mantén lejos a los zombies</li>
+</ul>
 
-- Faouaz Santillana, Dany
-
-Nuestro lema es: "Zombie muerto, abono pa' mi huerto"
-Les invitamos a jugar a nuestro juego, y que lo disfruten.
+<h2>Desarrolladores</h2>
+<ul>
+  <li>Ansón Alcolea, Alejandro</li>
+  <li>Faouaz Santillana, Dany</li>
+<ul>
+<br>
