@@ -72,6 +72,8 @@ cuya idea será desarrollada por LosZombiesSonVeganos.
 <br>
 <sub><i>*Características sujetas a cambios</i></sub>
 
+<br>
+
 <h2>Cómo se juega</h2>
 <ul>
   <li>Elige tus plantas</li>
