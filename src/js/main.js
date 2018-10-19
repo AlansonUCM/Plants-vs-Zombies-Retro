@@ -22,7 +22,7 @@ var PreloaderScene = {
     this.load.setPreloadSprite(this.loadingBar);
 
     // TODO: load here the assets for the game
-    this.game.load.image('logo', 'images/phaser.png');
+    this.game.load.image('logo', 'images/logo.png');
   },
 
   create: function () {
