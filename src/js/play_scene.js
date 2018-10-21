@@ -11,14 +11,13 @@
     logo.scale.setTo(0.7);
 
     //Zombie en Pantalla
-    zombie = new Zombie(this.game, this.game.world.centerX, this.game.world.centerY, "zombies");
-    zombie.scale.setTo(0.5);
+    zombie = new Zombie(this.game, 800, 200, "zombies", 0);
+    zombie.sprite.scale.setTo(0.2);
     // var walk = zombie.animations.add("walk");
     // zombie.animations.play("walk",30,true);
   },
   update: function (){
-    zombie.x -= 55;
-    // zombie.move(5);
+    zombie.move(2);
   },
   render: function (){
   }
@@ -26,8 +25,9 @@
 
 
 //CLASE ScreenObj
-function ScreenObj (game, x, y, tag){
-  Phaser.Sprite.apply(this,[game, x, y, tag]);
+function ScreenObj (game, x, y, tag, frame){
+  Phaser.Sprite.apply(this,[game, x, y, tag, frame]);
+  this.sprite = this.game.add.sprite(x, y, "zombies");
 }
 ScreenObj.prototype = Object.create(Phaser.Sprite.prototype);
 ScreenObj.prototype.constructor = ScreenObj;
@@ -81,15 +81,15 @@ Card.prototype.constructor =  Card;
 
 
 //CLASE GameObject
-function GameObject (game, x, y, tag){
-  ScreenObj.apply(this, [game, x, y, tag]);
+function GameObject (game, x, y, tag, frame){
+  ScreenObj.apply(this, [game, x, y, tag, frame]);
 }
 GameObject.prototype = Object.create(ScreenObj.prototype);
 GameObject.prototype.constructor = GameObject;
 
 //CLASE Character
-function Character (game, x, y, tag){
-  GameObject.apply(this, [game, x, y, tag]);
+function Character (game, x, y, tag, frame){
+  GameObject.apply(this, [game, x, y, tag, frame]);
   this._name = name;
   this._life = 0;
   this._force = 0;
@@ -128,20 +128,20 @@ LanzaGuisantes.prototype = Object.create(Plant.prototype);
 LanzaGuisantes.prototype.constructor = LanzaGuisantes;
 
 //CLASE ZOMBIE
-function Zombie (game, x, y, tag){
-  Character.apply(this,[game, x, y, tag]);
-  this.game.add.sprite(100,100,tag);
+function Zombie (game, x, y, tag, frame){
+  Character.apply(this,[game, x, y, tag, frame]);
+  //this.game.add.sprite(100,100,tag);
 }
 Zombie.prototype = Object.create(Character.prototype);
 Zombie.prototype.constructor = Zombie;
 // Metodos en Zombies
 Zombie.prototype.move = function (velocity) {
-  this.x -= velocity;
+  this.sprite.x -= velocity;
 }
 
 //Ejemplo ZombieComun
-function ZombieComun(game, x, y, tag){
-  Zombie.apply(this,[game, x, y, tag]);
+function ZombieComun(game, x, y, tag, frame){
+  Zombie.apply(this,[game, x, y, tag, frame]);
   //Atributos propios
   //----------------
   this._life = 12;
