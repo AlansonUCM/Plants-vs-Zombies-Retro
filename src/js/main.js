@@ -23,6 +23,9 @@ var PreloaderScene = {
 
     // TODO: load here the assets for the game
     this.game.load.image('logo', 'images/logo.png');
+    // Carga de los zombies
+    this.game.load.image("zombies", "images/zombie.png");
+    
   },
 
   create: function () {
