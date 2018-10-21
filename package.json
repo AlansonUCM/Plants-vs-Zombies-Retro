@@ -1,20 +1,16 @@
 {
   "version": "0.0.0",
   "name": "awesome-game",
-  "version": "0.0.0",
-  "author": "",
-  "license": "CC-BY-NC-SA-4.0",
-  
-  "repository": "gituser/awesome-game",
   "author": "gituser",
-  
+  "license": "CC-BY-NC-SA-4.0",
+  "repository": "gituser/awesome-game",
   "dependencies": {
     "browserify": "*",
     "browser-sync": "*",
     "del": "*",
     "gulp": "*",
     "gulp-connect": "*",
-    "gulp-gh-pages": "*", 
+    "gulp-gh-pages": "*",
     "gulp-util": "*",
     "merge-stream": "*",
     "phaser": "2.6.0",
