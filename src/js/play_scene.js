@@ -11,13 +11,20 @@
     logo.scale.setTo(0.7);
 
     //Zombie en Pantalla
-    zombie = new Zombie(this.game, 800, 200, "zombies", 0);
-    zombie.sprite.scale.setTo(0.2);
-    // var walk = zombie.animations.add("walk");
-    // zombie.animations.play("walk",30,true);
+    this.planta=new LanzaGuisantes(this.game,500,300,'plants');
+    this.planta.anchor.setTo(0.5,1);
+
+    zombie = new Zombie(this.game, 800, 300-100, "zombies", 0);
+   // this.game.world.addChild(zombie)
+    zombie.scale.setTo(1.8);
+    
+   
+
+
   },
   update: function (){
-    zombie.move(2);
+    zombie.move(1);
+    this.planta.animations.play('try');
   },
   render: function (){
   }
@@ -25,86 +32,89 @@
 
 
 //CLASE ScreenObj
-function ScreenObj (game, x, y, tag, frame){
-  Phaser.Sprite.apply(this,[game, x, y, tag, frame]);
-  this.sprite = this.game.add.sprite(x, y, "zombies");
+function ScreenObj (game, x, y, tag){
+  Phaser.Sprite.call(this,game, x, y, tag);
+
+  this.game.world.addChild(this);
+
 }
 ScreenObj.prototype = Object.create(Phaser.Sprite.prototype);
-ScreenObj.prototype.constructor = ScreenObj;
+ScreenObj.constructor = ScreenObj;
 
 //CLASE Score
-function Score (){
-  ScreenObj.Sprite.apply(this,[]);
+function Score (game, x, y, tag){
+  ScreenObj.Sprite.apply(this,[game, x, y, tag]);
   this.count=0;
 }
 Score.prototype = Object.create(ScreenObj.prototype);
-Score.prototype.constructor = Score;
+Score.constructor = Score;
 
 //CLASE ProgressBar
-function ProgressBar (){
-  ScreenObj.Sprite.apply(this,[]);
+function ProgressBar (game, x, y, tag){
+  ScreenObj.Sprite.apply(this,[game, x, y, tag]);
   this.time = 0;
 }
 ProgressBar.prototype = Object.create(ScreenObj.prototype);
-ProgressBar.prototype.constructor = ProgressBar;
+ProgressBar.constructor = ProgressBar;
 
 //CLASE Button
-function Button (){
-  ScreenObj.Sprite.apply(this,[]);
-  
+function Button (game, x, y, tag){
+  ScreenObj.Sprite.apply(this,[game, x, y, tag]);
+  this.game.physics.arcade.enable(this)
 }
 Button.prototype = Object.create(ScreenObj.prototype);
-Button.prototype.constructor =  Button;
+Button.constructor =  Button;
 
 //CLASE Sun
-function Sun (){
-  ScreenObj.Sprite.apply(this,[]);
+function Sun (game, x, y, tag){
+  ScreenObj.Sprite.apply(this,[game, x, y, tag]);
   
 }
 Sun.prototype = Object.create(Button.prototype);
-Sun.prototype.constructor =  Sun;
+Sun.constructor =  Sun;
 
 //CLASE Shovel
-function Shovel (){
-  ScreenObj.Sprite.apply(this,[]);
+function Shovel (game, x, y, tag){
+  ScreenObj.Sprite.apply(this,[game, x, y, tag]);
   
 }
 Shovel.prototype = Object.create(Button.prototype);
-Shovel.prototype.constructor =  Shovel;
+Shovel.constructor =  Shovel;
 
 //CLASE Card
-function Card (){
-  ScreenObj.Sprite.apply(this,[]);  
+function Card (game, x, y, tag){
+  ScreenObj.Sprite.apply(this,[game, x, y, tag]);  
 }
 Card.prototype = Object.create(Button.prototype);
-Card.prototype.constructor =  Card;
+Card.constructor =  Card;
 
 
 //CLASE GameObject
-function GameObject (game, x, y, tag, frame){
-  ScreenObj.apply(this, [game, x, y, tag, frame]);
+function GameObject (game, x, y, tag ){
+  ScreenObj.apply(this, [game, x, y, tag]);
+  this.game.physics.arcade.enable(this)
 }
 GameObject.prototype = Object.create(ScreenObj.prototype);
-GameObject.prototype.constructor = GameObject;
+GameObject.constructor = GameObject;
 
 //CLASE Character
-function Character (game, x, y, tag, frame){
-  GameObject.apply(this, [game, x, y, tag, frame]);
+function Character (game, x, y, tag){
+  GameObject.apply(this, [game, x, y, tag]);
   this._name = name;
   this._life = 0;
   this._force = 0;
 }
 Character.prototype = Object.create(GameObject.prototype);
-Character.prototype.constructor = Character;
+Character.constructor = Character;
 
 //CLASE BULLET
-function Bullet (vel,dam){
-  GameObject.apply(this,[]);
+function Bullet (game, x, y, tag,vel,dam){
+  GameObject.apply(this,[game, x, y, tag]);
   this._vel = vel;
   this._dam=dam;
 }
 Bullet.prototype = Object.create(GameObject.prototype);
-Bullet.prototype.constructor = Bullet;
+Bullet.constructor = Bullet;
 
 
 //CLASE PLANT
@@ -113,35 +123,39 @@ function Plant (game, x, y, tag){
   
 }
 Plant.prototype = Object.create(Character.prototype);
-Plant.prototype.constructor = Plant;
+Plant.constructor = Plant;
 
 //Ejemplo LanzaGuisantes
 function LanzaGuisantes(game, x, y, tag){
   Plant.apply(this,[game, x, y, tag]);
   //Atributos propios
   //----------------
+  this.animations.add('try',[0,1,0],5,true);
   this._life = 3;
   this._force = 1;
   //----------------
 }
 LanzaGuisantes.prototype = Object.create(Plant.prototype);
-LanzaGuisantes.prototype.constructor = LanzaGuisantes;
+LanzaGuisantes.constructor = LanzaGuisantes;
 
 //CLASE ZOMBIE
-function Zombie (game, x, y, tag, frame){
-  Character.apply(this,[game, x, y, tag, frame]);
+function Zombie (game, x, y, tag){
+  Character.apply(this,[game, x, y, tag]);
   //this.game.add.sprite(100,100,tag);
+  this.animations.add('move',[0,1,0]);
+  this.animations.play('move',5,true);
 }
 Zombie.prototype = Object.create(Character.prototype);
-Zombie.prototype.constructor = Zombie;
+Zombie.constructor = Zombie;
 // Metodos en Zombies
 Zombie.prototype.move = function (velocity) {
-  this.sprite.x -= velocity;
+  this.x -= velocity;
+
 }
 
 //Ejemplo ZombieComun
-function ZombieComun(game, x, y, tag, frame){
-  Zombie.apply(this,[game, x, y, tag, frame]);
+function ZombieComun(game, x, y, tag){
+  Zombie.apply(this,[game, x, y, tag]);
   //Atributos propios
   //----------------
   this._life = 12;
@@ -150,6 +164,6 @@ function ZombieComun(game, x, y, tag, frame){
   //----------------
 }
 ZombieComun.prototype = Object.create(Zombie.prototype);
-ZombieComun.prototype.constructor = ZombieComun;
+ZombieComun.constructor = ZombieComun;
 
 module.exports = PlayScene;
