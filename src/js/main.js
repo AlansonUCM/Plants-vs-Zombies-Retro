@@ -21,8 +21,15 @@ var PreloaderScene = {
     this.loadingBar.anchor.setTo(0, 0.5);
     this.load.setPreloadSprite(this.loadingBar);
 
+    this.game.physics.startSystem(Phaser.Physics.ARCADE);
+
     // TODO: load here the assets for the game
     this.game.load.image('logo', 'images/logo.png');
+
+    this.game.load.spritesheet('plants','images/lanzaGuisantes.png',64,64,3);
+    // Carga de los zombies
+    this.game.load.spritesheet("zombies", "images/firstZombie.png",46,56,2);
+    
   },
 
   create: function () {
