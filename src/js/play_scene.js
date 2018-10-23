@@ -13,7 +13,7 @@
     this.bulletPool=[];
     
     //Zombie en Pantalla
-    this.planta=new LanzaGuisantes(this.game,500,300,'plants',this.bulletPool);
+    this.planta=new LanzaGuisantes(this.game,200,300,'plants',this.bulletPool);
     this.planta.anchor.setTo(0.5,1);
 
     zombie = new Zombie(this.game, 800, 300-100, "zombies", 0);
@@ -27,7 +27,7 @@
 
   },
   update: function (){
-    zombie.move(1);
+    zombie.move(0.5);
  
     this.planta.shoot();
     for(var i =0;i<this.bulletPool.length;i++)
@@ -38,15 +38,16 @@
     for(var n=0;n<this.bulletPool.length;n++)
     {
       
-      this.game.physics.arcade.collide(this.bulletPool[n],this.zombie,bulletCollision);
+      this.game.physics.arcade.collide(this.bulletPool[n],zombie,bulletCollision);
     }
 
     function bulletCollision(obj1,obj2)
     {
-      console.log(obj2._life);
+    
       obj2.takeDamage(obj1._dam);
       obj1.Oncollision();
     }
+
 
   },
   render: function (){
@@ -156,8 +157,7 @@ Bullet.prototype.Oncollision = function () {
 
 Bullet.prototype.relocate=function(dam,vel,x,y)
 {
-  this.x=x;
-  this.y=y;
+ this.reset(x,y);
   this._dam=dam;
   this._vel=vel;
 }
@@ -189,28 +189,33 @@ LanzaGuisantes.prototype = Object.create(Plant.prototype);
 LanzaGuisantes.constructor = LanzaGuisantes;
 LanzaGuisantes.prototype.shoot=function()
 {
- 
+ console.log(this._bulletPool.length);
   if(this.game.time.now>this.timeCount){
      if(this._bulletPool.length==0)
       {
 
         this._bulletPool.push(new Bullet(this.game,this.x+30,this.y-48,'bullet',2,this._force));
         this._bulletPool[0].scale.setTo(2);
+        this._bulletPool[0].kill();
+        
       }
    var i=0;
    var shooted;
     while(i<this._bulletPool.length&&!shooted)
     {
+      
      if(!this._bulletPool[i].alive)
       {
         
         this.animations.play('shootin');
-        this._bulletPool[i].alive=true;
+        this._bulletPool[i].revive();
         this._bulletPool[i].relocate(this._force,2,this.x+30,this.y-48);
         
        
       shooted=true;
-     }
+      
+     
+      }
     i++
     }
     if(!shooted)
@@ -242,6 +247,10 @@ Zombie.prototype.move = function (velocity) {
 }
 Zombie.prototype.takeDamage = function (damage) {
   this._life-=damage;
+  if(this._life<=0)
+  {
+    this.kill();
+  }
 
 }
 
