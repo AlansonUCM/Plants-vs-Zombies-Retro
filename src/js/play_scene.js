@@ -2,6 +2,8 @@
 
   // Inicializacion
   var zombie;
+  var plants = [];
+  var card;
 
   var PlayScene = {
   create: function () {
@@ -9,22 +11,31 @@
       this.game.world.centerX, this.game.world.centerY, 'logo');
     logo.anchor.setTo(0.5, 0.5);
     logo.scale.setTo(0.7);
+    
+    //Agregamos input del raton 
+    //this.game.input.mouse.capture = true;
 
     //Zombie en Pantalla
-    this.planta=new LanzaGuisantes(this.game,500,300,'plants');
-    this.planta.anchor.setTo(0.5,1);
+    // this.planta=new LanzaGuisantes(this.game,500,300,'plants');
+    // this.planta.anchor.setTo(0.5,1);
 
-    zombie = new Zombie(this.game, 800, 300-100, "zombies", 0);
-   // this.game.world.addChild(zombie)
-    zombie.scale.setTo(1.8);
+    this.zombie = new Zombie(this.game, 800, 300-100, "zombies");
+    this.zombie.scale.setTo(1.8);
     
-   
-
+    card = new Card(this.game,0,64,"plants",LanzaGuisantes);
 
   },
+  
   update: function (){
-    zombie.move(1);
-    this.planta.animations.play('try');
+    this.zombie.move(1);
+    //this.card.checkInput();
+
+
+    //Movimiento de las plantas
+    // for(let i = 0; i < plants.length; i++)
+    //   plants[i].move();
+
+
   },
   render: function (){
   }
@@ -44,7 +55,7 @@ ScreenObj.constructor = ScreenObj;
 //CLASE Score
 function Score (game, x, y, tag){
   ScreenObj.Sprite.apply(this,[game, x, y, tag]);
-  this.count=0;
+  this.count = 0;
 }
 Score.prototype = Object.create(ScreenObj.prototype);
 Score.constructor = Score;
@@ -57,36 +68,38 @@ function ProgressBar (game, x, y, tag){
 ProgressBar.prototype = Object.create(ScreenObj.prototype);
 ProgressBar.constructor = ProgressBar;
 
-//CLASE Button
-function Button (game, x, y, tag){
-  ScreenObj.Sprite.apply(this,[game, x, y, tag]);
-  this.game.physics.arcade.enable(this)
-}
-Button.prototype = Object.create(ScreenObj.prototype);
-Button.constructor =  Button;
-
 //CLASE Sun
 function Sun (game, x, y, tag){
-  ScreenObj.Sprite.apply(this,[game, x, y, tag]);
+  Phaser.Button.apply(this,[game, x, y, tag]);
   
 }
-Sun.prototype = Object.create(Button.prototype);
+Sun.prototype = Object.create(Phaser.Button.prototype);
 Sun.constructor =  Sun;
 
 //CLASE Shovel
 function Shovel (game, x, y, tag){
-  ScreenObj.Sprite.apply(this,[game, x, y, tag]);
+  Phaser.Button.Sprite.apply(this,[game, x, y, tag]);
   
 }
-Shovel.prototype = Object.create(Button.prototype);
+Shovel.prototype = Object.create(Phaser.Button.prototype);
 Shovel.constructor =  Shovel;
 
 //CLASE Card
-function Card (game, x, y, tag){
-  ScreenObj.Sprite.apply(this,[game, x, y, tag]);  
+function Card (game, x, y, tag, funcionPlanta){
+  Phaser.Button.apply(this,[game, x, y, tag,this.onClick,,1,0,]);
+  this.game.world.addChild(this);
+  this.createPlant = funcionPlanta;
+  this.game.input.onDown.add(this.onClick,this);
 }
-Card.prototype = Object.create(Button.prototype);
+Card.prototype = Object.create(Phaser.Button.prototype);
 Card.constructor =  Card;
+//Metodos
+Card.prototype.onClick = function(){
+  if(this.input.pointerOver()){
+    plants.push(new this.createPlant(this.game, this.x,this.y,'plants'));
+  }
+}
+
 
 
 //CLASE GameObject
@@ -111,7 +124,7 @@ Character.constructor = Character;
 function Bullet (game, x, y, tag,vel,dam){
   GameObject.apply(this,[game, x, y, tag]);
   this._vel = vel;
-  this._dam=dam;
+  this._dam = dam;
 }
 Bullet.prototype = Object.create(GameObject.prototype);
 Bullet.constructor = Bullet;
@@ -120,10 +133,35 @@ Bullet.constructor = Bullet;
 //CLASE PLANT
 function Plant (game, x, y, tag){
   Character.apply(this,[game, x, y, tag]);
-  
+  //this.events.onInputDown.add(this.onDown,this);
+  this.inputEnabled = true;
+  this.input.enableDrag(true);
+  this.input.enableSnap(64, 64, true, true);
+  this.events.onDragStop.add(this.onDragStop, this);
 }
 Plant.prototype = Object.create(Character.prototype);
 Plant.constructor = Plant;
+//Metodos
+Plant.prototype.canBePlaced = function() {
+  return true;
+}
+Plant.prototype.placePlant = function(){  
+}
+Plant.prototype.onDragStop = function(){
+  if(this.canBePlaced()){
+    this.placePlant();
+    this.input.enableSnap(64, 64, false, false);
+    this.inputEnabled = false;
+    this.input.enableDrag(false);
+  }
+  else{
+    this.input.enableSnap(64, 64, false, false);
+    this.inputEnabled = false;
+    this.input.enableDrag(false);
+    this.kill();
+  }
+}
+
 
 //Ejemplo LanzaGuisantes
 function LanzaGuisantes(game, x, y, tag){
@@ -150,7 +188,6 @@ Zombie.constructor = Zombie;
 // Metodos en Zombies
 Zombie.prototype.move = function (velocity) {
   this.x -= velocity;
-
 }
 
 //Ejemplo ZombieComun
