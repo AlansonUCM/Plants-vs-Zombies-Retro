@@ -16,7 +16,6 @@
 
     cardSelector = new CardSelector(this.game, 0, 75, 128, 5,[],[])
     board = new Board(this.game, 100, 128, 5, 5, 100);
-    // board.desableBoard();
   },
   
   update: function (){
@@ -133,7 +132,7 @@ function Box (game, xPos, yPos){
   this.x = xPos;
   this.y = yPos;
 
-  //this.inputEnabled = false;
+  this.inputEnabled = false;
 }
 Box.prototype = Object.create(Phaser.Button.prototype);
 Box.constructor = Box;
@@ -142,7 +141,7 @@ Box.prototype.onClick = function(){
   console.log("casilla clickada");
   if(this.plantPlaced){
     console.log('lugar ya plantado');
-    //board.desableBoard();
+    board.desableBoard();
     board.selectedPlant = null;
     cardSelector.deSelectAll();
   }
@@ -150,7 +149,7 @@ Box.prototype.onClick = function(){
     //Habra que retocar para que dependiendo de la planta use un sprite u otro
     board.plants.push(new board.selectedPlant(this.game, this.x,this.y,'plants'));
     this.plantPlaced = true;
-    //board.desableBoard();
+    board.desableBoard();
   }
   else{
     board.selectedPlant = null;
@@ -176,14 +175,16 @@ Board.constructor = Board;
 //Metodos
 Board.prototype.desableBoard = function (){
   for(let i = 0; i < this.boxes.length; i++)
-    this.boxes[i].inputEnabled = false;
+    for(let j = 0;j < this.boxes[i].length; j++)
+      this.boxes[i][j].inputEnabled = false;
   
   this.selectedPlant = null;
   console.log('tablero desabilitado');
 }
 Board.prototype.ableBoard = function (){
   for(let i = 0; i < this.boxes.length; i++)
-    this.boxes[i].inputEnabled = true;
+    for(let j = 0;j < this.boxes[i].length; j++)
+      this.boxes[i][j].inputEnabled = true;
   console.log("Tablero preparado para posicionar planta")
 }
 
