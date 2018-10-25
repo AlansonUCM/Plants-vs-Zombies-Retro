@@ -3,32 +3,30 @@
   // Inicializacion
   var zombie;
   var plants = [];
-  var card;
+  var cardSelector;
+  var board;
 
   var PlayScene = {
   create: function () {
-    var logo = this.game.add.sprite(
-      this.game.world.centerX, this.game.world.centerY, 'logo');
-    logo.anchor.setTo(0.5, 0.5);
-    logo.scale.setTo(0.7);
+    // var logo = this.game.add.sprite(
+    //   this.game.world.centerX, this.game.world.centerY, 'logo');
+    // logo.anchor.setTo(0.5, 0.5);
+    // logo.scale.setTo(0.7);
     
     //Agregamos input del raton 
     //this.game.input.mouse.capture = true;
 
-    //Zombie en Pantalla
-    // this.planta=new LanzaGuisantes(this.game,500,300,'plants');
-    // this.planta.anchor.setTo(0.5,1);
+    // this.zombie = new Zombie(this.game, 800, 300-100, "zombies");
+    // this.zombie.scale.setTo(1.8);
 
-    this.zombie = new Zombie(this.game, 800, 300-100, "zombies");
-    this.zombie.scale.setTo(1.8);
-    
-    card = new Card(this.game,0,64,"plants",LanzaGuisantes);
+    this.game.stage.backgroundColor = '#ffffff'
 
+    cardSelector = new CardSelector(this.game, 0, 75, 128, 5,[],[])
+    board = new Board(100, 128, 5, 5, 75);
   },
   
   update: function (){
-    this.zombie.move(1);
-    //this.card.checkInput();
+    // this.zombie.move(1);
 
 
     //Movimiento de las plantas
@@ -88,6 +86,7 @@ Shovel.constructor =  Shovel;
 function Card (game, x, y, tag, funcionPlanta){
   Phaser.Button.apply(this,[game, x, y, tag,this.onClick,,1,0,]);
   this.game.world.addChild(this);
+  this.isSelected = false;
   this.createPlant = funcionPlanta;
   this.game.input.onDown.add(this.onClick,this);
 }
@@ -96,10 +95,36 @@ Card.constructor =  Card;
 //Metodos
 Card.prototype.onClick = function(){
   if(this.input.pointerOver()){
-    plants.push(new this.createPlant(this.game, this.x,this.y,'plants'));
+    this.isSelected = true;
+    // plants.push(new this.createPlant(this.game, this.x,this.y,'plants'));
   }
 }
 
+//Clase CardSelector
+function CardSelector (game, xPos, yPos, yOffset, numCards,tagsArray,plantsArray){
+  this.cards = [];
+  for(let i = 0; i < numCards; i++)
+    this.cards.push(new Card(game, xPos, yPos * i + yOffset, "plants", LanzaGuisantes));
+}
+CardSelector.constructor =  CardSelector;
+
+//Clase Box
+function Box (xPos, yPos){
+  this.x = xPos;
+  this.y = yPos;
+}
+Box.constructor =  Box;
+
+//CLASE Board
+function Board (xPos, yPos,numXBoxes, numYBoxes, boxTam){
+  this.boxes = [];
+  for(let i = 0; i < numXBoxes; i++){
+    this.boxes.push([]);
+    for(let j = 0;j < numYBoxes; j++)
+      this.boxes[i].push(new Box(xPos + boxTam* i, yPos + boxTam* j));
+  }
+}
+CardSelector.constructor =  CardSelector;
 
 
 //CLASE GameObject
@@ -134,33 +159,33 @@ Bullet.constructor = Bullet;
 function Plant (game, x, y, tag){
   Character.apply(this,[game, x, y, tag]);
   //this.events.onInputDown.add(this.onDown,this);
-  this.inputEnabled = true;
-  this.input.enableDrag(true);
-  this.input.enableSnap(64, 64, true, true);
-  this.events.onDragStop.add(this.onDragStop, this);
+  // this.inputEnabled = true;
+  // this.input.enableDrag(true);
+  // this.input.enableSnap(64, 64, true, true);
+  // this.events.onDragStop.add(this.onDragStop, this);
 }
 Plant.prototype = Object.create(Character.prototype);
 Plant.constructor = Plant;
 //Metodos
-Plant.prototype.canBePlaced = function() {
-  return true;
-}
-Plant.prototype.placePlant = function(){  
-}
-Plant.prototype.onDragStop = function(){
-  if(this.canBePlaced()){
-    this.placePlant();
-    this.input.enableSnap(64, 64, false, false);
-    this.inputEnabled = false;
-    this.input.enableDrag(false);
-  }
-  else{
-    this.input.enableSnap(64, 64, false, false);
-    this.inputEnabled = false;
-    this.input.enableDrag(false);
-    this.kill();
-  }
-}
+// Plant.prototype.canBePlaced = function() {
+//   return true;
+// }
+// Plant.prototype.placePlant = function(){  
+// }
+// Plant.prototype.onDragStop = function(){
+//   if(this.canBePlaced()){
+//     this.placePlant();
+//     this.input.enableSnap(64, 64, false, false);
+//     this.inputEnabled = false;
+//     this.input.enableDrag(false);
+//   }
+//   else{
+//     this.input.enableSnap(64, 64, false, false);
+//     this.inputEnabled = false;
+//     this.input.enableDrag(false);
+//     this.kill();
+//   }
+// }
 
 
 //Ejemplo LanzaGuisantes
