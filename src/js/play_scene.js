@@ -1,8 +1,6 @@
 'use strict';
 
   // Inicializacion
-  var zombie;
-  var plants = [];
   var cardSelector;
   var board;
 
@@ -12,27 +10,17 @@
     //   this.game.world.centerX, this.game.world.centerY, 'logo');
     // logo.anchor.setTo(0.5, 0.5);
     // logo.scale.setTo(0.7);
-    
-    //Agregamos input del raton 
-    //this.game.input.mouse.capture = true;
 
-    // this.zombie = new Zombie(this.game, 800, 300-100, "zombies");
-    // this.zombie.scale.setTo(1.8);
 
     this.game.stage.backgroundColor = '#ffffff'
 
     cardSelector = new CardSelector(this.game, 0, 75, 128, 5,[],[])
-    board = new Board(100, 128, 5, 5, 75);
+    board = new Board(this.game, 100, 128, 5, 5, 100);
+    // board.desableBoard();
   },
   
   update: function (){
     // this.zombie.move(1);
-
-
-    //Movimiento de las plantas
-    // for(let i = 0; i < plants.length; i++)
-    //   plants[i].move();
-
 
   },
   render: function (){
@@ -84,20 +72,38 @@ Shovel.constructor =  Shovel;
 
 //CLASE Card
 function Card (game, x, y, tag, funcionPlanta){
-  Phaser.Button.apply(this,[game, x, y, tag,this.onClick,,1,0,]);
+  Phaser.Button.apply(this,[game, x, y, tag, this.onClick, , 1, 0, 1]);
   this.game.world.addChild(this);
   this.isSelected = false;
-  this.createPlant = funcionPlanta;
-  this.game.input.onDown.add(this.onClick,this);
+  this.selectedPlant = funcionPlanta;
+  this.game.input.onUp.add(this.onClick, this);
 }
 Card.prototype = Object.create(Phaser.Button.prototype);
-Card.constructor =  Card;
+Card.constructor = Card;
 //Metodos
 Card.prototype.onClick = function(){
   if(this.input.pointerOver()){
-    this.isSelected = true;
+    this.select();
+    board.selectedPlant = this.selectedPlant;
+    // this.inputEnabled = false;
     // plants.push(new this.createPlant(this.game, this.x,this.y,'plants'));
   }
+}
+Card.prototype.select = function(){
+  cardSelector.deSelectAll();
+  this.isSelected = true;
+  this.inputEnabled = false;
+  this.freezeFrames = true;
+  board.selectedPlant = this.selectedPlant;
+  board.ableBoard();
+  console.log("Card selected");
+}
+Card.prototype.deSelect = function(){
+  this.isSelected = false; 
+  this.freezeFrames = false;
+  this.inputEnabled = true;
+  board.selectedPlant = null;
+  console.log("Card deselected");
 }
 
 //Clase CardSelector
@@ -106,25 +112,80 @@ function CardSelector (game, xPos, yPos, yOffset, numCards,tagsArray,plantsArray
   for(let i = 0; i < numCards; i++)
     this.cards.push(new Card(game, xPos, yPos * i + yOffset, "plants", LanzaGuisantes));
 }
-CardSelector.constructor =  CardSelector;
+CardSelector.constructor = CardSelector;
+//Metodos de CardSelector
+CardSelector.prototype.deSelectAll = function(){
+  for(let i = 0; i < this.cards.length; i++)
+    this.cards[i].deSelect();
+}
+
+
 
 //Clase Box
-function Box (xPos, yPos){
+function Box (game, xPos, yPos){
+  Phaser.Button.apply(this,[game, xPos, yPos, 'frame', this.onClick]);
+  this.game.world.addChild(this);
+  this.scale.setTo(0.5);
+  this.alpha = 0.3;
+
+  this.plantPlaced = false;
+
   this.x = xPos;
   this.y = yPos;
+
+  //this.inputEnabled = false;
 }
-Box.constructor =  Box;
+Box.prototype = Object.create(Phaser.Button.prototype);
+Box.constructor = Box;
+//Metodos
+Box.prototype.onClick = function(){
+  console.log("casilla clickada");
+  if(this.plantPlaced){
+    console.log('lugar ya plantado');
+    //board.desableBoard();
+    board.selectedPlant = null;
+    cardSelector.deSelectAll();
+  }
+  else if(!this.plantPlaced && board.selectedPlant != null){
+    //Habra que retocar para que dependiendo de la planta use un sprite u otro
+    board.plants.push(new board.selectedPlant(this.game, this.x,this.y,'plants'));
+    this.plantPlaced = true;
+    //board.desableBoard();
+  }
+  else{
+    board.selectedPlant = null;
+    cardSelector.deSelectAll();
+  }
+
+}
 
 //CLASE Board
-function Board (xPos, yPos,numXBoxes, numYBoxes, boxTam){
+function Board (game, xPos, yPos,numXBoxes, numYBoxes, boxTam){
   this.boxes = [];
+  this.plants = [];
+
+  this.selectedPlant = function(){};
+
   for(let i = 0; i < numXBoxes; i++){
     this.boxes.push([]);
     for(let j = 0;j < numYBoxes; j++)
-      this.boxes[i].push(new Box(xPos + boxTam* i, yPos + boxTam* j));
+      this.boxes[i].push(new Box(game, xPos + boxTam* i, yPos + boxTam* j));
   }
 }
-CardSelector.constructor =  CardSelector;
+Board.constructor = Board;
+//Metodos
+Board.prototype.desableBoard = function (){
+  for(let i = 0; i < this.boxes.length; i++)
+    this.boxes[i].inputEnabled = false;
+  
+  this.selectedPlant = null;
+  console.log('tablero desabilitado');
+}
+Board.prototype.ableBoard = function (){
+  for(let i = 0; i < this.boxes.length; i++)
+    this.boxes[i].inputEnabled = true;
+  console.log("Tablero preparado para posicionar planta")
+}
 
 
 //CLASE GameObject
@@ -158,34 +219,9 @@ Bullet.constructor = Bullet;
 //CLASE PLANT
 function Plant (game, x, y, tag){
   Character.apply(this,[game, x, y, tag]);
-  //this.events.onInputDown.add(this.onDown,this);
-  // this.inputEnabled = true;
-  // this.input.enableDrag(true);
-  // this.input.enableSnap(64, 64, true, true);
-  // this.events.onDragStop.add(this.onDragStop, this);
 }
 Plant.prototype = Object.create(Character.prototype);
 Plant.constructor = Plant;
-//Metodos
-// Plant.prototype.canBePlaced = function() {
-//   return true;
-// }
-// Plant.prototype.placePlant = function(){  
-// }
-// Plant.prototype.onDragStop = function(){
-//   if(this.canBePlaced()){
-//     this.placePlant();
-//     this.input.enableSnap(64, 64, false, false);
-//     this.inputEnabled = false;
-//     this.input.enableDrag(false);
-//   }
-//   else{
-//     this.input.enableSnap(64, 64, false, false);
-//     this.inputEnabled = false;
-//     this.input.enableDrag(false);
-//     this.kill();
-//   }
-// }
 
 
 //Ejemplo LanzaGuisantes
