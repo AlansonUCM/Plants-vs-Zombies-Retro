@@ -1,8 +1,8 @@
 'use strict';
 
-  // Inicializacion
-  var cardSelector;
-  var board;
+//Inicializacion
+var cardSelector;
+var board;
 
   var PlayScene = {
   create: function () {
@@ -30,9 +30,7 @@
 //CLASE ScreenObj
 function ScreenObj (game, x, y, tag){
   Phaser.Sprite.call(this,game, x, y, tag);
-
   this.game.world.addChild(this);
-
 }
 ScreenObj.prototype = Object.create(Phaser.Sprite.prototype);
 ScreenObj.constructor = ScreenObj;
@@ -55,16 +53,14 @@ ProgressBar.constructor = ProgressBar;
 
 //CLASE Sun
 function Sun (game, x, y, tag){
-  Phaser.Button.apply(this,[game, x, y, tag]);
-  
+  Phaser.Button.apply(this,[game, x, y, tag]);  
 }
 Sun.prototype = Object.create(Phaser.Button.prototype);
 Sun.constructor =  Sun;
 
 //CLASE Shovel
 function Shovel (game, x, y, tag){
-  Phaser.Button.Sprite.apply(this,[game, x, y, tag]);
-  
+  Phaser.Button.Sprite.apply(this,[game, x, y, tag]);  
 }
 Shovel.prototype = Object.create(Phaser.Button.prototype);
 Shovel.constructor =  Shovel;
@@ -84,8 +80,6 @@ Card.prototype.onClick = function(){
   if(this.input.pointerOver()){
     this.select();
     board.selectedPlant = this.selectedPlant;
-    // this.inputEnabled = false;
-    // plants.push(new this.createPlant(this.game, this.x,this.y,'plants'));
   }
 }
 Card.prototype.select = function(){
@@ -101,7 +95,6 @@ Card.prototype.deSelect = function(){
   this.isSelected = false; 
   this.freezeFrames = false;
   this.inputEnabled = true;
-  board.selectedPlant = null;
   console.log("Card deselected");
 }
 
@@ -109,13 +102,14 @@ Card.prototype.deSelect = function(){
 function CardSelector (game, xPos, yPos, yOffset, numCards,tagsArray,plantsArray){
   this.cards = [];
   for(let i = 0; i < numCards; i++)
-    this.cards.push(new Card(game, xPos, yPos * i + yOffset, "plants", LanzaGuisantes));
+    this.cards.push(new Card(game, xPos, yPos * i + yOffset, "plants", LanzaGuisantes));    // Se tendra que modificar mas tarde
 }
 CardSelector.constructor = CardSelector;
 //Metodos de CardSelector
 CardSelector.prototype.deSelectAll = function(){
   for(let i = 0; i < this.cards.length; i++)
     this.cards[i].deSelect();
+  board.selectedPlant = null;
 }
 
 
@@ -141,19 +135,25 @@ Box.prototype.onClick = function(){
   console.log("casilla clickada");
   if(this.plantPlaced){
     console.log('lugar ya plantado');
+
     board.desableBoard();
     board.selectedPlant = null;
+
     cardSelector.deSelectAll();
   }
   else if(!this.plantPlaced && board.selectedPlant != null){
+    console.log('Planta plantada');
+    
     //Habra que retocar para que dependiendo de la planta use un sprite u otro
     board.plants.push(new board.selectedPlant(this.game, this.x,this.y,'plants'));
     this.plantPlaced = true;
     board.desableBoard();
   }
   else{
+    console.log('Accion anulada');
     board.selectedPlant = null;
     cardSelector.deSelectAll();
+    board.desableBoard();
   }
 
 }
