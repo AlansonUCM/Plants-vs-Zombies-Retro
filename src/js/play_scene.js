@@ -1,9 +1,5 @@
 'use strict';
 
-//Inicializacion
-var cardSelector;
-var board;
-
   var PlayScene = {
   create: function () {
     // var logo = this.game.add.sprite(
@@ -14,15 +10,40 @@ var board;
 
     this.game.stage.backgroundColor = '#ffffff'
 
-    cardSelector = new CardSelector(this.game, 0, 75, 128, 5,[],[])
-    board = new Board(this.game, 100, 128, 5, 5, 100);
+    var cardSelector = new CardSelector(this.game, 0, 75, 128, 5,[],[]);
+    var board = new Board(this.game, 100, 128, 5, 5, 100);
+
+    //Metodos de orden e interaccion entre cardSelector y Board
+    this.game.deSelectAllCards = function(){
+      cardSelector.deSelectAll();
+      board.selectedPlant = null;
+    }
+
+    this.game.disableBoard = function(){
+      board.disableBoard();
+    }
+
+    this.game.ableBoard = function(){
+      board.ableBoard();
+    }
+
+    this.game.setSelectedPlant = function(plantRef){
+      board.selectedPlant = plantRef;
+    }
+
+    this.game.getSelectedPlant = function(){
+      return board.selectedPlant;
+    }
+    this.game.placePlant = function(newPlant){
+      board.plants.push(newPlant);
+    }
   },
   
   update: function (){
-    // this.zombie.move(1);
 
   },
   render: function (){
+    
   }
 };
 
@@ -70,7 +91,7 @@ function Card (game, x, y, tag, funcionPlanta){
   Phaser.Button.apply(this,[game, x, y, tag, this.onClick, , 1, 0, 1]);
   this.game.world.addChild(this);
   this.isSelected = false;
-  this.selectedPlant = funcionPlanta;
+  this.plantRef = funcionPlanta;
   this.game.input.onUp.add(this.onClick, this);
 }
 Card.prototype = Object.create(Phaser.Button.prototype);
@@ -79,16 +100,19 @@ Card.constructor = Card;
 Card.prototype.onClick = function(){
   if(this.input.pointerOver()){
     this.select();
-    board.selectedPlant = this.selectedPlant;
+    this.game.setSelectedPlant(this.plantRef);
   }
 }
 Card.prototype.select = function(){
-  cardSelector.deSelectAll();
+  this.game.deSelectAllCards();
+
   this.isSelected = true;
   this.inputEnabled = false;
   this.freezeFrames = true;
-  board.selectedPlant = this.selectedPlant;
-  board.ableBoard();
+
+  this.game.setSelectedPlant(this.plantRef);
+  this.game.ableBoard();
+
   console.log("Card selected");
 }
 Card.prototype.deSelect = function(){
@@ -109,9 +133,7 @@ CardSelector.constructor = CardSelector;
 CardSelector.prototype.deSelectAll = function(){
   for(let i = 0; i < this.cards.length; i++)
     this.cards[i].deSelect();
-  board.selectedPlant = null;
-}
-
+};
 
 
 //Clase Box
@@ -136,26 +158,28 @@ Box.prototype.onClick = function(){
   if(this.plantPlaced){
     console.log('lugar ya plantado');
 
-    board.desableBoard();
-    board.selectedPlant = null;
+    this.game.disableBoard();
+    this.game.setSelectedPlant(null);
 
-    cardSelector.deSelectAll();
-  }
-  else if(!this.plantPlaced && board.selectedPlant != null){
+    this.game.deSelectAllCards();
+  } else if(!this.plantPlaced && this.game.getSelectedPlant() != null){
     console.log('Planta plantada');
-    
-    //Habra que retocar para que dependiendo de la planta use un sprite u otro
-    board.plants.push(new board.selectedPlant(this.game, this.x,this.y,'plants'));
-    this.plantPlaced = true;
-    board.desableBoard();
-  }
-  else{
-    console.log('Accion anulada');
-    board.selectedPlant = null;
-    cardSelector.deSelectAll();
-    board.desableBoard();
-  }
 
+    //Habra que retocar para que dependiendo de la planta use un sprite u otro
+    var plantType = this.game.getSelectedPlant();
+
+    this.game.placePlant(new plantType(this.game, this.x,this.y,'plants'));    
+    this.plantPlaced = true;
+
+    this.game.disableBoard();
+  } else{
+    console.log('Accion anulada');
+    
+    this.game.disableBoard();
+    this.game.setSelectedPlant(null);
+
+    this.game.deSelectAllCards();
+  }
 }
 
 //CLASE Board
@@ -173,7 +197,7 @@ function Board (game, xPos, yPos,numXBoxes, numYBoxes, boxTam){
 }
 Board.constructor = Board;
 //Metodos
-Board.prototype.desableBoard = function (){
+Board.prototype.disableBoard = function (){
   for(let i = 0; i < this.boxes.length; i++)
     for(let j = 0;j < this.boxes[i].length; j++)
       this.boxes[i][j].inputEnabled = false;
@@ -181,6 +205,7 @@ Board.prototype.desableBoard = function (){
   this.selectedPlant = null;
   console.log('tablero desabilitado');
 }
+
 Board.prototype.ableBoard = function (){
   for(let i = 0; i < this.boxes.length; i++)
     for(let j = 0;j < this.boxes[i].length; j++)
@@ -197,6 +222,7 @@ function GameObject (game, x, y, tag ){
 GameObject.prototype = Object.create(ScreenObj.prototype);
 GameObject.constructor = GameObject;
 
+
 //CLASE Character
 function Character (game, x, y, tag){
   GameObject.apply(this, [game, x, y, tag]);
@@ -206,6 +232,7 @@ function Character (game, x, y, tag){
 }
 Character.prototype = Object.create(GameObject.prototype);
 Character.constructor = Character;
+
 
 //CLASE BULLET
 function Bullet (game, x, y, tag,vel,dam){
@@ -225,7 +252,7 @@ Plant.prototype = Object.create(Character.prototype);
 Plant.constructor = Plant;
 
 
-//Ejemplo LanzaGuisantes
+//LanzaGuisantes
 function LanzaGuisantes(game, x, y, tag){
   Plant.apply(this,[game, x, y, tag]);
   //Atributos propios
@@ -238,6 +265,7 @@ function LanzaGuisantes(game, x, y, tag){
 LanzaGuisantes.prototype = Object.create(Plant.prototype);
 LanzaGuisantes.constructor = LanzaGuisantes;
 
+
 //CLASE ZOMBIE
 function Zombie (game, x, y, tag){
   Character.apply(this,[game, x, y, tag]);
@@ -247,12 +275,14 @@ function Zombie (game, x, y, tag){
 }
 Zombie.prototype = Object.create(Character.prototype);
 Zombie.constructor = Zombie;
+
 // Metodos en Zombies
 Zombie.prototype.move = function (velocity) {
   this.x -= velocity;
 }
 
-//Ejemplo ZombieComun
+
+//ZombieComun
 function ZombieComun(game, x, y, tag){
   Zombie.apply(this,[game, x, y, tag]);
   //Atributos propios
