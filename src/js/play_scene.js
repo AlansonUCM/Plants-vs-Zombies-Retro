@@ -11,50 +11,55 @@
     this.game.stage.backgroundColor = '#ffffff'
 
     var cardSelector = new CardSelector(this.game, 0, 75, 128, 5,[],[]);
-    var board = new Board(this.game, 100, 128, 5, 5, 100);
+    this.board = new Board(this.game, 100, 128, 5, 5, 100);
 
     this.bulletPool=[];
     
     //Zombie en Pantalla
-    this.planta=new LanzaGuisantes(this.game,200,300,'plants',this.bulletPool);
-    this.planta.anchor.setTo(0.5,1);
+   //this.planta=new LanzaGuisantes(this.game,200,300,'plants',this.bulletPool);
+    //this.planta.anchor.setTo(0.5,1);
 
-    zombie = new Zombie(this.game, 800, 300-100, "zombies", 0);
+    this.zombie = new Zombie(this.game, 800, 300-100, "zombies", 0);
    // this.game.world.addChild(zombie)
-    zombie.scale.setTo(1.8);
-    this.planta.animations.play('try');
+    this.zombie.scale.setTo(1.8);
+    //this.planta.animations.play('try');
     
 
     //Metodos de orden e interaccion entre cardSelector y Board
     this.game.deSelectAllCards = function(){
       cardSelector.deSelectAll();
-      board.selectedPlant = null;
+      this.state.getCurrentState().board.selectedPlant = null;
     }
 
     this.game.disableBoard = function(){
-      board.disableBoard();
+      this.state.getCurrentState().board.disableBoard();
     }
 
     this.game.ableBoard = function(){
-      board.ableBoard();
+      this.state.getCurrentState().board.ableBoard();
     }
 
     this.game.setSelectedPlant = function(plantRef){
-      board.selectedPlant = plantRef;
+      this.state.getCurrentState().board.selectedPlant = plantRef;
     }
 
     this.game.getSelectedPlant = function(){
-      return board.selectedPlant;
+      return  this.state.getCurrentState().board.selectedPlant;
     }
     this.game.placePlant = function(newPlant){
-      board.plants.push(newPlant);
+      this.state.getCurrentState().board.plants.push(newPlant);
     }
   },
   
   update: function (){
-    zombie.move(0.5);
+    this.zombie.move(0.5);
  
-    this.planta.shoot();
+    for(let i =0;i<this.board.plants.length;i++)
+    {
+      this.board.plants[i].shoot();
+    }
+
+    //this.planta.shoot();
     for(var i =0;i<this.bulletPool.length;i++)
     {
       this.bulletPool[i].move();
@@ -63,7 +68,7 @@
     for(var n=0;n<this.bulletPool.length;n++)
     {
       
-      this.game.physics.arcade.collide(this.bulletPool[n],zombie,bulletCollision);
+      this.game.physics.arcade.collide(this.bulletPool[n],this.zombie,bulletCollision);
     }
 
     function bulletCollision(obj1,obj2)
@@ -202,10 +207,12 @@ Box.prototype.onClick = function(){
     //Habra que retocar para que dependiendo de la planta use un sprite u otro
     var plantType = this.game.getSelectedPlant();
 
-    this.game.placePlant(new plantType(this.game, this.x,this.y,'plants'));    
+    this.game.placePlant(new plantType(this.game, this.x,this.y,'plants',this.game.state.getCurrentState().bulletPool));    
     this.plantPlaced = true;
 
     this.game.disableBoard();
+    this.game.deSelectAllCards();
+
   } else{
     console.log('Accion anulada');
     
@@ -320,47 +327,34 @@ function LanzaGuisantes(game, x, y, tag,bulletPool){
 }
 LanzaGuisantes.prototype = Object.create(Plant.prototype);
 LanzaGuisantes.constructor = LanzaGuisantes;
-LanzaGuisantes.prototype.shoot=function()
-{
- console.log(this._bulletPool.length);
+LanzaGuisantes.prototype.shoot=function(){
+ //console.log(this._bulletPool.length);
   if(this.game.time.now>this.timeCount){
-     if(this._bulletPool.length==0)
-      {
-
-        this._bulletPool.push(new Bullet(this.game,this.x+30,this.y-48,'bullet',2,this._force));
+     if(this._bulletPool.length==0) {
+        this._bulletPool.push(new Bullet(this.game,this.x+60,this.y+13,'bullet',2,this._force));
         this._bulletPool[0].scale.setTo(2);
-        this._bulletPool[0].kill();
-        
+        this._bulletPool[0].kill();        
       }
    var i=0;
-   var shooted;
-    while(i<this._bulletPool.length&&!shooted)
-    {
-      
-     if(!this._bulletPool[i].alive)
-      {
-        
+   var shooted = false;
+    while(i<this._bulletPool.length&&!shooted) {      
+     if(!this._bulletPool[i].alive){        
         this.animations.play('shootin');
         this._bulletPool[i].revive();
-        this._bulletPool[i].relocate(this._force,2,this.x+30,this.y-48);
-        
+        this._bulletPool[i].relocate(this._force,2,this.x+60,this.y+13);
        
-      shooted=true;
-      
-     
+        shooted=true;    
       }
     i++
     }
-    if(!shooted)
-   {
+    if(!shooted)   {
     this.animations.play('shootin');
-    this._bulletPool.push(new Bullet(this.game,this.x+30,this.y-48,'bullet',2,this._force));
+    this._bulletPool.push(new Bullet(this.game,this.x+60,this.y+13,'bullet',2,this._force));
    
     this._bulletPool[i].scale.setTo(2);
     }
-    this.timeCount=this.game.time.now+this.firerate;
-  }
-  
+    this.timeCount=this.game.time.now + this.firerate;
+  }  
 }
 
 
