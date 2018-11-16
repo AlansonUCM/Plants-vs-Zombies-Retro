@@ -29,8 +29,9 @@ var PreloaderScene = {
     this.game.load.spritesheet('plants','images/lanzaGuisantes.png',64,64,3);
     // Carga de los zombies
     this.game.load.spritesheet("zombies", "images/firstZombie.png",46,56,2);
-    this.game.load.image('bullet', 'images/BasicBullet.png');
 
+    this.game.load.image('frame', 'images/frame.png');
+    this.game.load.image('bullet', 'images/BasicBullet.png');
     
   },
 
