@@ -1,5 +1,6 @@
 'use strict';
 
+var MainMenu = require('./main_menu.js');
 var PlayScene = require('./play_scene.js');
 
 
@@ -36,7 +37,7 @@ var PreloaderScene = {
   },
 
   create: function () {
-    this.game.state.start('play');
+    this.game.state.start('mainMenu');
   }
 };
 
@@ -46,6 +47,7 @@ window.onload = function () {
 
   game.state.add('boot', BootScene);
   game.state.add('preloader', PreloaderScene);
+  game.state.add('mainMenu', MainMenu);
   game.state.add('play', PlayScene);
 
   game.state.start('boot');
