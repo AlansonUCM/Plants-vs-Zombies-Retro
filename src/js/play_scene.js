@@ -13,7 +13,7 @@
     var cardSelector = new CardSelector(this.game, 0, 75, 128, 5,[],[]);
     this.board = new Board(this.game, 100, 128, 5, 5, 100);
 
-    this.bulletPool=[];
+    this.bulletPool = [];
     
     //Zombie en Pantalla
    //this.planta=new LanzaGuisantes(this.game,200,300,'plants',this.bulletPool);

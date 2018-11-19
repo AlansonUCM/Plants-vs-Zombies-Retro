@@ -34,22 +34,16 @@ function StartButton (game, x, y, tag){
   StartButton.constructor = StartButton;
   //Metodos
   StartButton.prototype.down = function(){
-    if(this.input.pointerOver()){
-        this.scale.setTo(0.40);
-    }
+    this.scale.setTo(0.40);
   }
   StartButton.prototype.over = function(){
-    if(this.input.pointerOver()){
-        this.scale.setTo(0.35);
-    }
+    this.scale.setTo(0.35);
   }
   StartButton.prototype.out = function(){
-        this.scale.setTo(0.30);
+    this.scale.setTo(0.30);
   }
   StartButton.prototype.up = function(){
-    if(this.input.pointerOver()){
-        this.game.state.start('play');
-    }
+    this.game.state.start('play');
   }
 
 module.exports = MainMenu;
