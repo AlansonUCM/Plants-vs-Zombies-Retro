@@ -358,32 +358,34 @@ function LanzaGuisantes(game, x, y, tag, bulletPool){
 LanzaGuisantes.prototype = Object.create(Plant.prototype);
 LanzaGuisantes.constructor = LanzaGuisantes;
 LanzaGuisantes.prototype.shoot=function(){
- //console.log(this._bulletPool.length);
-  if(this.game.time.now > this.timeCount){
-    if(this._bulletPool.length == 0) {
-      this._bulletPool.push(new Bullet(this.game, this.x + 60, this.y + 13, 'bullet', 180, this._force));
-      this._bulletPool[0].scale.setTo(2);
-      this._bulletPool[0].kill();        
-    }
-    var i = 0;
-    var shooted = false;
-    while(i < this._bulletPool.length && !shooted) {      
-     if(!this._bulletPool[i].alive){        
-        this.animations.play('shootin');
-        this._bulletPool[i].revive();
-        this._bulletPool[i].relocate(this._force,180,this.x+60,this.y+13);
-       
-        shooted=true;    
+ //Mas tarde se añadira la condicion de que disparé solo si hay zombies enfrente suya
+ if(this.alive){
+    if(this.game.time.now > this.timeCount){
+      if(this._bulletPool.length == 0) {
+        this._bulletPool.push(new Bullet(this.game, this.x + 60, this.y + 13, 'bullet', 180, this._force));
+        this._bulletPool[0].scale.setTo(2);
+        this._bulletPool[0].kill();        
       }
-      i++
-    }
-    if(!shooted)   {
-    this.animations.play('shootin');
-    this._bulletPool.push(new Bullet(this.game, this.x + 60, this.y + 13, 'bullet', 180, this._force));   
-    this._bulletPool[i].scale.setTo(2);
-    }
-    this.timeCount=this.game.time.now + this.firerate;
-  }  
+      var i = 0;
+      var shooted = false;
+      while(i < this._bulletPool.length && !shooted) {      
+      if(!this._bulletPool[i].alive){        
+          this.animations.play('shootin');
+          this._bulletPool[i].revive();
+          this._bulletPool[i].relocate(this._force,180,this.x+60,this.y+13);
+        
+          shooted=true;    
+        }
+        i++
+      }
+      if(!shooted)   {
+      this.animations.play('shootin');
+      this._bulletPool.push(new Bullet(this.game, this.x + 60, this.y + 13, 'bullet', 180, this._force));   
+      this._bulletPool[i].scale.setTo(2);
+      }
+      this.timeCount=this.game.time.now + this.firerate;
+    }  
+  }
 }
 
 
