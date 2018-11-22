@@ -7,7 +7,6 @@
     // logo.anchor.setTo(0.5, 0.5);
     // logo.scale.setTo(0.7);
 
-
     this.game.stage.backgroundColor = '#ffffff'
 
     this.cardSelector = new CardSelector(this.game, 0, 75, 128, 5,[],[]);
@@ -17,9 +16,7 @@
     
     //Zombie en Pantalla
     this.zombie = new Zombie(this.game, 800, 300-100, "zombies", 1, 1);
-    this.zombie.scale.setTo(1.8);
-    //this.planta.animations.play('try');
-    
+    this.zombie.scale.setTo(1.8);    
 
     //Metodos de orden e interaccion entre cardSelector y Board
     this.game.deSelectAllCards = function(){
@@ -48,14 +45,19 @@
   },
   
   update: function (){
-    this.zombie.updateZombie(0.5);
- 
-    // for(let i =0;i<this.board.plants.length;i++)
-    //   this.board.plants[i].shoot();
+    //Update de los Zombies
+    this.zombie.updateZombie(50);
 
+    //Update de las Plantas
+    for(let i =0;i<this.board.plants.length;i++)
+      this.board.plants[i].shoot();
+
+    //Update de las Bullets
     for(let i = 0; i < this.bulletPool.length; i++)
       this.bulletPool[i].move();
-    
+
+    //Temporal (se comprobará cada zombie con cada planta de su fila)
+    //Colision de Bullets con Zombies
     for(let i = 0; i < this.bulletPool.length; i++)      
       this.game.physics.arcade.collide(this.bulletPool[i],this.zombie,function bulletCollision(obj1,obj2) {    
         obj2.takeDamage(obj1._dam);
@@ -63,13 +65,14 @@
     });
 
     //Temporal (se comprobará cada zombie con cada planta de su fila)
+    //Colision de Zombies con Plants
     for(let i = 0; i < this.board.plants.length; i++)
-      this.game.physics.arcade.collide(this.zombie, this.board.plants[i], function zombieAttackPlant(obj1,obj2) {    
-        var dam = obj1.attack();
-        var obj2IsDead = obj2.takeDamage(dam);
-        obj1.isAttacking = !obj2IsDead;
+      this.game.physics.arcade.collide(this.zombie, this.board.plants[i], function zombieAttackPlant(obj1,obj2) { 
+        if(obj1.x > obj2.x + obj2.width / 2) {
+          var dam = obj1.attack();
+          var obj2IsDead = obj2.takeDamage(dam);
+          obj1.isAttacking = !obj2IsDead;}
     });
-
   },
   render: function (){
     
@@ -304,7 +307,7 @@ Bullet.prototype = Object.create(GameObject.prototype);
 Bullet.constructor = Bullet;
 
 Bullet.prototype.move = function () {
-  this.x += this._vel;
+  this.x += this._vel * this.game.time.elapsedMS/1000;
 }
 
 
@@ -319,7 +322,7 @@ Bullet.prototype.relocate=function(dam,vel,x,y) {
 }
 
 //CLASE PLANT
-function Plant (game, x, y, tag,bulletPool){
+function Plant (game, x, y, tag, bulletPool){
   Character.apply(this,[game, x, y, tag]);
 }
 Plant.prototype = Object.create(Character.prototype);
@@ -350,6 +353,7 @@ function LanzaGuisantes(game, x, y, tag, bulletPool){
   this._life = 3;
   this._force = 1;
   //----------------
+  //this.animations.play('try');
 }
 LanzaGuisantes.prototype = Object.create(Plant.prototype);
 LanzaGuisantes.constructor = LanzaGuisantes;
@@ -357,7 +361,7 @@ LanzaGuisantes.prototype.shoot=function(){
  //console.log(this._bulletPool.length);
   if(this.game.time.now > this.timeCount){
     if(this._bulletPool.length == 0) {
-      this._bulletPool.push(new Bullet(this.game, this.x + 60, this.y + 13, 'bullet', 2, this._force));
+      this._bulletPool.push(new Bullet(this.game, this.x + 60, this.y + 13, 'bullet', 180, this._force));
       this._bulletPool[0].scale.setTo(2);
       this._bulletPool[0].kill();        
     }
@@ -367,7 +371,7 @@ LanzaGuisantes.prototype.shoot=function(){
      if(!this._bulletPool[i].alive){        
         this.animations.play('shootin');
         this._bulletPool[i].revive();
-        this._bulletPool[i].relocate(this._force,2,this.x+60,this.y+13);
+        this._bulletPool[i].relocate(this._force,180,this.x+60,this.y+13);
        
         shooted=true;    
       }
@@ -375,7 +379,7 @@ LanzaGuisantes.prototype.shoot=function(){
     }
     if(!shooted)   {
     this.animations.play('shootin');
-    this._bulletPool.push(new Bullet(this.game, this.x + 60, this.y + 13, 'bullet', 2, this._force));   
+    this._bulletPool.push(new Bullet(this.game, this.x + 60, this.y + 13, 'bullet', 180, this._force));   
     this._bulletPool[i].scale.setTo(2);
     }
     this.timeCount=this.game.time.now + this.firerate;
@@ -401,7 +405,7 @@ Zombie.constructor = Zombie;
 
 // Metodos en Zombies
 Zombie.prototype.move = function (_velocity) {
-  this.x -= _velocity;
+  this.x -= _velocity * this.game.time.elapsedMS/1000;
 }
 Zombie.prototype.takeDamage = function (damage) {
   this._life -= damage;
@@ -415,7 +419,7 @@ Zombie.prototype.attack = function () {
     return this.damage;
   }
   else{
-    this.timeCount += this.game.time.elapsedMS;
+    this.timeCount += this.game.time.elapsed;
     return 0;
   } 
 }
