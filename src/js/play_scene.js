@@ -13,7 +13,7 @@
     this.sunPool = [];
 
     this.board = new Board(this.game, 100, 128, 5, 5, 100);
-    this.spManager = new SPManager(this.game, new CardSelector(this.game, 0, 75, 128, 5,[],[], this.board), this.sunPool, 4);
+    this.spManager = new SPManager(this.game, this.board, this.sunPool, 4);
     
     //Zombie en Pantalla
     this.zombie = new Zombie(this.game, 800, 300-100, "zombies", 1, 1);
@@ -157,6 +157,7 @@ function SunCounter (game, x, y, tag){
   this.anchor.setTo(0.35, 0.5);
 
   this.points = 0;
+
   this.text = game.add.text(x + 5, y + 30, "" + this.points, { font: "24px Arial", fill: "#000000", align: "center" });
   this.text.anchor.setTo(0.5, 0);
 }
@@ -168,11 +169,11 @@ SunCounter.prototype.updateCounter = function(){
 }
 
 //Clase SPManager
-function SPManager (_game, _cardSelector, _sunPool, _timeToSpawnSun){  
+function SPManager (_game, _board, _sunPool, _timeToSpawnSun){  
   this.game = Object.create(_game);
   
   this.sunCounter = new SunCounter(this.game, 30, 30, 'sun');  
-  this.cardSelector = _cardSelector;
+  this.cardSelector = new CardSelector(this.game, 0, 75, 128, 5,[],[], _board, this.sunCounter);
   //this.board = _board;
   
   //Le damos la referencia al tablero del selector de cartas
@@ -245,7 +246,7 @@ function Card (game, x, y, tag, funcionPlanta, _cardSelector){
   this.game.world.addChild(this);
   this.isSelected = false;
   this.plantRef = funcionPlanta;
-  //
+  this.plantRef.cost = funcionPlanta.cost;
 
   this.cardSelector = _cardSelector;
 
@@ -256,8 +257,12 @@ Card.constructor = Card;
 //Metodos
 Card.prototype.up = function(){
   if(this.input.pointerOver()){
-    this.select();
-    this.cardSelector.boardRef.selectedPlant = this.plantRef;
+    if(this.plantRef.cost <= this.cardSelector.sunCounterRef.points){
+      this.select();
+      this.cardSelector.boardRef.selectedPlant = this.plantRef;
+    }
+    else
+      console.log('No tienes suficientes puntos');
   }
 }
 Card.prototype.select = function(){
@@ -280,10 +285,11 @@ Card.prototype.deSelect = function(){
 }
 
 //Clase CardSelector
-function CardSelector (game, xPos, yPos, yOffset, numCards,tagsArray,plantsArray, _boardRef){
+function CardSelector (game, xPos, yPos, yOffset, numCards,tagsArray,plantsArray, _boardRef, _sunCounterRef){
   this.cards = [];
 
   this.boardRef = _boardRef;
+  this.sunCounterRef = _sunCounterRef;
 
   for(let i = 0; i < numCards; i++)
     this.cards.push(new Card(game, xPos, yPos * i + yOffset, "plants", LanzaGuisantes, this));    // Se tendra que modificar mas tarde
@@ -334,11 +340,15 @@ Box.prototype.up = function(){
     //Habra que retocar para que dependiendo de la planta use un sprite u otro
     var plantType = this.boardRef.selectedPlant;
 
-    this.boardRef.plants.push(new plantType(this.game, this.x,this.y,'plants',this.boardRef));    
+    this.boardRef.plants.push(new plantType(this.game, this.x, this.y, 'plants', this.boardRef));    
     this.plantPlaced = true;
 
     this.boardRef.disableBoard();
     this.boardRef.cardSelectorRef.deSelectAll();
+
+      //Al crearse debe quitar el coste 
+    this.boardRef.cardSelectorRef.sunCounterRef.points -= plantType.cost;
+    this.boardRef.cardSelectorRef.sunCounterRef.updateCounter();
 
   } else{
     console.log('Accion anulada');
@@ -452,6 +462,7 @@ Bullet.prototype.relocate=function(dam,vel,x,y) {
 //CLASE PLANT
 function Plant (game, x, y, tag, _boardRef){
   Character.apply(this,[game, x, y, tag, _boardRef]);
+
   this.boardRef = _boardRef;
 }
 Plant.prototype = Object.create(Character.prototype);
@@ -485,6 +496,8 @@ function LanzaGuisantes(game, x, y, tag, _boardRef){
 }
 LanzaGuisantes.prototype = Object.create(Plant.prototype);
 LanzaGuisantes.constructor = LanzaGuisantes;
+//Metodos
+LanzaGuisantes.cost = 20;
 LanzaGuisantes.prototype.shoot=function(_bulletPool){
  //Mas tarde se añadira la condicion de que disparé solo si hay zombies enfrente suya
  if(this.alive){
