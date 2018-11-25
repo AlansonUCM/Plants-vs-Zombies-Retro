@@ -128,6 +128,8 @@ function Sun (game, x, y, tag, _value, _spManager){
   this.anchor.setTo(0.5, 0);
   this.scale.setTo(0.05);
 
+  this.ySpw = y;
+
   this.velocity = 100;
   this.value = _value; //Pixeles/seg
   
@@ -181,7 +183,7 @@ Sun.prototype.goToCounter = function() {
 }
 Sun.prototype.reSpawn = function(){
   var xSpw = this.game.rnd.integerInRange(this.game.world._width/3, this.game.world._width);
-  this.reset(xSpw, this.y);
+  this.reset(xSpw, this.ySpw);
 }
 
 //Clase SunCounter
@@ -407,7 +409,8 @@ Box.prototype.down = function(){
   this.scale.setTo(0.37);
 }
 Box.prototype.over = function(){
-  this.scale.setTo(0.42);
+  if(!this.plantPlaced)
+    this.scale.setTo(0.42);
 }
 Box.prototype.out = function(){
   this.scale.setTo(0.5);
