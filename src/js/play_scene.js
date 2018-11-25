@@ -88,28 +88,28 @@
 
 
 
-//CLASE ScreenObj
-function ScreenObj (game, x, y, tag){
+//CLASE CanvasObject
+function CanvasObject (game, x, y, tag){
   Phaser.Sprite.call(this,game, x, y, tag);
   this.game.world.addChild(this);
 }
-ScreenObj.prototype = Object.create(Phaser.Sprite.prototype);
-ScreenObj.constructor = ScreenObj;
+CanvasObject.prototype = Object.create(Phaser.Sprite.prototype);
+CanvasObject.constructor = CanvasObject;
 
 //CLASE Score
 function Score (game, x, y, tag){
-  ScreenObj.Sprite.apply(this,[game, x, y, tag]);
+  CanvasObject.Sprite.apply(this,[game, x, y, tag]);
   this.count = 0;
 }
-Score.prototype = Object.create(ScreenObj.prototype);
+Score.prototype = Object.create(CanvasObject.prototype);
 Score.constructor = Score;
 
 //CLASE ProgressBar
 function ProgressBar (game, x, y, tag){
-  ScreenObj.Sprite.apply(this,[game, x, y, tag]);
+  CanvasObject.Sprite.apply(this,[game, x, y, tag]);
   this.time = 0;
 }
-ProgressBar.prototype = Object.create(ScreenObj.prototype);
+ProgressBar.prototype = Object.create(CanvasObject.prototype);
 ProgressBar.constructor = ProgressBar;
 
 //CLASE Sun
@@ -126,7 +126,7 @@ function Sun (game, x, y, tag, _value, _spManager){
   this.xSpw = x;
   this.ySpw = y;
   //Ref al manager
-  this.spManager = _spManager;
+  this.spManager = Object.create(_spManager);
   //Por ser boton
   this.onInputOver.add(this.over, this);
   this.onInputOut.add(this.out, this);
@@ -173,20 +173,30 @@ Sun.prototype.reSpawn = function(){
 }
 
 //Clase SunCounter
-function SunCounter (){ 
+function SunCounter (game, x, y, tag){ 
+  Phaser.Sprite.call(this,game, x, y, tag);
+  this.game.world.addChild(this);
+
+  //Temporal(solo visual para ver que funciona)
+  this.scale.setTo(0.05);
+  this.anchor.setTo(0.35, 0.5);
+
   this.points = 0;
+  this.text = game.add.text(x + 5, y + 30, "" + this.points, { font: "24px Arial", fill: "#000000", align: "center" });
+  this.text.anchor.setTo(0.5, 0);
 }
+SunCounter.prototype = Object.create(CanvasObject.prototype);
 SunCounter.constructor =  SunCounter;
 //Metodos
 SunCounter.prototype.updateCounter = function(){
-
+  this.text.text = "" + this.points;
 }
 
 //Clase SPManager
 function SPManager (_game, _cardSelector, _sunPool, _frecuency){  
-  this.game = _game;
+  this.game = Object.create(_game);
   
-  this.sunCounter = new SunCounter();
+  this.sunCounter = new SunCounter(this.game, 30, 30, 'sun');
   this.cardSelector = _cardSelector;
   this.sunPool = _sunPool;
   this.frecuency = _frecuency;
@@ -406,10 +416,10 @@ Board.prototype.ableBoard = function (){
 
 //CLASE GameObject
 function GameObject (game, x, y, tag ){
-  ScreenObj.apply(this, [game, x, y, tag]);
+  CanvasObject.apply(this, [game, x, y, tag]);
   this.game.physics.arcade.enable(this)
 }
-GameObject.prototype = Object.create(ScreenObj.prototype);
+GameObject.prototype = Object.create(CanvasObject.prototype);
 GameObject.constructor = GameObject;
 
 
