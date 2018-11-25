@@ -9,10 +9,12 @@
 
     this.game.stage.backgroundColor = '#ffffff'
 
-    this.cardSelector = new CardSelector(this.game, 0, 75, 128, 5,[],[]);
     this.board = new Board(this.game, 100, 128, 5, 5, 100);
 
     this.bulletPool = [];
+    this.sunPool = [];
+
+    this.spManager = new SPManager(this.game, new CardSelector(this.game, 0, 75, 128, 5,[],[]),this.sunPool, 2);
     
     //Zombie en Pantalla
     this.zombie = new Zombie(this.game, 800, 300-100, "zombies", 1, 1);
@@ -20,7 +22,7 @@
 
     //Metodos de orden e interaccion entre cardSelector y Board
     this.game.deSelectAllCards = function(){
-      this.state.getCurrentState().cardSelector.deSelectAll();
+      this.spManager.cardSelector.deSelectAll();
       this.state.getCurrentState().board.selectedPlant = null;
     }
 
@@ -54,7 +56,10 @@
 
     //Update de las Bullets
     for(let i = 0; i < this.bulletPool.length; i++)
-      this.bulletPool[i].move();
+      this.bulletPool[i].move();;
+
+    //Update de SPManager
+    this.spManager.updateSPM();
 
     //Temporal (se comprobará cada zombie con cada planta de su fila)
     //Colision de Bullets con Zombies
@@ -108,11 +113,134 @@ ProgressBar.prototype = Object.create(ScreenObj.prototype);
 ProgressBar.constructor = ProgressBar;
 
 //CLASE Sun
-function Sun (game, x, y, tag){
+function Sun (game, x, y, tag, _value, _spManager){
   Phaser.Button.apply(this,[game, x, y, tag]);  
+  this.game.world.addChild(this);
+
+  this.anchor.setTo(0.5, 0);
+  this.scale.setTo(0.05);
+
+  this.velocity = 100;
+  this.value = _value; //Pixeles/seg
+  //SpawnPos
+  this.xSpw = x;
+  this.ySpw = y;
+  //Ref al manager
+  this.spManager = _spManager;
+  //Por ser boton
+  this.onInputOver.add(this.over, this);
+  this.onInputOut.add(this.out, this);
+  this.onInputUp.add(this.up, this);
+  this.onInputDown.add(this.down,this);
+
+  this.kill();
 }
 Sun.prototype = Object.create(Phaser.Button.prototype);
 Sun.constructor =  Sun;
+
+//Metodos
+Sun.prototype.fall = function(){
+  if(this.alive){
+    this.y += this.velocity * this.game.time.elapsedMS / 1000;
+    //Si esta fuera de pantalla se mata
+    if(this.y > this.game.world._height){
+      this.kill();
+      console.log('Sol ha muerto fuera del campo de vision');
+    }
+  }
+}
+
+Sun.prototype.over = function (){
+  //Hará algo, a lo mejor hacemos que con que el cursor pase por encima, ya recoja el sol
+  this.spManager.addSunPoints(this.takeSun());
+  console.log('Sol recogido y suma realizada');
+}
+Sun.prototype.down = function(){
+  //Hara algo, o no
+}
+Sun.prototype.out = function(){
+  //No creo que haga algo
+}
+Sun.prototype.up = function(){
+  //Probablemente coja el sol
+}
+Sun.prototype.takeSun = function(){
+  this.kill();
+  return this.value;
+}
+Sun.prototype.reSpawn = function(){
+  this.reset(this.xSpw, this.ySpw);
+}
+
+//Clase SunCounter
+function SunCounter (){ 
+  this.points = 0;
+}
+SunCounter.constructor =  SunCounter;
+//Metodos
+SunCounter.prototype.updateCounter = function(){
+
+}
+
+//Clase SPManager
+function SPManager (_game, _cardSelector, _sunPool, _frecuency){  
+  this.game = _game;
+  
+  this.sunCounter = new SunCounter();
+  this.cardSelector = _cardSelector;
+  this.sunPool = _sunPool;
+  this.frecuency = _frecuency;
+
+  this.timeCount = 0;
+}
+SPManager.constructor =  SPManager;
+//Metodos
+SPManager.prototype.updateSPM = function(){ 
+  this.sunSpawnControl();
+  this.updateSuns();
+}
+
+SPManager.prototype.sunSpawnControl = function(){
+  //Control de Spawn
+  if(this.timeCount >= this.frecuency){
+    //SpawnSun
+    console.log('Sol Spawnea');
+    //Implementacion    
+    //Busca el primer sol disponible que pueda desplegarse
+    var i = 0;
+    var isFound = false;
+    while(i < this.sunPool.length && !isFound){
+      if(this.sunPool[i].alive)
+        i++;
+      else
+        isFound = true;
+    }      
+    //Si no encuentra algun sol, entonces lo crea y lo spawnea
+    if(!isFound){
+      this.sunPool.push(new Sun(this.game, this.game.world.centerX, this.game.world.centerY, 'sun', 20, this));
+      this.sunPool[this.sunPool.length - 1].reSpawn();
+    }
+    //Si lo encuentra, lo Spawnea
+    else if(isFound)
+      this.sunPool[i].reSpawn();
+    //--------------
+    this.timeCount = 0;
+  }
+  this.timeCount += this.game.time.elapsedMS / 1000;
+}
+
+SPManager.prototype.updateSuns = function(){
+ //Update de los soles
+ for(let i = 0; i < this.sunPool.length; i++)
+ this.sunPool[i].fall();
+}
+
+SPManager.prototype.addSunPoints = function(_points){
+  this.sunCounter.points += _points;
+  //Actualiza visualmente los soles
+  this.sunCounter.updateCounter();
+  console.log('SunPoints: ' + this.sunCounter.points);
+}
 
 //CLASE Shovel
 function Shovel (game, x, y, tag){
@@ -436,9 +564,6 @@ Zombie.prototype.updateZombie = function(_velocity){
     console.log("Zombie parado para ataca");
   }
 }
-
-
-
 
 //ZombieComun
 function ZombieComun(game, x, y, tag){

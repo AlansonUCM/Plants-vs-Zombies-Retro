@@ -33,6 +33,7 @@ var PreloaderScene = {
 
     this.game.load.image('frame', 'images/frame.png');
     this.game.load.image('bullet', 'images/BasicBullet.png');
+    this.game.load.image('sun', 'images/sun.png');
     
   },
 
