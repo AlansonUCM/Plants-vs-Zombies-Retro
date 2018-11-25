@@ -48,7 +48,7 @@
     //Colision de Zombies con Plants
     for(let i = 0; i < this.board.plants.length; i++)
       this.game.physics.arcade.collide(this.zombie, this.board.plants[i], function zombieAttackPlant(obj1,obj2) { 
-        if(obj1.x > obj2.x + obj2.width / 2) {
+        if(obj1.x > obj2.x + obj1.width / 2) {
           var dam = obj1.attack();
           var obj2IsDead = obj2.takeDamage(dam);
           obj1.isAttacking = !obj2IsDead;}
@@ -97,9 +97,7 @@ function Sun (game, x, y, tag, _value, _spManager){
 
   this.velocity = 100;
   this.value = _value; //Pixeles/seg
-  //SpawnPos
-  this.xSpw = x;
-  this.ySpw = y;
+  
   //Ref al manager
   this.spManager = _spManager;
   //Por ser boton
@@ -140,11 +138,17 @@ Sun.prototype.up = function(){
   //Probablemente coja el sol
 }
 Sun.prototype.takeSun = function(){
-  this.kill();
+  //El sol debe ir al contador
+  this.goToCounter();
   return this.value;
 }
+Sun.prototype.goToCounter = function() {
+  var tween = this.game.add.tween(this).to({x:this.spManager.sunCounter.x, y: this.spManager.sunCounter.y}, 500, Phaser.Easing.Defaul, true);
+  tween.onComplete.addOnce(this.kill, this);
+}
 Sun.prototype.reSpawn = function(){
-  this.reset(this.xSpw, this.ySpw);
+  var xSpw = this.game.rnd.integerInRange(this.game.world._width/3, this.game.world._width);
+  this.reset(xSpw, this.y);
 }
 
 //Clase SunCounter
@@ -208,7 +212,7 @@ SPManager.prototype.sunSpawnControl = function(){
     }      
     //Si no encuentra algun sol, entonces lo crea y lo spawnea
     if(!isFound){
-      this.sunPool.push(new Sun(this.game, this.game.world.centerX, this.game.world.centerY, 'sun', 20, this));
+      this.sunPool.push(new Sun(this.game, this.game.world._width, -20, 'sun', 20, this));
       this.sunPool[this.sunPool.length - 1].reSpawn();
     }
     //Si lo encuentra, lo Spawnea
@@ -346,7 +350,7 @@ Box.prototype.up = function(){
     this.boardRef.disableBoard();
     this.boardRef.cardSelectorRef.deSelectAll();
 
-      //Al crearse debe quitar el coste 
+    //Al crearse debe quitar el coste 
     this.boardRef.cardSelectorRef.sunCounterRef.points -= plantType.cost;
     this.boardRef.cardSelectorRef.sunCounterRef.updateCounter();
 
