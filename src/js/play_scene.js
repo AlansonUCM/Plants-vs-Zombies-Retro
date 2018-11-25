@@ -9,39 +9,16 @@
 
     this.game.stage.backgroundColor = '#ffffff'
 
-    this.cardSelector = new CardSelector(this.game, 0, 75, 128, 5,[],[]);
-    this.board = new Board(this.game, 100, 128, 5, 5, 100);
-
     this.bulletPool = [];
+    this.sunPool = [];
+
+    this.board = new Board(this.game, 100, 128, 5, 5, 100);
+    this.spManager = new SPManager(this.game, this.board, this.sunPool, 4);
     
     //Zombie en Pantalla
     this.zombie = new Zombie(this.game, 800, 300-100, "zombies", 1, 1);
     this.zombie.scale.setTo(1.8);    
 
-    //Metodos de orden e interaccion entre cardSelector y Board
-    this.game.deSelectAllCards = function(){
-      this.state.getCurrentState().cardSelector.deSelectAll();
-      this.state.getCurrentState().board.selectedPlant = null;
-    }
-
-    this.game.disableBoard = function(){
-      this.state.getCurrentState().board.disableBoard();
-    }
-
-    this.game.ableBoard = function(){
-      this.state.getCurrentState().board.ableBoard();
-    }
-
-    this.game.setSelectedPlant = function(plantRef){
-      this.state.getCurrentState().board.selectedPlant = plantRef;
-    }
-
-    this.game.getSelectedPlant = function(){
-      return this.state.getCurrentState().board.selectedPlant;
-    }
-    this.game.placePlant = function(newPlant){
-      this.state.getCurrentState().board.plants.push(newPlant);
-    }
   },
   
   update: function (){
@@ -50,11 +27,14 @@
 
     //Update de las Plantas
     for(let i =0;i<this.board.plants.length;i++)
-      this.board.plants[i].shoot();
+      this.board.plants[i].shoot(this.bulletPool);
 
     //Update de las Bullets
     for(let i = 0; i < this.bulletPool.length; i++)
-      this.bulletPool[i].move();
+      this.bulletPool[i].move();;
+
+    //Update de SPManager
+    this.spManager.updateSPM();
 
     //Temporal (se comprobará cada zombie con cada planta de su fila)
     //Colision de Bullets con Zombies
@@ -83,36 +63,175 @@
 
 
 
-//CLASE ScreenObj
-function ScreenObj (game, x, y, tag){
+//CLASE CanvasObject
+function CanvasObject (game, x, y, tag){
   Phaser.Sprite.call(this,game, x, y, tag);
   this.game.world.addChild(this);
 }
-ScreenObj.prototype = Object.create(Phaser.Sprite.prototype);
-ScreenObj.constructor = ScreenObj;
+CanvasObject.prototype = Object.create(Phaser.Sprite.prototype);
+CanvasObject.constructor = CanvasObject;
 
 //CLASE Score
 function Score (game, x, y, tag){
-  ScreenObj.Sprite.apply(this,[game, x, y, tag]);
+  CanvasObject.Sprite.apply(this,[game, x, y, tag]);
   this.count = 0;
 }
-Score.prototype = Object.create(ScreenObj.prototype);
+Score.prototype = Object.create(CanvasObject.prototype);
 Score.constructor = Score;
 
 //CLASE ProgressBar
 function ProgressBar (game, x, y, tag){
-  ScreenObj.Sprite.apply(this,[game, x, y, tag]);
+  CanvasObject.Sprite.apply(this,[game, x, y, tag]);
   this.time = 0;
 }
-ProgressBar.prototype = Object.create(ScreenObj.prototype);
+ProgressBar.prototype = Object.create(CanvasObject.prototype);
 ProgressBar.constructor = ProgressBar;
 
 //CLASE Sun
-function Sun (game, x, y, tag){
+function Sun (game, x, y, tag, _value, _spManager){
   Phaser.Button.apply(this,[game, x, y, tag]);  
+  this.game.world.addChild(this);
+
+  this.anchor.setTo(0.5, 0);
+  this.scale.setTo(0.05);
+
+  this.velocity = 100;
+  this.value = _value; //Pixeles/seg
+  //SpawnPos
+  this.xSpw = x;
+  this.ySpw = y;
+  //Ref al manager
+  this.spManager = _spManager;
+  //Por ser boton
+  this.onInputOver.add(this.over, this);
+  this.onInputOut.add(this.out, this);
+  this.onInputUp.add(this.up, this);
+  this.onInputDown.add(this.down,this);
+
+  this.kill();
 }
 Sun.prototype = Object.create(Phaser.Button.prototype);
 Sun.constructor =  Sun;
+
+//Metodos
+Sun.prototype.fall = function(){
+  if(this.alive){
+    this.y += this.velocity * this.game.time.elapsedMS / 1000;
+    //Si esta fuera de pantalla se mata
+    if(this.y > this.game.world._height){
+      this.kill();
+      console.log('Sol ha muerto fuera del campo de vision');
+    }
+  }
+}
+
+Sun.prototype.over = function (){
+  //Hará algo, a lo mejor hacemos que con que el cursor pase por encima, ya recoja el sol
+  this.spManager.addSunPoints(this.takeSun());
+  console.log('Sol recogido y suma realizada');
+}
+Sun.prototype.down = function(){
+  //Hara algo, o no
+}
+Sun.prototype.out = function(){
+  //No creo que haga algo
+}
+Sun.prototype.up = function(){
+  //Probablemente coja el sol
+}
+Sun.prototype.takeSun = function(){
+  this.kill();
+  return this.value;
+}
+Sun.prototype.reSpawn = function(){
+  this.reset(this.xSpw, this.ySpw);
+}
+
+//Clase SunCounter
+function SunCounter (game, x, y, tag){ 
+  Phaser.Sprite.call(this, game, x, y, tag);
+  this.game.world.addChild(this);
+
+  //Temporal(solo visual para ver que funciona)
+  this.scale.setTo(0.05);
+  this.anchor.setTo(0.35, 0.5);
+
+  this.points = 0;
+
+  this.text = game.add.text(x + 5, y + 30, "" + this.points, { font: "24px Arial", fill: "#000000", align: "center" });
+  this.text.anchor.setTo(0.5, 0);
+}
+SunCounter.prototype = Object.create(CanvasObject.prototype);
+SunCounter.constructor =  SunCounter;
+//Metodos
+SunCounter.prototype.updateCounter = function(){
+  this.text.text = "" + this.points;
+}
+
+//Clase SPManager
+function SPManager (_game, _board, _sunPool, _timeToSpawnSun){  
+  this.game = Object.create(_game);
+  
+  this.sunCounter = new SunCounter(this.game, 30, 30, 'sun');  
+  this.cardSelector = new CardSelector(this.game, 0, 75, 128, 5,[],[], _board, this.sunCounter);
+  //this.board = _board;
+  
+  //Le damos la referencia al tablero del selector de cartas
+  this.cardSelector.boardRef.cardSelectorRef = this.cardSelector;
+
+  this.sunPool = _sunPool;
+  this.timeToSpawnSun = _timeToSpawnSun;
+
+  this.timeCount = 0;
+}
+SPManager.constructor =  SPManager;
+//Metodos
+SPManager.prototype.updateSPM = function(){ 
+  this.sunSpawnControl();
+  this.updateSuns();
+}
+
+SPManager.prototype.sunSpawnControl = function(){
+  //Control de Spawn
+  if(this.timeCount >= this.timeToSpawnSun){
+    //SpawnSun
+    console.log('Sol Spawnea');
+    //Implementacion    
+    //Busca el primer sol disponible que pueda desplegarse
+    var i = 0;
+    var isFound = false;
+    while(i < this.sunPool.length && !isFound){
+      if(this.sunPool[i].alive)
+        i++;
+      else
+        isFound = true;
+    }      
+    //Si no encuentra algun sol, entonces lo crea y lo spawnea
+    if(!isFound){
+      this.sunPool.push(new Sun(this.game, this.game.world.centerX, this.game.world.centerY, 'sun', 20, this));
+      this.sunPool[this.sunPool.length - 1].reSpawn();
+    }
+    //Si lo encuentra, lo Spawnea
+    else if(isFound)
+      this.sunPool[i].reSpawn();
+    //--------------
+    this.timeCount = 0;
+  }
+  this.timeCount += this.game.time.elapsedMS / 1000;
+}
+
+SPManager.prototype.updateSuns = function(){
+ //Update de los soles
+ for(let i = 0; i < this.sunPool.length; i++)
+  this.sunPool[i].fall();
+}
+
+SPManager.prototype.addSunPoints = function(_points){
+  this.sunCounter.points += _points;
+  //Actualiza visualmente los soles
+  this.sunCounter.updateCounter();
+  //console.log('SunPoints: ' + this.sunCounter.points);
+}
 
 //CLASE Shovel
 function Shovel (game, x, y, tag){
@@ -122,12 +241,15 @@ Shovel.prototype = Object.create(Phaser.Button.prototype);
 Shovel.constructor =  Shovel;
 
 //CLASE Card
-function Card (game, x, y, tag, funcionPlanta){
+function Card (game, x, y, tag, funcionPlanta, _cardSelector){
   Phaser.Button.apply(this,[game, x, y, tag, this.up, , 1, 0, 1]);
   this.game.world.addChild(this);
   this.isSelected = false;
   this.plantRef = funcionPlanta;
-  //
+  this.plantRef.cost = funcionPlanta.cost;
+
+  this.cardSelector = _cardSelector;
+
   this.onInputUp.add(this.up, this);
 }
 Card.prototype = Object.create(Phaser.Button.prototype);
@@ -135,19 +257,23 @@ Card.constructor = Card;
 //Metodos
 Card.prototype.up = function(){
   if(this.input.pointerOver()){
-    this.select();
-    this.game.setSelectedPlant(this.plantRef);
+    if(this.plantRef.cost <= this.cardSelector.sunCounterRef.points){
+      this.select();
+      this.cardSelector.boardRef.selectedPlant = this.plantRef;
+    }
+    else
+      console.log('No tienes suficientes puntos');
   }
 }
 Card.prototype.select = function(){
-  this.game.deSelectAllCards();
+  this.cardSelector.deSelectAll();
 
   this.isSelected = true;
   this.inputEnabled = false;
   this.freezeFrames = true;
 
-  this.game.setSelectedPlant(this.plantRef);
-  this.game.ableBoard();
+  this.cardSelector.boardRef.selectedPlant = this.plantRef;
+  this.cardSelector.boardRef.ableBoard();
 
   console.log("Card selected");
 }
@@ -159,10 +285,14 @@ Card.prototype.deSelect = function(){
 }
 
 //Clase CardSelector
-function CardSelector (game, xPos, yPos, yOffset, numCards,tagsArray,plantsArray){
+function CardSelector (game, xPos, yPos, yOffset, numCards,tagsArray,plantsArray, _boardRef, _sunCounterRef){
   this.cards = [];
+
+  this.boardRef = _boardRef;
+  this.sunCounterRef = _sunCounterRef;
+
   for(let i = 0; i < numCards; i++)
-    this.cards.push(new Card(game, xPos, yPos * i + yOffset, "plants", LanzaGuisantes));    // Se tendra que modificar mas tarde
+    this.cards.push(new Card(game, xPos, yPos * i + yOffset, "plants", LanzaGuisantes, this));    // Se tendra que modificar mas tarde
 }
 CardSelector.constructor = CardSelector;
 //Metodos de CardSelector
@@ -173,13 +303,15 @@ CardSelector.prototype.deSelectAll = function(){
 
 
 //Clase Box
-function Box (game, xPos, yPos){
+function Box (game, xPos, yPos, _boardRef){
   Phaser.Button.apply(this,[game, xPos, yPos, 'frame', this.onInputUp]);
   this.game.world.addChild(this);
   this.scale.setTo(0.5);
   this.alpha = 0.3;
 
   this.plantPlaced = false;
+
+  this.boardRef = _boardRef;
 
   this.x = xPos;
   this.y = yPos;
@@ -198,29 +330,33 @@ Box.prototype.up = function(){
   if(this.plantPlaced){
     console.log('lugar ya plantado');
 
-    this.game.disableBoard();
-    this.game.setSelectedPlant(null);
+    this.boardRef.disableBoard();
+    this.boardRef.selectedPlant = null;
 
-    this.game.deSelectAllCards();
-  } else if(!this.plantPlaced && this.game.getSelectedPlant() != null){
+    this.boardRef.cardSelectorRef.deSelectAll();
+  } else if(!this.plantPlaced && this.boardRef.selectedPlant != null){
     console.log('Planta plantada');
 
     //Habra que retocar para que dependiendo de la planta use un sprite u otro
-    var plantType = this.game.getSelectedPlant();
+    var plantType = this.boardRef.selectedPlant;
 
-    this.game.placePlant(new plantType(this.game, this.x,this.y,'plants',this.game.state.getCurrentState().bulletPool));    
+    this.boardRef.plants.push(new plantType(this.game, this.x, this.y, 'plants', this.boardRef));    
     this.plantPlaced = true;
 
-    this.game.disableBoard();
-    this.game.deSelectAllCards();
+    this.boardRef.disableBoard();
+    this.boardRef.cardSelectorRef.deSelectAll();
+
+      //Al crearse debe quitar el coste 
+    this.boardRef.cardSelectorRef.sunCounterRef.points -= plantType.cost;
+    this.boardRef.cardSelectorRef.sunCounterRef.updateCounter();
 
   } else{
     console.log('Accion anulada');
     
-    this.game.disableBoard();
-    this.game.setSelectedPlant(null);
+    this.boardRef.disableBoard();
+    this.boardRef.selectedPlant = null;
 
-    this.game.deSelectAllCards();
+    this.boardRef.cardSelectorRef.deSelectAll();
   }
   this.scale.setTo(0.5);
 }
@@ -241,12 +377,14 @@ function Board (game, _xPos, _yPos,numXBoxes, numYBoxes, _boxTam){
   this.plants = [];
   this.boxTam = _boxTam;
 
+  this.cardSelectorRef = null;
+
   this.selectedPlant = function(){};
 
   for(let i = 0; i < numXBoxes; i++){
     this.boxes.push([]);
     for(let j = 0;j < numYBoxes; j++)
-      this.boxes[i].push(new Box(game, _xPos + this.boxTam* i, _yPos + this.boxTam* j));
+      this.boxes[i].push(new Box(game, _xPos + this.boxTam* i, _yPos + this.boxTam* j, this));
   }
 }
 Board.constructor = Board;
@@ -278,10 +416,10 @@ Board.prototype.ableBoard = function (){
 
 //CLASE GameObject
 function GameObject (game, x, y, tag ){
-  ScreenObj.apply(this, [game, x, y, tag]);
+  CanvasObject.apply(this, [game, x, y, tag]);
   this.game.physics.arcade.enable(this)
 }
-GameObject.prototype = Object.create(ScreenObj.prototype);
+GameObject.prototype = Object.create(CanvasObject.prototype);
 GameObject.constructor = GameObject;
 
 
@@ -322,8 +460,10 @@ Bullet.prototype.relocate=function(dam,vel,x,y) {
 }
 
 //CLASE PLANT
-function Plant (game, x, y, tag, bulletPool){
-  Character.apply(this,[game, x, y, tag]);
+function Plant (game, x, y, tag, _boardRef){
+  Character.apply(this,[game, x, y, tag, _boardRef]);
+
+  this.boardRef = _boardRef;
 }
 Plant.prototype = Object.create(Character.prototype);
 Plant.constructor = Plant;
@@ -331,7 +471,7 @@ Plant.constructor = Plant;
 Plant.prototype.takeDamage = function(_damage){
   this._life -= _damage;
   if(this._life <= 0){
-    var box = this.game.state.getCurrentState().board.searchPlant(this.x, this.y);
+    var box = this.boardRef.searchPlant(this.x, this.y);
     box.plantPlaced = false;
     this.kill();
   }
@@ -340,12 +480,11 @@ Plant.prototype.takeDamage = function(_damage){
 
 
 //Ejemplo LanzaGuisantes
-function LanzaGuisantes(game, x, y, tag, bulletPool){
-  Plant.apply(this,[game, x, y, tag, bulletPool]);
+function LanzaGuisantes(game, x, y, tag, _boardRef){
+  Plant.apply(this,[game, x, y, tag, _boardRef]);
 
   //Atributos propios
   //----------------
-  this._bulletPool = bulletPool;
   this.timeCount=0;
   this.firerate=1000;
   this.animations.add('try',[0,1,0],5,true);
@@ -357,22 +496,24 @@ function LanzaGuisantes(game, x, y, tag, bulletPool){
 }
 LanzaGuisantes.prototype = Object.create(Plant.prototype);
 LanzaGuisantes.constructor = LanzaGuisantes;
-LanzaGuisantes.prototype.shoot=function(){
+//Metodos
+LanzaGuisantes.cost = 20;
+LanzaGuisantes.prototype.shoot=function(_bulletPool){
  //Mas tarde se añadira la condicion de que disparé solo si hay zombies enfrente suya
  if(this.alive){
     if(this.game.time.now > this.timeCount){
-      if(this._bulletPool.length == 0) {
-        this._bulletPool.push(new Bullet(this.game, this.x + 60, this.y + 13, 'bullet', 180, this._force));
-        this._bulletPool[0].scale.setTo(2);
-        this._bulletPool[0].kill();        
+      if(_bulletPool.length == 0) {
+        _bulletPool.push(new Bullet(this.game, this.x + 60, this.y + 13, 'bullet', 180, this._force));
+        _bulletPool[0].scale.setTo(2);
+        _bulletPool[0].kill();        
       }
       var i = 0;
       var shooted = false;
-      while(i < this._bulletPool.length && !shooted) {      
-      if(!this._bulletPool[i].alive){        
+      while(i < _bulletPool.length && !shooted) {      
+      if(!_bulletPool[i].alive){        
           this.animations.play('shootin');
-          this._bulletPool[i].revive();
-          this._bulletPool[i].relocate(this._force,180,this.x+60,this.y+13);
+          _bulletPool[i].revive();
+          _bulletPool[i].relocate(this._force,180,this.x+60,this.y+13);
         
           shooted=true;    
         }
@@ -380,8 +521,8 @@ LanzaGuisantes.prototype.shoot=function(){
       }
       if(!shooted)   {
       this.animations.play('shootin');
-      this._bulletPool.push(new Bullet(this.game, this.x + 60, this.y + 13, 'bullet', 180, this._force));   
-      this._bulletPool[i].scale.setTo(2);
+      _bulletPool.push(new Bullet(this.game, this.x + 60, this.y + 13, 'bullet', 180, this._force));   
+      _bulletPool[i].scale.setTo(2);
       }
       this.timeCount=this.game.time.now + this.firerate;
     }  
@@ -436,9 +577,6 @@ Zombie.prototype.updateZombie = function(_velocity){
     console.log("Zombie parado para ataca");
   }
 }
-
-
-
 
 //ZombieComun
 function ZombieComun(game, x, y, tag){
