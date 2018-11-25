@@ -17,11 +17,18 @@
     
     //Zombie en Pantalla
     this.zombie = new Zombie(this.game, 800, 300-100, "zombies", 1, 1);
-    this.zombie.scale.setTo(1.8);    
+    this.zombie.scale.setTo(1.8); 
+    
+    //Cursor Changer
+    this.game.cursor = new CursorSprite(this.game, 0, 0, undefined);
 
   },
   
   update: function (){
+    //Prueba
+    // this.cursorChanger.updateMC();
+
+
     //Update de los Zombies
     this.zombie.updateZombie(50);
 
@@ -55,12 +62,38 @@
     });
   },
   render: function (){
-    
+    this.game.cursor.renderMC();
   }
 };
 
 
+//Clase MouseChanger
+function CursorSprite(game, x, y, tag){
+  Phaser.Sprite.call(this, game, x, y, tag);
+  this.game.world.addChild(this);
 
+  this.alpha = 0.6;
+  this.anchor.setTo(0.5);
+}
+CursorSprite.prototype = Object.create(Phaser.Sprite.prototype);
+CursorSprite.constructor = CursorSprite;
+//Metodos
+CursorSprite.prototype.renderMC = function (){
+  if(this.key != null){
+    this.x = this.game.input.activePointer.x;
+    this.y = this.game.input.activePointer.y;
+  }
+  
+  //Solo si queremos que el cursor por defecto desaparezca
+  // if(this.game.canvas.style.cursor != "none")
+  //   this.game.canvas.style.cursor = "none";
+}
+CursorSprite.prototype.changeSprite = function(_tag){
+  this.loadTexture(_tag);
+}
+CursorSprite.prototype.clearCursor = function (){
+  this.changeSprite(undefined);
+}
 
 
 //CLASE CanvasObject
@@ -73,7 +106,7 @@ CanvasObject.constructor = CanvasObject;
 
 //CLASE Score
 function Score (game, x, y, tag){
-  CanvasObject.Sprite.apply(this,[game, x, y, tag]);
+  CanvasObject.apply(this,[game, x, y, tag]);
   this.count = 0;
 }
 Score.prototype = Object.create(CanvasObject.prototype);
@@ -81,7 +114,7 @@ Score.constructor = Score;
 
 //CLASE ProgressBar
 function ProgressBar (game, x, y, tag){
-  CanvasObject.Sprite.apply(this,[game, x, y, tag]);
+  CanvasObject.apply(this,[game, x, y, tag]);
   this.time = 0;
 }
 ProgressBar.prototype = Object.create(CanvasObject.prototype);
@@ -276,6 +309,8 @@ Card.prototype.select = function(){
   this.inputEnabled = false;
   this.freezeFrames = true;
 
+  this.game.cursor.changeSprite(this.key);
+
   this.cardSelector.boardRef.selectedPlant = this.plantRef;
   this.cardSelector.boardRef.ableBoard();
 
@@ -292,6 +327,7 @@ Card.prototype.deSelect = function(){
 function CardSelector (game, xPos, yPos, yOffset, numCards,tagsArray,plantsArray, _boardRef, _sunCounterRef){
   this.cards = [];
 
+  this.game = game;
   this.boardRef = _boardRef;
   this.sunCounterRef = _sunCounterRef;
 
@@ -301,6 +337,7 @@ function CardSelector (game, xPos, yPos, yOffset, numCards,tagsArray,plantsArray
 CardSelector.constructor = CardSelector;
 //Metodos de CardSelector
 CardSelector.prototype.deSelectAll = function(){
+  this.game.cursor.clearCursor();
   for(let i = 0; i < this.cards.length; i++)
     this.cards[i].deSelect();
 };
@@ -331,6 +368,8 @@ Box.constructor = Box;
 //Metodos
 Box.prototype.up = function(){
   console.log("casilla clickada");
+  this.game.cursor.clearCursor();
+
   if(this.plantPlaced){
     console.log('lugar ya plantado');
 
