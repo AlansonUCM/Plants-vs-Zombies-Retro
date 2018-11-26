@@ -525,6 +525,7 @@ Plant.prototype.takeDamage = function(_damage){
   if(this._life <= 0){
     var box = this.boardRef.searchPlant(this.x, this.y);
     box.plantPlaced = false;
+    //Probablemente sea mejor un Destroy(); porque no se vuelve a usar la planta
     this.kill();
   }
   return !this.alive;
@@ -584,7 +585,9 @@ LanzaGuisantes.prototype.shoot=function(_bulletPool){
 function GiraSol(_game, _xPos, _yPos, _boardRef){
   Plant.apply(this,[_game, _xPos, _yPos, 'giraSol', _boardRef]);
   
-  this.animations.add('idle',[0,1,0], 3,true);
+  this.animations.add('idle', [0, 1, 0], 3, true);
+  this.animations.add('shoot', [2, 0], 2, false);
+
   this.animations.play('idle');
   //Atributos
   this.timeToShoot = 8; //segundos
@@ -599,6 +602,8 @@ GiraSol.prototype.shoot = function (){
     if(this.timeCount >= this.timeToShoot){
       //SpawnSun
       console.log('Sol Disparado');
+      this.animations.play('shoot');
+      this.events.onAnimationComplete.add(function(){this.animations.play('idle')}, this);
       //Implementacion    
       //Busca el primer sol disponible que pueda desplegarse
       var i = 0;
