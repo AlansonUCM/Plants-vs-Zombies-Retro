@@ -26,7 +26,8 @@ var PreloaderScene = {
 
     // TODO: load here the assets for the game
     this.game.load.image('logo', 'images/logo.png');
-
+    //Sprites de botones
+    this.game.load.spritesheet('shovel', 'images/shovel.png', 64, 64, 4);
     //Sprites plantas
     this.game.load.spritesheet('plants','images/lanzaGuisantes.png',64,64,3);
     this.game.load.spritesheet('giraSol', 'images/giraSol.png', 64, 64, 3);

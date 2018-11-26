@@ -21,7 +21,6 @@
     
     //Cursor Changer
     this.game.cursor = new CursorSprite(this.game, 0, 0, undefined);
-
   },
   
   update: function (){
@@ -85,8 +84,8 @@ CursorSprite.prototype.renderMC = function (){
   // if(this.game.canvas.style.cursor != "none")
   //   this.game.canvas.style.cursor = "none";
 }
-CursorSprite.prototype.changeSprite = function(_tag){
-  this.loadTexture(_tag);
+CursorSprite.prototype.changeSprite = function(_tag, _frameNum){
+  this.loadTexture(_tag, _frameNum);
 }
 CursorSprite.prototype.clearCursor = function (){
   this.changeSprite(undefined);
@@ -215,6 +214,7 @@ function SPManager (_game, _bulletPool, _sunPool, _timeToSpawnSun){
   this.sunCounter = new SunCounter(_game, 30, 30, 'sun');  
   this.cardSelector = new CardSelector(_game, 0, 75, 128, 5,[],[], this);
   this.board = new Board(_game, 100, 128, 5, 5, 100, this);
+  this.shovel = new Shovel(this.game, 120, 0, this);
 
   //Pools
   this.sunPool = _sunPool;
@@ -274,11 +274,65 @@ SPManager.prototype.addSunPoints = function(_points){
 }
 
 //CLASE Shovel
-function Shovel (game, x, y, tag){
-  Phaser.Button.Sprite.apply(this,[game, x, y, tag]);  
+function Shovel (game, x, y, _spManager){
+  Phaser.Button.apply(this,[game, x, y, 'shovel', this.onInputUp, , 0, 1]);
+  this.game.world.addChild(this);
+
+  this.isSelected = false;
+
+  this.spManager = _spManager;
+
+  //Por ser boton
+  this.onInputOver.add(this.over, this);
+  this.onInputOut.add(this.out, this);
+  this.onInputUp.add(this.up, this);
+  this.onInputDown.add(this.down,this);
 }
 Shovel.prototype = Object.create(Phaser.Button.prototype);
 Shovel.constructor =  Shovel;
+//Metodos
+Shovel.prototype.up = function(){
+  this.click();
+}
+Shovel.prototype.down = function(){
+  
+}
+Shovel.prototype.over = function(){
+  //Algo
+}
+Shovel.prototype.out = function(){
+  // if(this.isSelected)
+  //   this._onOutFrame = 2;
+  // else if (!this.isSelected)
+  //   this._onOutFrame = 1;
+}
+Shovel.prototype.selectShovel = function (){
+  this.isSelected = true;
+  //Habilita el tablero y deshabilita cartas
+  this.spManager.board.ableBoard();
+  this.spManager.cardSelector.deSelectAll();
+  this.frame = 2;
+  this._onOutFrame = 2;
+  //Cambia el cursor
+  this.game.cursor.changeSprite(this.key, 3);
+}
+Shovel.prototype.deselectShovel = function (){
+  //Vacia cursor
+  this.game.cursor.clearCursor();
+  this.isSelected = false;
+  this.frame = 1;
+  this._onOutFrame = 1;
+  //Dehabilita tablero
+  this.spManager.board.disableBoard();
+}
+Shovel.prototype.click = function () {
+  if(!this.isSelected){
+    this.selectShovel();
+  }
+  else if (this.isSelected){
+    this.deselectShovel();
+  }
+}
 
 //CLASE Card
 function Card (game, x, y, tag, funcionPlanta, _cardSelector){
@@ -311,6 +365,8 @@ Card.prototype.select = function(){
   this.isSelected = true;
   this.inputEnabled = false;
   this.freezeFrames = true;
+
+  this.cardSelector.spManager.shovel.deselectShovel();
 
   this.game.cursor.changeSprite(this.key);
 
@@ -374,6 +430,36 @@ Box.constructor = Box;
 //Metodos
 Box.prototype.up = function(){
   console.log("casilla clickada");
+  if(this.boardRef.selectedPlant != null)
+    this.plant();
+  else if (this.boardRef.selectedPlant == null){
+    this.clearBox();
+  }
+}
+Box.prototype.down = function(){
+  this.scale.setTo(0.37);
+}
+Box.prototype.over = function(){
+  if(!this.plantPlaced)
+    this.scale.setTo(0.42);
+}
+Box.prototype.out = function(){
+  this.scale.setTo(0.5);
+}
+Box.prototype.clearBox = function (){
+  if(this.plantPlaced){
+    //Busca la planta y la borra
+    var plant = this.boardRef.searchPlant(this.x, this.y);
+    plant.destroy();
+    //Deja libre esta caja
+    this.plantPlaced = false;
+  }
+  else if (!this.plantPlaced){
+    //Desactivas modo pala
+    this.boardRef.spManager.shovel.deselectShovel();
+  }
+}
+Box.prototype.plant = function(){
   this.game.cursor.clearCursor();
 
   if(this.plantPlaced){
@@ -382,7 +468,7 @@ Box.prototype.up = function(){
     this.boardRef.disableBoard();
     this.boardRef.selectedPlant = null;
 
-    this.boardRef.cardSelectorRef.deSelectAll();
+    this.boardRef.spManager.cardSelector.deSelectAll();
   } else if(!this.plantPlaced && this.boardRef.selectedPlant != null){
     console.log('Planta plantada');
 
@@ -392,6 +478,7 @@ Box.prototype.up = function(){
     this.boardRef.plants.push(new plantType(this.game, this.x, this.y, this.boardRef));    
     this.plantPlaced = true;
 
+    this.boardRef.selectedPlant = null;
     this.boardRef.disableBoard();
     this.boardRef.spManager.cardSelector.deSelectAll();
 
@@ -409,16 +496,6 @@ Box.prototype.up = function(){
   }
   this.scale.setTo(0.5);
 }
-Box.prototype.down = function(){
-  this.scale.setTo(0.37);
-}
-Box.prototype.over = function(){
-  if(!this.plantPlaced)
-    this.scale.setTo(0.42);
-}
-Box.prototype.out = function(){
-  this.scale.setTo(0.5);
-}
 
 
 //CLASE Board
@@ -429,7 +506,8 @@ function Board (game, _xPos, _yPos,numXBoxes, numYBoxes, _boxTam, _spManager){
 
   this.spManager = _spManager;
 
-  this.selectedPlant = function(){};
+  this.selectedPlant = null;
+
 
   for(let i = 0; i < numXBoxes; i++){
     this.boxes.push([]);
@@ -439,12 +517,18 @@ function Board (game, _xPos, _yPos,numXBoxes, numYBoxes, _boxTam, _spManager){
 }
 Board.constructor = Board;
 //Metodos
-Board.prototype.searchPlant = function(xPos, yPos){
+Board.prototype.searchBox = function(xPos, yPos){
   for(let i = 0; i < this.boxes.length; i++)
     for(let j = 0;j < this.boxes[i].length; j++)
       if(this.boxes[i][j].x == xPos && this.boxes[i][j].y == yPos)
         return this.boxes[i][j];
   console.log("Lugar no encontrado");
+}
+Board.prototype.searchPlant = function(_xPos, _yPos){
+  for(let i = 0; i < this.plants.length; i++)
+    if(this.plants[i].x == _xPos && this.plants[i].y == _yPos && this.plants[i].alive)
+      return this.plants[i];
+console.log("Planta no encontrada");
 }
 
 Board.prototype.disableBoard = function (){
@@ -523,10 +607,10 @@ Plant.constructor = Plant;
 Plant.prototype.takeDamage = function(_damage){
   this._life -= _damage;
   if(this._life <= 0){
-    var box = this.boardRef.searchPlant(this.x, this.y);
+    var box = this.boardRef.searchBox(this.x, this.y);
     box.plantPlaced = false;
-    //Probablemente sea mejor un Destroy(); porque no se vuelve a usar la planta
-    this.kill();
+
+    this.destroy();
   }
   return !this.alive;
 }
