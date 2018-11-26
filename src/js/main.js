@@ -27,7 +27,9 @@ var PreloaderScene = {
     // TODO: load here the assets for the game
     this.game.load.image('logo', 'images/logo.png');
 
+    //Sprites plantas
     this.game.load.spritesheet('plants','images/lanzaGuisantes.png',64,64,3);
+    this.game.load.spritesheet('giraSol', 'images/giraSol.png', 64, 64, 3);
     // Carga de los zombies
     this.game.load.spritesheet("zombies", "images/firstZombie.png",46,56,2);
 
