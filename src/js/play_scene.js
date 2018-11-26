@@ -12,11 +12,11 @@
     this.bulletPool = [];
     this.sunPool = [];
 
-    this.board = new Board(this.game, 100, 128, 5, 5, 100);
-    this.spManager = new SPManager(this.game, this.board, this.sunPool, 4);
+    //this.board = new Board(this.game, 100, 128, 5, 5, 100);
+    this.spManager = new SPManager(this.game, this.bulletPool, this.sunPool, 4);
     
     //Zombie en Pantalla
-    this.zombie = new Zombie(this.game, 800, 300-100, "zombies", 1, 1);
+    this.zombie = new Zombie(this.game, 800, 300-100, "zombies", 1, 30, 1);
     this.zombie.scale.setTo(1.8); 
     
     //Cursor Changer
@@ -25,16 +25,13 @@
   },
   
   update: function (){
-    //Prueba
-    // this.cursorChanger.updateMC();
-
 
     //Update de los Zombies
-    this.zombie.updateZombie(50);
+    this.zombie.updateZombie();
 
     //Update de las Plantas
-    for(let i =0;i<this.board.plants.length;i++)
-      this.board.plants[i].shoot(this.bulletPool);
+    for(let i =0;i<this.spManager.board.plants.length;i++)
+      this.spManager.board.plants[i].shoot(this.bulletPool);
 
     //Update de las Bullets
     for(let i = 0; i < this.bulletPool.length; i++)
@@ -53,8 +50,8 @@
 
     //Temporal (se comprobará cada zombie con cada planta de su fila)
     //Colision de Zombies con Plants
-    for(let i = 0; i < this.board.plants.length; i++)
-      this.game.physics.arcade.collide(this.zombie, this.board.plants[i], function zombieAttackPlant(obj1,obj2) { 
+    for(let i = 0; i < this.spManager.board.plants.length; i++)
+      this.game.physics.arcade.collide(this.zombie, this.spManager.board.plants[i], function zombieAttackPlant(obj1,obj2) { 
         if(obj1.x > obj2.x + obj1.width / 2) {
           var dam = obj1.attack();
           var obj2IsDead = obj2.takeDamage(dam);
@@ -128,8 +125,6 @@ function Sun (game, x, y, tag, _value, _spManager){
   this.anchor.setTo(0.5, 0);
   this.scale.setTo(0.05);
 
-  this.ySpw = y;
-
   this.velocity = 100;
   this.value = _value; //Pixeles/seg
   
@@ -181,9 +176,15 @@ Sun.prototype.goToCounter = function() {
   var tween = this.game.add.tween(this).to({x:this.spManager.sunCounter.x, y: this.spManager.sunCounter.y}, 500, Phaser.Easing.Defaul, true);
   tween.onComplete.addOnce(this.kill, this);
 }
+Sun.prototype.drop = function(_xPos, _yPos){
+  this.velocity = 0;
+  this.reset(_xPos, _yPos);
+  var tween = this.game.add.tween(this).to({y: _yPos + 25}, 1500, Phaser.Easing.Bounce.In, true);
+}
 Sun.prototype.reSpawn = function(){
+  this.velocity = 100;
   var xSpw = this.game.rnd.integerInRange(this.game.world._width/3, this.game.world._width);
-  this.reset(xSpw, this.ySpw);
+  this.reset(xSpw, -25);
 }
 
 //Clase SunCounter
@@ -208,17 +209,17 @@ SunCounter.prototype.updateCounter = function(){
 }
 
 //Clase SPManager
-function SPManager (_game, _board, _sunPool, _timeToSpawnSun){  
+function SPManager (_game, _bulletPool, _sunPool, _timeToSpawnSun){  
   this.game = Object.create(_game);
   
-  this.sunCounter = new SunCounter(this.game, 30, 30, 'sun');  
-  this.cardSelector = new CardSelector(this.game, 0, 75, 128, 5,[],[], _board, this.sunCounter);
-  //this.board = _board;
-  
-  //Le damos la referencia al tablero del selector de cartas
-  this.cardSelector.boardRef.cardSelectorRef = this.cardSelector;
+  this.sunCounter = new SunCounter(_game, 30, 30, 'sun');  
+  this.cardSelector = new CardSelector(_game, 0, 75, 128, 5,[],[], this);
+  this.board = new Board(_game, 100, 128, 5, 5, 100, this);
 
+  //Pools
   this.sunPool = _sunPool;
+  this.bulletPool = _bulletPool;
+
   this.timeToSpawnSun = _timeToSpawnSun;
 
   this.timeCount = 0;
@@ -296,9 +297,9 @@ Card.constructor = Card;
 //Metodos
 Card.prototype.up = function(){
   if(this.input.pointerOver()){
-    if(this.plantRef.cost <= this.cardSelector.sunCounterRef.points){
+    if(this.plantRef.cost <= this.cardSelector.spManager.sunCounter.points){
       this.select();
-      this.cardSelector.boardRef.selectedPlant = this.plantRef;
+      this.cardSelector.spManager.board.selectedPlant = this.plantRef;
     }
     else
       console.log('No tienes suficientes puntos');
@@ -313,8 +314,8 @@ Card.prototype.select = function(){
 
   this.game.cursor.changeSprite(this.key);
 
-  this.cardSelector.boardRef.selectedPlant = this.plantRef;
-  this.cardSelector.boardRef.ableBoard();
+  this.cardSelector.spManager.board.selectedPlant = this.plantRef;
+  this.cardSelector.spManager.board.ableBoard();
 
   console.log("Card selected");
 }
@@ -326,15 +327,18 @@ Card.prototype.deSelect = function(){
 }
 
 //Clase CardSelector
-function CardSelector (game, xPos, yPos, yOffset, numCards,tagsArray,plantsArray, _boardRef, _sunCounterRef){
+function CardSelector (game, xPos, yPos, yOffset, numCards,tagsArray,plantsArray, _spManager){
   this.cards = [];
 
   this.game = game;
-  this.boardRef = _boardRef;
-  this.sunCounterRef = _sunCounterRef;
+  this.spManager = _spManager;
+  
+  //Temporal
+  var tempTagsArray = ['plants','giraSol','giraSol','plants','plants'];
+  var tempPlantsArray =[LanzaGuisantes, GiraSol, GiraSol, LanzaGuisantes, LanzaGuisantes];
 
   for(let i = 0; i < numCards; i++)
-    this.cards.push(new Card(game, xPos, yPos * i + yOffset, "plants", LanzaGuisantes, this));    // Se tendra que modificar mas tarde
+    this.cards.push(new Card(game, xPos, yPos * i + yOffset, tempTagsArray[i], tempPlantsArray[i], this));    // Se tendra que modificar mas tarde
 }
 CardSelector.constructor = CardSelector;
 //Metodos de CardSelector
@@ -385,15 +389,15 @@ Box.prototype.up = function(){
     //Habra que retocar para que dependiendo de la planta use un sprite u otro
     var plantType = this.boardRef.selectedPlant;
 
-    this.boardRef.plants.push(new plantType(this.game, this.x, this.y, 'plants', this.boardRef));    
+    this.boardRef.plants.push(new plantType(this.game, this.x, this.y, this.boardRef));    
     this.plantPlaced = true;
 
     this.boardRef.disableBoard();
-    this.boardRef.cardSelectorRef.deSelectAll();
+    this.boardRef.spManager.cardSelector.deSelectAll();
 
     //Al crearse debe quitar el coste 
-    this.boardRef.cardSelectorRef.sunCounterRef.points -= plantType.cost;
-    this.boardRef.cardSelectorRef.sunCounterRef.updateCounter();
+    this.boardRef.spManager.sunCounter.points -= plantType.cost;
+    this.boardRef.spManager.sunCounter.updateCounter();
 
   } else{
     console.log('Accion anulada');
@@ -401,7 +405,7 @@ Box.prototype.up = function(){
     this.boardRef.disableBoard();
     this.boardRef.selectedPlant = null;
 
-    this.boardRef.cardSelectorRef.deSelectAll();
+    this.boardRef.spManager.cardSelector.deSelectAll();
   }
   this.scale.setTo(0.5);
 }
@@ -418,12 +422,12 @@ Box.prototype.out = function(){
 
 
 //CLASE Board
-function Board (game, _xPos, _yPos,numXBoxes, numYBoxes, _boxTam){
+function Board (game, _xPos, _yPos,numXBoxes, numYBoxes, _boxTam, _spManager){
   this.boxes = [];
   this.plants = [];
   this.boxTam = _boxTam;
 
-  this.cardSelectorRef = null;
+  this.spManager = _spManager;
 
   this.selectedPlant = function(){};
 
@@ -510,6 +514,8 @@ function Plant (game, x, y, tag, _boardRef){
   Character.apply(this,[game, x, y, tag, _boardRef]);
 
   this.boardRef = _boardRef;
+
+  this.timeCount = 0;
 }
 Plant.prototype = Object.create(Character.prototype);
 Plant.constructor = Plant;
@@ -526,13 +532,12 @@ Plant.prototype.takeDamage = function(_damage){
 
 
 //Ejemplo LanzaGuisantes
-function LanzaGuisantes(game, x, y, tag, _boardRef){
-  Plant.apply(this,[game, x, y, tag, _boardRef]);
+function LanzaGuisantes(game, x, y, _boardRef){
+  Plant.apply(this,[game, x, y, 'plants', _boardRef]);
 
   //Atributos propios
   //----------------
-  this.timeCount=0;
-  this.firerate=1000;
+  this.firerate = 1000;
   this.animations.add('try',[0,1,0],5,true);
   this.animations.add('shootin',[2,0],2,false);
   this._life = 3;
@@ -575,15 +580,59 @@ LanzaGuisantes.prototype.shoot=function(_bulletPool){
   }
 }
 
+//Clase GiraSol
+function GiraSol(_game, _xPos, _yPos, _boardRef){
+  Plant.apply(this,[_game, _xPos, _yPos, 'giraSol', _boardRef]);
+  
+  this.animations.add('idle',[0,1,0], 3,true);
+  this.animations.play('idle');
+  //Atributos
+  this.timeToShoot = 8; //segundos
+
+}
+GiraSol.prototype = Object.create(Plant.prototype);
+GiraSol.constructor = GiraSol;
+//Metodos
+GiraSol.cost = 10;
+GiraSol.prototype.shoot = function (){
+  if(this.alive){
+    if(this.timeCount >= this.timeToShoot){
+      //SpawnSun
+      console.log('Sol Disparado');
+      //Implementacion    
+      //Busca el primer sol disponible que pueda desplegarse
+      var i = 0;
+      var isFound = false;
+      while(i < this.boardRef.spManager.sunPool.length && !isFound){
+        if(this.boardRef.spManager.sunPool[i].alive)
+          i++;
+        else
+          isFound = true;
+      }      
+      //Si no encuentra algun sol, entonces lo crea y lo spawnea
+      if(!isFound){
+        this.boardRef.spManager.sunPool.push(new Sun(this.game, this.x, this.y, 'sun', 20, this.boardRef.spManager));
+        this.boardRef.spManager.sunPool[this.boardRef.spManager.sunPool.length - 1].drop(this.x + this.width, this.y);
+      }
+      //Si lo encuentra, lo Spawnea
+      else if(isFound)
+      this.boardRef.spManager.sunPool[i].drop(this.x + this.width, this.y);
+      //--------------
+      this.timeCount = 0;
+    }
+    this.timeCount += this.game.time.elapsedMS / 1000;
+  }
+}
 
 //CLASE ZOMBIE
-function Zombie (game, x, y, tag, _damage, _attacksPerSec){
+function Zombie (game, x, y, tag, _damage, _velocity, _attacksPerSec){
   Character.apply(this,[game, x, y, tag]);
   //this.game.add.sprite(100,100,tag);
   this._life = 12;
   this.damage = _damage; 
   this.attacksPerSec = _attacksPerSec;
   this.isAttacking = false;
+  this.velocity = _velocity;
   this.timeCount = 0;
 
   this.animations.add('move',[0,1,0]);
@@ -593,8 +642,8 @@ Zombie.prototype = Object.create(Character.prototype);
 Zombie.constructor = Zombie;
 
 // Metodos en Zombies
-Zombie.prototype.move = function (_velocity) {
-  this.x -= _velocity * this.game.time.elapsedMS/1000;
+Zombie.prototype.move = function () {
+  this.x -= this.velocity * this.game.time.elapsedMS/1000;
 }
 Zombie.prototype.takeDamage = function (damage) {
   this._life -= damage;
