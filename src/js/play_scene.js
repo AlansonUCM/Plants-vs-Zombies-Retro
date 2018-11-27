@@ -121,8 +121,7 @@ function Sun (game, x, y, tag, _value, _spManager){
   Phaser.Button.apply(this,[game, x, y, tag]);  
   this.game.world.addChild(this);
 
-  this.anchor.setTo(0.5, 0);
-  this.scale.setTo(0.05);
+  this.anchor.setTo(0.5);
 
   this.velocity = 100;
   this.value = _value; //Pixeles/seg
@@ -192,12 +191,12 @@ function SunCounter (game, x, y, tag){
   this.game.world.addChild(this);
 
   //Temporal(solo visual para ver que funciona)
-  this.scale.setTo(0.05);
-  this.anchor.setTo(0.35, 0.5);
+  //this.scale.setTo(0.05);
+  this.anchor.setTo(0.5);
 
   this.points = 0;
 
-  this.text = game.add.text(x + 5, y + 30, "" + this.points, { font: "24px Arial", fill: "#000000", align: "center" });
+  this.text = game.add.text(x, y + 30, "" + this.points, { font: "24px Arial", fill: "#000000", align: "center" });
   this.text.anchor.setTo(0.5, 0);
 }
 SunCounter.prototype = Object.create(CanvasObject.prototype);
