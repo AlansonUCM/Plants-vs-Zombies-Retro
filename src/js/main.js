@@ -27,16 +27,20 @@ var PreloaderScene = {
     // TODO: load here the assets for the game
     this.game.load.image('logo', 'images/logo.png');
     //Sprites de botones
-    this.game.load.spritesheet('shovel', 'images/shovel.png', 64, 64, 4);
+    this.game.load.spritesheet('shovel', 'images/palaFrame.png', 64, 64, 4);
     //Sprites plantas
     this.game.load.spritesheet('plants','images/lanzaGuisantes.png',64,64,3);
+    //this.game.load.image('logo', 'images/logo.png');
     this.game.load.spritesheet('giraSol', 'images/giraSol.png', 64, 64, 3);
+    //this.game.load.image('logo', 'images/logo.png');
     // Carga de los zombies
     this.game.load.spritesheet("zombies", "images/firstZombie.png",46,56,2);
 
     this.game.load.image('frame', 'images/frame.png');
     this.game.load.image('bullet', 'images/BasicBullet.png');
-    this.game.load.image('sun', 'images/sun.png');
+    //Soles y contador
+    this.game.load.image('sunFrame', 'images/sunCounterFrame.png');
+    this.game.load.image('sun', 'images/sun2.png');
     
   },
 

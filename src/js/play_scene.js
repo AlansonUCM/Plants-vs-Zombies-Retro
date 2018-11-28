@@ -58,7 +58,7 @@
     });
   },
   render: function (){
-    this.game.cursor.renderMC();
+    //this.game.cursor.move();
   }
 };
 
@@ -68,16 +68,21 @@ function CursorSprite(game, x, y, tag){
   Phaser.Sprite.call(this, game, x, y, tag);
   this.game.world.addChild(this);
 
+  this.x = this.game.input.mouse.event.x;
+  this.y = this.game.input.mouse.event.y;
+
   this.alpha = 0.6;
   this.anchor.setTo(0.5);
+
+  this.game.input.addMoveCallback(this.move, this);
 }
 CursorSprite.prototype = Object.create(Phaser.Sprite.prototype);
 CursorSprite.constructor = CursorSprite;
 //Metodos
-CursorSprite.prototype.renderMC = function (){
-  if(this.key != null){
-    this.x = this.game.input.activePointer.x;
-    this.y = this.game.input.activePointer.y;
+CursorSprite.prototype.move = function (pointer, x, y, click){
+  if(this.key != '__default'){
+  this.x = this.game.input.mouse.event.x;
+  this.y = this.game.input.mouse.event.y;
   }
   
   //Solo si queremos que el cursor por defecto desaparezca
@@ -171,7 +176,7 @@ Sun.prototype.takeSun = function(){
   return this.value;
 }
 Sun.prototype.goToCounter = function() {
-  var tween = this.game.add.tween(this).to({x:this.spManager.sunCounter.x, y: this.spManager.sunCounter.y}, 500, Phaser.Easing.Defaul, true);
+  var tween = this.game.add.tween(this).to({x:this.spManager.sunCounter.x, y: this.spManager.sunCounter.y}, 500, Phaser.Easing.Default, true);
   tween.onComplete.addOnce(this.kill, this);
 }
 Sun.prototype.drop = function(_xPos, _yPos){
@@ -186,18 +191,16 @@ Sun.prototype.reSpawn = function(){
 }
 
 //Clase SunCounter
-function SunCounter (game, x, y, tag){ 
-  Phaser.Sprite.call(this, game, x, y, tag);
+function SunCounter (game, x, y){ 
+  Phaser.Sprite.call(this, game, x, y, 'sunFrame');
   this.game.world.addChild(this);
-
-  //Temporal(solo visual para ver que funciona)
-  //this.scale.setTo(0.05);
-  this.anchor.setTo(0.5);
-
+  //Puntos
   this.points = 0;
-
-  this.text = game.add.text(x, y + 30, "" + this.points, { font: "24px Arial", fill: "#000000", align: "center" });
-  this.text.anchor.setTo(0.5, 0);
+  //Ancla de sprite
+  this.anchor.setTo(0.5);
+  //Texto
+  this.text = game.add.text(x + 25, y + 5, "" + this.points, { font: "bold 32px Arial", fill: "#000000", align: "center" });
+  this.text.anchor.setTo(0.5);
 }
 SunCounter.prototype = Object.create(CanvasObject.prototype);
 SunCounter.constructor =  SunCounter;
@@ -210,10 +213,10 @@ SunCounter.prototype.updateCounter = function(){
 function SPManager (_game, _bulletPool, _sunPool, _timeToSpawnSun){  
   this.game = Object.create(_game);
   
-  this.sunCounter = new SunCounter(_game, 30, 30, 'sun');  
+  this.sunCounter = new SunCounter(_game, 102.5, 27);  
   this.cardSelector = new CardSelector(_game, 0, 75, 128, 5,[],[], this);
   this.board = new Board(_game, 100, 128, 5, 5, 100, this);
-  this.shovel = new Shovel(this.game, 120, 0, this);
+  this.shovel = new Shovel(this.game, 205, 0, this);
 
   //Pools
   this.sunPool = _sunPool;
