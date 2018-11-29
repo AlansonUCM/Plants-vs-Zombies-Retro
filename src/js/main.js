@@ -26,13 +26,25 @@ var PreloaderScene = {
 
     // TODO: load here the assets for the game
     this.game.load.image('logo', 'images/logo.png');
+
     //Sprites de botones
-    this.game.load.spritesheet('shovel', 'images/palaFrame.png', 64, 64, 4);
+    this.game.load.image('shovel', 'images/palaSuelta.png');
+    this.game.load.spritesheet('shovelFrame', 'images/palaFrame.png', 64, 64, 4);
+    
     //Sprites plantas
-    this.game.load.spritesheet('plants','images/lanzaGuisantes.png',64,64,3);
-    //this.game.load.image('logo', 'images/logo.png');
+    //LanzaGuisantes
+    this.game.load.spritesheet('lanzaGuisantes','images/lanzaGuisantes.png',64,64,3);
+    this.game.load.image('lanzaGuisantesFrame', 'images/lanzaGuisantesFrame.png');
+    //GiraSol
     this.game.load.spritesheet('giraSol', 'images/giraSol.png', 64, 64, 3);
-    //this.game.load.image('logo', 'images/logo.png');
+    this.game.load.image('giraSolFrame', 'images/giraSolFrame.png');
+    //CherryBoom
+    this.game.load.image('cherryBoom', 'images/cherryBoom.png');
+    this.game.load.image('cherryBoomFrame', 'images/cherryBoomFrame.png');    
+    //Nuez
+    this.game.load.spritesheet('nuez','images/nuez.png',64,64,3);
+    this.game.load.image('nuezFrame', 'images/nuezFrame.png');
+
     // Carga de los zombies
     this.game.load.spritesheet("zombies", "images/firstZombie.png",46,56,2);
 

@@ -194,12 +194,12 @@ Sun.prototype.reSpawn = function(){
 function SunCounter (game, x, y){ 
   Phaser.Sprite.call(this, game, x, y, 'sunFrame');
   this.game.world.addChild(this);
+
   //Puntos
   this.points = 0;
-  //Ancla de sprite
-  this.anchor.setTo(0.5);
+
   //Texto
-  this.text = game.add.text(x + 25, y + 5, "" + this.points, { font: "bold 32px Arial", fill: "#000000", align: "center" });
+  this.text = game.add.text(x + 130, y + 32, "" + this.points, { font: "bold 32px Arial", fill: "#000000", align: "center" });
   this.text.anchor.setTo(0.5);
 }
 SunCounter.prototype = Object.create(CanvasObject.prototype);
@@ -213,10 +213,10 @@ SunCounter.prototype.updateCounter = function(){
 function SPManager (_game, _bulletPool, _sunPool, _timeToSpawnSun){  
   this.game = Object.create(_game);
   
-  this.sunCounter = new SunCounter(_game, 102.5, 27);  
-  this.cardSelector = new CardSelector(_game, 0, 75, 128, 5,[],[], this);
-  this.board = new Board(_game, 100, 128, 5, 5, 100, this);
-  this.shovel = new Shovel(this.game, 205, 0, this);
+  this.sunCounter = new SunCounter(_game, 5, 5);  
+  this.cardSelector = new CardSelector(_game, 5, 64, 72, 5,[],[], this);
+  this.board = new Board(_game, 130, 128, 5, 5, 100, this);
+  this.shovel = new Shovel(this.game, 205 + 10, 5, this);
 
   //Pools
   this.sunPool = _sunPool;
@@ -277,7 +277,7 @@ SPManager.prototype.addSunPoints = function(_points){
 
 //CLASE Shovel
 function Shovel (game, x, y, _spManager){
-  Phaser.Button.apply(this,[game, x, y, 'shovel', this.onInputUp, , 0, 1]);
+  Phaser.Button.apply(this,[game, x, y, 'shovelFrame', this.onInputUp, , 0, 1]);
   this.game.world.addChild(this);
 
   this.isSelected = false;
@@ -313,17 +313,19 @@ Shovel.prototype.selectShovel = function (){
   //Habilita el tablero y deshabilita cartas
   this.spManager.board.ableBoard();
   this.spManager.cardSelector.deSelectAll();
-  this.frame = 2;
-  this._onOutFrame = 2;
-  //Cambia el cursor
-  this.game.cursor.changeSprite(this.key, 3);
+  //this.frame = 2;
+  //this._onOutFrame = 2;
+  //Cambio de imagen de cursor (para quitar la parte "Frame" del tag)
+  var str = this.key;
+  var res = str.substr(0, str.length - 5);
+  this.game.cursor.changeSprite(res);
 }
 Shovel.prototype.deselectShovel = function (){
   //Vacia cursor
   this.game.cursor.clearCursor();
   this.isSelected = false;
-  this.frame = 1;
-  this._onOutFrame = 1;
+  //this.frame = 1;
+  //this._onOutFrame = 1;
   //Dehabilita tablero
   this.spManager.board.disableBoard();
 }
@@ -338,7 +340,7 @@ Shovel.prototype.click = function () {
 
 //CLASE Card
 function Card (game, x, y, tag, funcionPlanta, _cardSelector){
-  Phaser.Button.apply(this,[game, x, y, tag, this.up, , 1, 0, 1]);
+  Phaser.Button.apply(this,[game, x, y, tag + "Frame", this.up, , 1, 0, 1]);
   this.game.world.addChild(this);
   this.isSelected = false;
   this.plantRef = funcionPlanta;
@@ -347,6 +349,8 @@ function Card (game, x, y, tag, funcionPlanta, _cardSelector){
   this.cardSelector = _cardSelector;
 
   this.onInputUp.add(this.up, this);
+
+  this.costText = this.game.add.text(x + 80, y + 35, "" + this.plantRef.cost, { font: "bold 24px Arial", fill: "#000000", align: "center" });
 }
 Card.prototype = Object.create(Phaser.Button.prototype);
 Card.constructor = Card;
@@ -369,8 +373,10 @@ Card.prototype.select = function(){
   this.freezeFrames = true;
 
   this.cardSelector.spManager.shovel.deselectShovel();
-
-  this.game.cursor.changeSprite(this.key);
+  //Cambio de imagen de cursor (para quitar la parte "Frame" del tag)
+  var str = this.key;
+  var res = str.substr(0, str.length - 5);
+  this.game.cursor.changeSprite(res);
 
   this.cardSelector.spManager.board.selectedPlant = this.plantRef;
   this.cardSelector.spManager.board.ableBoard();
@@ -392,11 +398,11 @@ function CardSelector (game, xPos, yPos, yOffset, numCards,tagsArray,plantsArray
   this.spManager = _spManager;
   
   //Temporal
-  var tempTagsArray = ['plants','giraSol','giraSol','plants','plants'];
+  var tempTagsArray = ['lanzaGuisantes','giraSol','giraSol','lanzaGuisantes','lanzaGuisantes'];
   var tempPlantsArray =[LanzaGuisantes, GiraSol, GiraSol, LanzaGuisantes, LanzaGuisantes];
 
   for(let i = 0; i < numCards; i++)
-    this.cards.push(new Card(game, xPos, yPos * i + yOffset, tempTagsArray[i], tempPlantsArray[i], this));    // Se tendra que modificar mas tarde
+    this.cards.push(new Card(game, xPos, yPos +  i * yOffset, tempTagsArray[i], tempPlantsArray[i], this));    // Se tendra que modificar mas tarde
 }
 CardSelector.constructor = CardSelector;
 //Metodos de CardSelector
@@ -620,7 +626,7 @@ Plant.prototype.takeDamage = function(_damage){
 
 //Ejemplo LanzaGuisantes
 function LanzaGuisantes(game, x, y, _boardRef){
-  Plant.apply(this,[game, x, y, 'plants', _boardRef]);
+  Plant.apply(this,[game, x, y, 'lanzaGuisantes', _boardRef]);
 
   //Atributos propios
   //----------------
