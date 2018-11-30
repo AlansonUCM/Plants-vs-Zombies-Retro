@@ -19,9 +19,9 @@ function Nuez(game, x , y, _boardRef){
   Nuez.prototype.takeDamage = function(_damage){
     this._life -= _damage;
     //Cambio de animaciones
-    if(this._life > this.iniLife * 0.33 && this._life < this.iniLife * 0.66)
-        this.animations.play('iddleMid');
-    else if(this._life < this.iniLife * 0.33)
+    if(this._life >= this.iniLife * 0.33 && this._life < this.iniLife * 0.66 && this.animations.currentAnim.name != 'idleMid')
+        this.animations.play('idleMid');
+    else if(this._life < this.iniLife * 0.33 && this.animations.currentAnim.name != 'idleDown')
         this.animations.play('idleDown');
 
     //Destruye si tiene menos vida que 0
