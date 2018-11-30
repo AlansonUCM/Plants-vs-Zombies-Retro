@@ -1,4 +1,3 @@
-import './Card.js'
 
 //Clase CardSelector
 function CardSelector (game, xPos, yPos, yOffset, numCards,tagsArray,plantsArray, _spManager){

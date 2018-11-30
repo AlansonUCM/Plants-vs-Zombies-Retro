@@ -1,5 +1,3 @@
-//var Box = require('./Box.js');
-import './Box.js'
 
 //CLASE Board
 function Board (game, _xPos, _yPos,numXBoxes, numYBoxes, _boxTam, _spManager){
@@ -49,5 +47,3 @@ function Board (game, _xPos, _yPos,numXBoxes, numYBoxes, _boxTam, _spManager){
         this.boxes[i][j].inputEnabled = true;
     console.log("Tablero preparado para posicionar planta")
   }
-
-  module.exports = Board;

@@ -1,5 +1,4 @@
-import './Plant.js'
-import './Bullet.js'
+
 
 //Ejemplo LanzaGuisantes
 function LanzaGuisantes(game, x, y, _boardRef){

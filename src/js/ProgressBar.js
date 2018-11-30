@@ -1,4 +1,3 @@
-import './CanvasObject.js'
 
 //CLASE ProgressBar
 function ProgressBar (game, x, y, tag){

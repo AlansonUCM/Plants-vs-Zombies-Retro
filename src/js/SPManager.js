@@ -1,12 +1,3 @@
-// var SunCounter = require('./SunCounter.js');
-// var CardSelector = require('./CardSelector.js');
-// var Board = require('./Board.js');
-// var Shovel = require('./Shovel.js');
-import './SunCounter.js'
-import './CardSelector.js'
-import './Board.js'
-import './Shovel.js'
-
 
 //Clase SPManager
 function SPManager (_game, _bulletPool, _sunPool, _timeToSpawnSun){  
@@ -73,5 +64,3 @@ function SPManager (_game, _bulletPool, _sunPool, _timeToSpawnSun){
     this.sunCounter.updateCounter();
     //console.log('SunPoints: ' + this.sunCounter.points);
   }
-
-  module.exports = SPManager;

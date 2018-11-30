@@ -1,4 +1,4 @@
-import './CanvasObject.js'
+
 
 //CLASE GameObject
 function GameObject (game, x, y, tag ){

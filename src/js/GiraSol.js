@@ -1,5 +1,3 @@
-import './Plant.js'
-import './Sun.js'
 
 //Clase GiraSol
 function GiraSol(_game, _xPos, _yPos, _boardRef){

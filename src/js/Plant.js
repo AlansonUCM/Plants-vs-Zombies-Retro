@@ -1,4 +1,4 @@
-import './Character.js'
+
 
 //CLASE PLANT
 function Plant (game, x, y, tag, _boardRef){

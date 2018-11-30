@@ -1,4 +1,3 @@
-import './Character.js'
 
 //CLASE ZOMBIE
 function Zombie (game, x, y, tag, _damage, _velocity, _attacksPerSec){

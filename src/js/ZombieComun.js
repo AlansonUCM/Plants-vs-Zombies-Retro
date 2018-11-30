@@ -1,4 +1,3 @@
-import './Zombie.js'
 
 //ZombieComun
 function ZombieComun(game, x, y, tag){

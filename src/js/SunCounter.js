@@ -1,4 +1,3 @@
-import './CanvasObject.js'
 
 //Clase SunCounter
 function SunCounter (game, x, y){ 

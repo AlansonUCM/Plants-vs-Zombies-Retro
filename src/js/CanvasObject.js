@@ -5,5 +5,3 @@ function CanvasObject (game, x, y, tag){
   }
   CanvasObject.prototype = Object.create(Phaser.Sprite.prototype);
   CanvasObject.constructor = CanvasObject;
-
-  module.exports = CanvasObject;

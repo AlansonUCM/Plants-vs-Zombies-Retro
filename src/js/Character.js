@@ -1,4 +1,4 @@
-import './GameObject.js'
+
 
 //CLASE Character
 function Character (game, x, y, tag){

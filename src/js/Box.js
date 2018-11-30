@@ -1,8 +1,3 @@
-// var Plant = require('./Plant.js')
-import './Plant.js'
-import './LanzaGuisantes.js'
-import './GiraSol.js'
-
 
 //Clase Box
 function Box (game, xPos, yPos, _boardRef){
@@ -98,4 +93,3 @@ function Box (game, xPos, yPos, _boardRef){
     }
     this.scale.setTo(0.5);
   }
-  module.exports = Box;
