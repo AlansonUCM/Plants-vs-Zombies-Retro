@@ -11,13 +11,12 @@
 
     this.bulletPool = [];
     this.sunPool = [];
-
-    //this.board = new Board(this.game, 100, 128, 5, 5, 100);
-    this.spManager = new SPManager(this.game, this.bulletPool, this.sunPool, 4);
     
     //Zombie en Pantalla
     this.zombie = new Zombie(this.game, 800, 300-100, "zombies", 1, 30, 1);
     this.zombie.scale.setTo(1.8); 
+
+    this.spManager = new SPManager(this.game, this.bulletPool, this.sunPool, 4);
     
     //Cursor Changer
     this.game.cursor = new MouseChanger(this.game, 0, 0, undefined);
