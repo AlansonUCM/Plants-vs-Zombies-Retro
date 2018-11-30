@@ -1,6 +1,6 @@
 
 //Clase SPManager
-function SPManager (_game, _bulletPool, _sunPool, _timeToSpawnSun){  
+function SPManager (_game, _bulletPool, _sunPool, _timeToSpawnSun, _zombies){  
     this.game = Object.create(_game);
     
     this.sunCounter = new SunCounter(_game, 5, 5);  
@@ -11,6 +11,9 @@ function SPManager (_game, _bulletPool, _sunPool, _timeToSpawnSun){
     //Pools
     this.sunPool = _sunPool;
     this.bulletPool = _bulletPool;
+
+    //Zombies
+    this.zombies = _zombies;
   
     this.timeToSpawnSun = _timeToSpawnSun;
   
