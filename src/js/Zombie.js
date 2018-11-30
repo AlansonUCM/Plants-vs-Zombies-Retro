@@ -28,13 +28,12 @@ function Zombie (game, x, y, tag, _damage, _velocity, _attacksPerSec){
   Zombie.prototype.attack = function () {
     this.isAttacking = true;
     if(this.timeCount > 1000 / this.attacksPerSec){    
-      this.timeCount += this.game.time.elapsedMS;
+      this.timeCount = 0;
       return this.damage;
     }
-    else{
-      this.timeCount += this.game.time.elapsed;
-      return 0;
-    } 
+    this.timeCount += this.game.time.elapsedMS;
+    return 0;
+    
   }
   Zombie.prototype.updateZombie = function(_velocity){
     if(!this.isAttacking){

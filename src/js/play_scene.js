@@ -11,13 +11,13 @@
 
     this.bulletPool = [];
     this.sunPool = [];
-
-    //this.board = new Board(this.game, 100, 128, 5, 5, 100);
-    this.spManager = new SPManager(this.game, this.bulletPool, this.sunPool, 4);
     
     //Zombie en Pantalla
-    this.zombie = new Zombie(this.game, 800, 300-100, "zombies", 1, 30, 1);
-    this.zombie.scale.setTo(1.8); 
+    this.zombie =[];
+    this.zombie.push(new Zombie(this.game, 800, 300-100, "zombies", 1, 30, 1));
+    this.zombie[0].scale.setTo(1.8); 
+
+    this.spManager = new SPManager(this.game, this.bulletPool, this.sunPool, 4, this.zombie);
     
     //Cursor Changer
     this.game.cursor = new MouseChanger(this.game, 0, 0, undefined);
@@ -26,7 +26,7 @@
   update: function (){
 
     //Update de los Zombies
-    this.zombie.updateZombie();
+    this.zombie[0].updateZombie();
 
     //Update de las Plantas
     for(let i =0;i<this.spManager.board.plants.length;i++)

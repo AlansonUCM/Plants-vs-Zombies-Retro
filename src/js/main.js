@@ -42,7 +42,7 @@ var PreloaderScene = {
     this.game.load.image('cherryBoom', 'images/cherryBoom.png');
     this.game.load.image('cherryBoomFrame', 'images/cherryBoomFrame.png');    
     //Nuez
-    this.game.load.spritesheet('nuez','images/nuez.png',64,64,3);
+    this.game.load.spritesheet('nuez','images/nuez.png',64,64,9);
     this.game.load.image('nuezFrame', 'images/nuezFrame.png');
 
     // Carga de los zombies
