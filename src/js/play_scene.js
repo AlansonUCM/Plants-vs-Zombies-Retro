@@ -20,7 +20,7 @@
     this.zombie.scale.setTo(1.8); 
     
     //Cursor Changer
-    this.game.cursor = new CursorSprite(this.game, 0, 0, undefined);
+    this.game.cursor = new MouseChanger(this.game, 0, 0, undefined);
   },
   
   update: function (){
@@ -64,7 +64,7 @@
 
 
 //Clase MouseChanger
-function CursorSprite(game, x, y, tag){
+function MouseChanger(game, x, y, tag){
   Phaser.Sprite.call(this, game, x, y, tag);
   this.game.world.addChild(this);
 
@@ -76,10 +76,10 @@ function CursorSprite(game, x, y, tag){
 
   this.game.input.addMoveCallback(this.move, this);
 }
-CursorSprite.prototype = Object.create(Phaser.Sprite.prototype);
-CursorSprite.constructor = CursorSprite;
+MouseChanger.prototype = Object.create(Phaser.Sprite.prototype);
+MouseChanger.constructor = MouseChanger;
 //Metodos
-CursorSprite.prototype.move = function (pointer, x, y, click){
+MouseChanger.prototype.move = function (pointer, x, y, click){
   if(this.key != '__default'){
   this.x = this.game.input.mouse.event.x;
   this.y = this.game.input.mouse.event.y;
@@ -89,10 +89,10 @@ CursorSprite.prototype.move = function (pointer, x, y, click){
   // if(this.game.canvas.style.cursor != "none")
   //   this.game.canvas.style.cursor = "none";
 }
-CursorSprite.prototype.changeSprite = function(_tag, _frameNum){
+MouseChanger.prototype.changeSprite = function(_tag, _frameNum){
   this.loadTexture(_tag, _frameNum);
 }
-CursorSprite.prototype.clearCursor = function (){
+MouseChanger.prototype.clearCursor = function (){
   this.changeSprite(undefined);
 }
 
@@ -105,13 +105,6 @@ function CanvasObject (game, x, y, tag){
 CanvasObject.prototype = Object.create(Phaser.Sprite.prototype);
 CanvasObject.constructor = CanvasObject;
 
-//CLASE Score
-function Score (game, x, y, tag){
-  CanvasObject.apply(this,[game, x, y, tag]);
-  this.count = 0;
-}
-Score.prototype = Object.create(CanvasObject.prototype);
-Score.constructor = Score;
 
 //CLASE ProgressBar
 function ProgressBar (game, x, y, tag){
@@ -312,6 +305,7 @@ Shovel.prototype.selectShovel = function (){
   this.isSelected = true;
   //Habilita el tablero y deshabilita cartas
   this.spManager.board.ableBoard();
+  this.spManager.board.selectedPlant = null;
   this.spManager.cardSelector.deSelectAll();
   //this.frame = 2;
   //this._onOutFrame = 2;
@@ -458,7 +452,10 @@ Box.prototype.clearBox = function (){
   if(this.plantPlaced){
     //Busca la planta y la borra
     var plant = this.boardRef.searchPlant(this.x, this.y);
+    //Eliminado
+    var index = this.boardRef.plants.indexOf(plant);
     plant.destroy();
+    this.boardRef.plants.splice(index, 1);
     //Deja libre esta caja
     this.plantPlaced = false;
   }
@@ -617,8 +614,10 @@ Plant.prototype.takeDamage = function(_damage){
   if(this._life <= 0){
     var box = this.boardRef.searchBox(this.x, this.y);
     box.plantPlaced = false;
-
+    
     this.destroy();
+    var index = this.boardRef.plants.indexOf(this);
+    this.boardRef.plants.splice(index, 1);
   }
   return !this.alive;
 }
