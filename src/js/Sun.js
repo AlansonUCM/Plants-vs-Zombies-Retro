@@ -63,6 +63,6 @@ function Sun (game, x, y, tag, _value, _spManager){
   }
   Sun.prototype.reSpawn = function(){
     this.velocity = 100;
-    var xSpw = this.game.rnd.integerInRange(this.game.world._width/3, this.game.world._width);
+    var xSpw = this.game.rnd.integerInRange(this.game.world._width/3, this.game.world._width - 40);
     this.reset(xSpw, -25);
   }

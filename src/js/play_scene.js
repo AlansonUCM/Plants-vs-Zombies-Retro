@@ -6,19 +6,25 @@
     //   this.game.world.centerX, this.game.world.centerY, 'logo');
     // logo.anchor.setTo(0.5, 0.5);
     // logo.scale.setTo(0.7);
-
+    this.game.world.setBounds(-20, -20, this.game.width+40, this.game.height+40);
+    this.game.camera.x = 2; //Set our camera slightly moved into the game, so when shaking no black borders appear
+    this.game.camera.y = 2;
     this.game.stage.backgroundColor = '#ffffff'
 
     this.bulletPool = [];
     this.sunPool = [];
     
     //Zombie en Pantalla
-    this.zombie =[];
-    this.zombie.push(new Zombie(this.game, 800, 300-100, "zombies", 1, 30, 1));
-    this.zombie[0].scale.setTo(1.8); 
-
-    this.spManager = new SPManager(this.game, this.bulletPool, this.sunPool, 4, this.zombie);
+    this.zombie =this.game.add.group();
     
+
+    
+    //this.zombie.push(new Zombie(this.game, 800, 300-100, "zombies", 1, 30, 1));
+   
+    this.spManager = new SPManager(this.game, this.bulletPool, this.sunPool, 4, this.zombie);
+    this.zombie.add(new Zombie(this.game, 800, 300-100, "zombies", 1, 30, 1,this.spManager));
+    this.zombie.getChildAt(0).scale.setTo(1.8); 
+
     //Cursor Changer
     this.game.cursor = new MouseChanger(this.game, 0, 0, undefined);
   },
@@ -26,7 +32,9 @@
   update: function (){
 
     //Update de los Zombies
-    this.zombie[0].updateZombie();
+    for(let j=0;j<this.zombie.length;j++)
+    this.zombie.getChildAt(j).updateZombie();
+    
 
     //Update de las Plantas
     for(let i =0;i<this.spManager.board.plants.length;i++)
@@ -42,20 +50,29 @@
     //Temporal (se comprobará cada zombie con cada planta de su fila)
     //Colision de Bullets con Zombies
     for(let i = 0; i < this.bulletPool.length; i++)      
-      this.game.physics.arcade.collide(this.bulletPool[i],this.zombie,function bulletCollision(obj1,obj2) {    
+    {
+      for(let j=0;j<this.zombie.length;j++)
+      this.game.physics.arcade.collide(this.bulletPool[i],  this.zombie.getChildAt(j),function bulletCollision(obj1,obj2) 
+      {    
         obj2.takeDamage(obj1._dam);
         obj1.Oncollision();
-    });
+      
+      });
+    }
 
     //Temporal (se comprobará cada zombie con cada planta de su fila)
     //Colision de Zombies con Plants
     for(let i = 0; i < this.spManager.board.plants.length; i++)
-      this.game.physics.arcade.collide(this.zombie, this.spManager.board.plants[i], function zombieAttackPlant(obj1,obj2) { 
+    {
+      for(let j=0;j<this.zombie.length;j++)
+      this.game.physics.arcade.collide(this.zombie.getChildAt(0), this.spManager.board.plants[i], function zombieAttackPlant(obj1,obj2)
+       { 
         if(obj1.x > obj2.x + obj1.width / 2) {
           var dam = obj1.attack();
           var obj2IsDead = obj2.takeDamage(dam);
           obj1.isAttacking = !obj2IsDead;}
-    });
+      });
+    }
   },
   render: function (){
     //this.game.cursor.move();

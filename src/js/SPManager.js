@@ -43,7 +43,7 @@ function SPManager (_game, _bulletPool, _sunPool, _timeToSpawnSun, _zombies){
       }      
       //Si no encuentra algun sol, entonces lo crea y lo spawnea
       if(!isFound){
-        this.sunPool.push(new Sun(this.game, this.game.world._width, -20, 'sun', 20, this));
+        this.sunPool.push(new Sun(this.game, this.game.world._width - 40, -20, 'sun', 20, this));
         this.sunPool[this.sunPool.length - 1].reSpawn();
       }
       //Si lo encuentra, lo Spawnea

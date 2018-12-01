@@ -40,6 +40,7 @@ var PreloaderScene = {
     this.game.load.image('giraSolFrame', 'images/giraSolFrame.png');
     //CherryBoom
     this.game.load.image('cherryBoom', 'images/cherryBoom.png');
+    this.game.load.spritesheet('cherryBoomBOOMBOOM','images/cherryBoomBOOMBOOM.png',256,256,10);
     this.game.load.image('cherryBoomFrame', 'images/cherryBoomFrame.png');    
     //Nuez
     this.game.load.spritesheet('nuez','images/nuez.png',64,64,9);
