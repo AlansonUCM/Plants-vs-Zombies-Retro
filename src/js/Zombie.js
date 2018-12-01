@@ -1,6 +1,6 @@
 
 //CLASE ZOMBIE
-function Zombie (game, x, y, tag, _damage, _velocity, _attacksPerSec){
+function Zombie (game, x, y, tag, _damage, _velocity, _attacksPerSec,spManager){
     Character.apply(this,[game, x, y, tag]);
     //this.game.add.sprite(100,100,tag);
     this._life = 12;
@@ -9,7 +9,9 @@ function Zombie (game, x, y, tag, _damage, _velocity, _attacksPerSec){
     this.isAttacking = false;
     this.velocity = _velocity;
     this.timeCount = 0;
-  
+
+    this.manager=spManager;
+
     this.animations.add('move',[0,1,0]);
     this.animations.play('move',5,true);
   }
@@ -23,7 +25,8 @@ function Zombie (game, x, y, tag, _damage, _velocity, _attacksPerSec){
   Zombie.prototype.takeDamage = function (damage) {
     this._life -= damage;
     if(this._life <= 0)
-      this.kill();
+      this.manager.zombies.remove(this,true);
+  
   }
   Zombie.prototype.attack = function () {
     this.isAttacking = true;
@@ -35,11 +38,11 @@ function Zombie (game, x, y, tag, _damage, _velocity, _attacksPerSec){
     return 0;
     
   }
-  Zombie.prototype.updateZombie = function(_velocity){
+  Zombie.prototype.updateZombie = function(){
     if(!this.isAttacking){
       if(this.timeCount > 0)
         this.timeCount = 0;
-      this.move(_velocity);
+      this.move(this.velocity);
     }else{
       //Animacion de atacar
       //------------

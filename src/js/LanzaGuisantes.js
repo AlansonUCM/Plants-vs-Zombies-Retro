@@ -29,7 +29,7 @@ function LanzaGuisantes(game, x, y, _boardRef){
   LanzaGuisantes.prototype.checkRayCast = function(_zombiesArray){
     var aux = false;
     for(let i = 0; i < _zombiesArray.length; i++){
-      this.game.physics.arcade.collide(this.rayCastLine, _zombiesArray[i],function rayCollides(obj1){
+      this.game.physics.arcade.collide(this.rayCastLine, _zombiesArray.getChildAt(i),function rayCollides(obj1){
         obj1.collides = true;
       });
     }
