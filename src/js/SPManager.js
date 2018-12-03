@@ -14,10 +14,14 @@ function SPManager (_game, _bulletPool, _sunPool, _timeToSpawnSun, _zombies){
 
     //Zombies
     this.zombies = _zombies;
-  
+
+    //Tiempo de Spawn de soles
     this.timeToSpawnSun = _timeToSpawnSun;
   
     this.timeCount = 0;
+
+    //Metodos de inicializacion
+    this.cardSelector.actualizaAspecto();
   }
   SPManager.constructor =  SPManager;
   //Metodos
@@ -66,4 +70,6 @@ function SPManager (_game, _bulletPool, _sunPool, _timeToSpawnSun, _zombies){
     //Actualiza visualmente los soles
     this.sunCounter.updateCounter();
     //console.log('SunPoints: ' + this.sunCounter.points);
+    //Actualiza la tarjetas que se pueden usar o no 
+    this.cardSelector.actualizaAspecto();
   }

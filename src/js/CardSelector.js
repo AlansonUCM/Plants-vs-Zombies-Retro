@@ -21,4 +21,12 @@ function CardSelector (game, xPos, yPos, yOffset, numCards,tagsArray,plantsArray
     this.game.cursor.clearCursor();
     for(let i = 0; i < this.cards.length; i++)
       this.cards[i].deSelect();
-  };
+  }
+  CardSelector.prototype.actualizaAspecto = function(){
+    for(let i = 0; i < this.cards.length; i++){
+      if(this.cards[i].plantRef.cost <= this.spManager.sunCounter.points && this.cards[i].inputEnabled == true)
+        this.cards[i].tint = parseInt('0xFFFFFF');
+      else if(this.cards[i].plantRef.cost > this.spManager.sunCounter.points && this.cards[i].inputEnabled == true)
+        this.cards[i].tint = parseInt('0x888888');
+    }
+  }

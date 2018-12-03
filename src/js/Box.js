@@ -87,7 +87,7 @@ function Box (game, xPos, yPos, _boardRef){
         card.tint = cantTint - resto ;
         return k;
       }, true);
-      tintTween.onComplete.addOnce(function isFinished(){card.inputEnabled = true; console.log("Carta lista para usar de nuevo");}, this);
+      tintTween.onComplete.addOnce(function isFinished(){card.inputEnabled = true; card.cardSelector.actualizaAspecto(); console.log("Carta lista para usar de nuevo");}, this);
       this.boardRef.spManager.cardSelector.lastCardUsed = null;
   
       this.boardRef.selectedPlant = null;
@@ -97,6 +97,8 @@ function Box (game, xPos, yPos, _boardRef){
       //Al crearse debe quitar el coste 
       this.boardRef.spManager.sunCounter.points -= plantType.cost;
       this.boardRef.spManager.sunCounter.updateCounter();
+      //Actualiza el aspecto de las cartas
+      this.boardRef.spManager.cardSelector.actualizaAspecto();
   
     } else{
       console.log('Accion anulada');
