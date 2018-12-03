@@ -25,6 +25,7 @@ function LanzaGuisantes(game, x, y, _boardRef){
   LanzaGuisantes.prototype = Object.create(Plant.prototype);
   LanzaGuisantes.constructor = LanzaGuisantes;
   LanzaGuisantes.cost = 20;
+  LanzaGuisantes.coolDownTime = (10 * 1000);
   //Metodos
   LanzaGuisantes.prototype.checkRayCast = function(_zombiesArray){
     var aux = false;

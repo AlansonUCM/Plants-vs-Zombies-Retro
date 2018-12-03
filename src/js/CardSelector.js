@@ -5,6 +5,8 @@ function CardSelector (game, xPos, yPos, yOffset, numCards,tagsArray,plantsArray
   
     this.game = game;
     this.spManager = _spManager;
+
+    this.lastCardUsed = null;
     
     //Temporal
     var tempTagsArray = ['lanzaGuisantes','giraSol','cherryBoom','nuez','lanzaGuisantes'];

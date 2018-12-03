@@ -11,6 +11,7 @@ function Plant (game, x, y, tag, _boardRef){
   Plant.prototype = Object.create(Character.prototype);
   Plant.constructor = Plant;
   //Métodos
+  Plant.prototype.coolDownTime = 2000;
   Plant.prototype.shoot = function(){}
   Plant.prototype.takeDamage = function(_damage){
     this._life -= _damage;

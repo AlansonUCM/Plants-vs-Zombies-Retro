@@ -32,28 +32,32 @@ function Card (game, x, y, tag, funcionPlanta, _cardSelector){
   }
   Card.prototype.select = function(){
     this.cardSelector.deSelectAll();
-    if(!this.isSelected){
-      this.cardSelector.spManager.shovel.deselectShovel();
+    this.cardSelector.spManager.shovel.deselectShovel();
     
-      this.isSelected = true;
-      //this.inputEnabled = false;
-      //this.freezeFrames = true;
+    this.isSelected = true;
+    //this.inputEnabled = false;
+    //this.freezeFrames = true;
     
-      //Cambio de imagen de cursor (para quitar la parte "Frame" del tag)
-      var str = this.key;
-      var res = str.substr(0, str.length - 5);
-      this.game.cursor.changeSprite(res);
+    //Cambio de imagen de cursor (para quitar la parte "Frame" del tag)
+    var str = this.key;
+    var res = str.substr(0, str.length - 5);
+    this.game.cursor.changeSprite(res);
     
-      this.cardSelector.spManager.board.selectedPlant = this.plantRef;
-      this.cardSelector.spManager.board.ableBoard();
+    this.cardSelector.lastCardUsed = this;
     
-      console.log("Card selected");
-    }
+    this.cardSelector.spManager.board.selectedPlant = this.plantRef;
+    this.cardSelector.spManager.board.ableBoard();
+    
+    console.log("Card selected");
+    
   }
   Card.prototype.deSelect = function(){
     this.isSelected = false; 
     //this.freezeFrames = false;
     //this.inputEnabled = true;
+    
+    this.cardSelector.lastCardUsed = null;
+
     this.game.cursor.changeSprite(undefined);
     console.log("Card deselected");
   }

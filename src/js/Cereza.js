@@ -24,6 +24,7 @@ function Cereza(game, x , y, _boardRef){
 Cereza.prototype = Object.create(Plant.prototype);
 Cereza.constructor = Cereza;
 Cereza.cost = 40;
+Cereza.coolDownTime = (18 * 1000);
 
 Cereza.prototype.shoot=function() {   
     this.alpha=0;
