@@ -7,8 +7,7 @@
     // logo.anchor.setTo(0.5, 0.5);
     // logo.scale.setTo(0.7);
     this.game.world.setBounds(-20, -20, this.game.width+40, this.game.height+40);
-    this.game.camera.x = 2; //Set our camera slightly moved into the game, so when shaking no black borders appear
-    this.game.camera.y = 2;
+    
     this.game.stage.backgroundColor = '#ffffff'
 
     this.bulletPool = [];

@@ -7,6 +7,7 @@ function Sun (game, x, y, tag, _value, _spManager){
   
     this.velocity = 100;
     this.value = _value; //Pixeles/seg
+    this.isTaken = false;
     
     //Ref al manager
     this.spManager = _spManager;
@@ -35,8 +36,13 @@ function Sun (game, x, y, tag, _value, _spManager){
   
   Sun.prototype.over = function (){
     //Hará algo, a lo mejor hacemos que con que el cursor pase por encima, ya recoja el sol
-    this.spManager.addSunPoints(this.takeSun());
-    console.log('Sol recogido y suma realizada');
+    //this.spManager.addSunPoints(this.takeSun());
+    if(!this.isTaken){
+      this.isTaken = true;
+      this.takeSun();
+      console.log('Sol recogido y suma realizada');
+  }
+    //this.inputEnable = false;
   }
   Sun.prototype.down = function(){
     //Hara algo, o no
@@ -50,18 +56,20 @@ function Sun (game, x, y, tag, _value, _spManager){
   Sun.prototype.takeSun = function(){
     //El sol debe ir al contador
     this.goToCounter();
-    return this.value;
+    //return this.value;
   }
   Sun.prototype.goToCounter = function() {
-    var tween = this.game.add.tween(this).to({x:this.spManager.sunCounter.x, y: this.spManager.sunCounter.y}, 500, Phaser.Easing.Default, true);
-    tween.onComplete.addOnce(this.kill, this);
+    var tween = this.game.add.tween(this).to({x:this.spManager.sunCounter.x + 130, y: this.spManager.sunCounter.y + 27}, 500, Phaser.Easing.Default, true);
+    tween.onComplete.addOnce(function whenFinished(){this.kill(); this.spManager.addSunPoints(this.value);}, this);
   }
   Sun.prototype.drop = function(_xPos, _yPos){
     this.velocity = 0;
     this.reset(_xPos, _yPos);
+    this.isTaken = false;
     var tween = this.game.add.tween(this).to({y: _yPos + 25}, 1500, Phaser.Easing.Bounce.In, true);
   }
   Sun.prototype.reSpawn = function(){
+    this.isTaken = false;
     this.velocity = 100;
     var xSpw = this.game.rnd.integerInRange(this.game.world._width/3, this.game.world._width - 40);
     this.reset(xSpw, -25);

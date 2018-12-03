@@ -27,7 +27,7 @@ Cereza.cost = 40;
 
 Cereza.prototype.shoot=function() {   
     this.alpha=0;
-   if(this.timeCount>1000){
+   if(this.timeCount > 1000){
         for(let j=0;j<this.boardRef.spManager.zombies.length;j++) {
             this.rayCastSquare.collides=this.game.physics.arcade.collide(this.rayCastSquare,this.boardRef.spManager.zombies.getChildAt(j));
             if(this.rayCastSquare.collides) {
