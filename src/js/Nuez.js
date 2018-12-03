@@ -15,6 +15,7 @@ function Nuez(game, x , y, _boardRef){
   Nuez.constructor = Nuez;
   //Coste
   Nuez.cost = 15;
+  Nuez.coolDownTime = (40 * 1000);
   //Metodos
   Nuez.prototype.takeDamage = function(_damage){
     this._life -= _damage;

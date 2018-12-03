@@ -15,6 +15,7 @@ function GiraSol(_game, _xPos, _yPos, _boardRef){
   GiraSol.constructor = GiraSol;
   //Metodos
   GiraSol.cost = 10;
+  GiraSol.coolDownTime = (7 * 1000);
   GiraSol.prototype.shoot = function (){
     if(this.alive){
       if(this.timeCount >= this.timeToShoot){

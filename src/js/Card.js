@@ -17,9 +17,14 @@ function Card (game, x, y, tag, funcionPlanta, _cardSelector){
   //Metodos
   Card.prototype.up = function(){
     if(this.input.pointerOver()){
-      if(this.plantRef.cost <= this.cardSelector.spManager.sunCounter.points){
+      if(this.plantRef.cost <= this.cardSelector.spManager.sunCounter.points && !this.isSelected){
         this.select();
         this.cardSelector.spManager.board.selectedPlant = this.plantRef;
+      }
+      else if(this.plantRef.cost <= this.cardSelector.spManager.sunCounter.points && this.isSelected){
+        this.deSelect();
+        this.cardSelector.spManager.board.selectedPlant = null;
+        this.cardSelector.spManager.board.disableBoard();
       }
       else
         console.log('No tienes suficientes puntos');
@@ -27,25 +32,32 @@ function Card (game, x, y, tag, funcionPlanta, _cardSelector){
   }
   Card.prototype.select = function(){
     this.cardSelector.deSelectAll();
-  
-    this.isSelected = true;
-    this.inputEnabled = false;
-    this.freezeFrames = true;
-  
     this.cardSelector.spManager.shovel.deselectShovel();
+    
+    this.isSelected = true;
+    //this.inputEnabled = false;
+    //this.freezeFrames = true;
+    
     //Cambio de imagen de cursor (para quitar la parte "Frame" del tag)
     var str = this.key;
     var res = str.substr(0, str.length - 5);
     this.game.cursor.changeSprite(res);
-  
+    
+    this.cardSelector.lastCardUsed = this;
+    
     this.cardSelector.spManager.board.selectedPlant = this.plantRef;
     this.cardSelector.spManager.board.ableBoard();
-  
+    
     console.log("Card selected");
+    
   }
   Card.prototype.deSelect = function(){
     this.isSelected = false; 
-    this.freezeFrames = false;
-    this.inputEnabled = true;
+    //this.freezeFrames = false;
+    //this.inputEnabled = true;
+    
+    this.cardSelector.lastCardUsed = null;
+
+    this.game.cursor.changeSprite(undefined);
     console.log("Card deselected");
   }
