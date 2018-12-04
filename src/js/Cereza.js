@@ -3,7 +3,7 @@ function Cereza(game, x , y, _boardRef){
     //Atributos propios    
     this._life = 4;
     this._force = 100;
-
+    this.sfx=this.game.add.audio('explosion');
     this.rayCastSquare = new Phaser.Sprite(this.game, x-this.width*1.5, y-this.height*1.5,'cherryBoomBOOMBOOM');
     this.game.world.addChild(this.rayCastSquare);
     this.rayCastSquare.width =  this.width*4;
@@ -34,7 +34,8 @@ Cereza.prototype.shoot=function() {
             if(this.rayCastSquare.collides) {
                 this.boardRef.spManager.zombies.getChildAt(j).takeDamage(this.rayCastSquare.damage);
             }
-        }        
+        }
+        this.sfx.play();
         this.takeDamage(5);
         this.rayCastSquare.destroy();
     }

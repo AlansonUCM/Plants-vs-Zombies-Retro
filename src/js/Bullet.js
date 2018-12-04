@@ -2,6 +2,8 @@
 function Bullet (game, x, y, tag,vel,dam){
     GameObject.apply(this,[game, x, y, tag]);
    
+    this.sfx=this.game.add.audio('hit');
+    this.sfx.volume=0.2;
     this._vel = vel;
     this._dam = dam;
   }
@@ -14,6 +16,7 @@ function Bullet (game, x, y, tag,vel,dam){
   
   
   Bullet.prototype.Oncollision = function () {
+    this.sfx.play();
     this.kill();
   }
   

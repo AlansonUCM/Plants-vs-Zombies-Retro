@@ -55,6 +55,18 @@ var PreloaderScene = {
     this.game.load.image('sunFrame', 'images/sunCounterFrame.png');
     this.game.load.image('sun', 'images/sun2.png');
     
+
+    this.game.load.audio('shoot','sounds/shoot .mp3');
+
+    this.game.load.audio('hit','sounds/golpe a zombie(casi seguro).mp3');
+    this.game.load.audio('bite','sounds/zombie eating plant.mp3');
+    this.game.load.audio('plantar','sounds/plantar.mp3');
+    this.game.load.audio('sun','sounds/points.mp3');
+    this.game.load.audio('explosion','sounds/explosion(1).mp3');
+    this.game.load.audio('shovel','sounds/shovel.mp3');
+
+  
+  
   },
 
   create: function () {

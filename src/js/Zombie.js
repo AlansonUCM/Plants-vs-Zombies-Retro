@@ -8,8 +8,8 @@ function Zombie (game, x, y, tag, _damage, _velocity, _attacksPerSec,spManager){
     this.attacksPerSec = _attacksPerSec;
     this.isAttacking = false;
     this.velocity = _velocity;
-    this.timeCount = 0;
-
+    this.timeCount = _attacksPerSec*1000;
+    this.sfx=this.game.add.audio('bite');
     this.manager=spManager;
 
     this.animations.add('move',[0,1,0]);
@@ -30,8 +30,10 @@ function Zombie (game, x, y, tag, _damage, _velocity, _attacksPerSec,spManager){
   }
   Zombie.prototype.attack = function () {
     this.isAttacking = true;
-    if(this.timeCount > 1000 / this.attacksPerSec){    
+    if(this.timeCount > 1000 / this.attacksPerSec){   
+      this.sfx.play(); 
       this.timeCount = 0;
+      
       return this.damage;
     }
     this.timeCount += this.game.time.elapsedMS;
