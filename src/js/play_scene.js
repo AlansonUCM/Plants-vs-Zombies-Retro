@@ -61,16 +61,20 @@
 
     //Temporal (se comprobará cada zombie con cada planta de su fila)
     //Colision de Zombies con Plants
-    for(let i = 0; i < this.spManager.board.plants.length; i++)
-    {
-      for(let j=0;j<this.zombie.length;j++)
-      this.game.physics.arcade.collide(this.zombie.getChildAt(0), this.spManager.board.plants[i], function zombieAttackPlant(obj1,obj2)
-       { 
-        if(obj1.x > obj2.x + obj1.width / 2) {
-          var dam = obj1.attack();
-          var obj2IsDead = obj2.takeDamage(dam);
-          obj1.isAttacking = !obj2IsDead;}
-      });
+    for(let i = 0; i < this.zombie.length; i++) {
+      var zomb = this.zombie.getChildAt(i);
+      var col = false;
+      for(let j=0;j<this.spManager.board.plants.length;j++) {
+        col = this.game.physics.arcade.collide(zomb, this.spManager.board.plants[j], function zombieAttackPlant(obj1,obj2) { 
+          if(obj1.x > obj2.x + obj1.width / 2) {
+            var dam = obj1.attack();
+            var obj2IsDead = obj2.takeDamage(dam);
+            //obj1.isAttacking = !obj2IsDead;
+          }
+        });
+      }
+      if(!col)
+        zomb.isAttacking = false;
     }
   },
   render: function (){

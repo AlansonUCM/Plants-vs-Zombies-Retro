@@ -9,8 +9,17 @@ function Card (game, x, y, tag, funcionPlanta, _cardSelector){
     this.cardSelector = _cardSelector;
   
     this.onInputUp.add(this.up, this);
-  
+
+    //Texto del coste
     this.costText = this.game.add.text(x + 80, y + 35, "" + this.plantRef.cost, { font: "bold 24px Arial", fill: "#000000", align: "center" });
+    //Pantalla de coolDown(inicializacion)
+    this.coolDownTint = new Phaser.Sprite(this.game, this.x, this.y + this.height, tag + "Frame");
+    this.game.world.addChild(this.coolDownTint);
+    this.coolDownTint.anchor.setTo(0, 1);
+    this.coolDownTint.tint = '0x000000';
+    this.coolDownTint.alpha = 0.20;
+    this.coolDownTint.height = 0;
+
   }
   Card.prototype = Object.create(Phaser.Button.prototype);
   Card.constructor = Card;
