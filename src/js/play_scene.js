@@ -16,8 +16,11 @@
     //Zombie en Pantalla
     this.zombie =this.game.add.group();
     
-
+    this.music=this.game.add.audio('music');
+    this.music.loop=true;
     
+    this.music.play();
+    this.music.volume=0.2;
     //this.zombie.push(new Zombie(this.game, 800, 300-100, "zombies", 1, 30, 1));
    
     this.spManager = new SPManager(this.game, this.bulletPool, this.sunPool, 4, this.zombie);
