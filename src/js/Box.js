@@ -75,30 +75,22 @@ function Box (game, xPos, yPos, _boardRef){
   
       this.boardRef.plants.push(new plantType(this.game, this.x, this.y, this.boardRef));    
       this.plantPlaced = true;
-
-      //Si se planta, genera un coolDown en la Carta
-      var card = this.boardRef.spManager.cardSelector.lastCardUsed;
-      card.inputEnabled = false;
-      var tintTween = this.game.add.tween(card).to({}, card.plantRef.coolDownTime, function (k){
-        //Aqui se cambia el tono inicial del coolDown de la carta
-        var colorIni = parseInt('0x888888');
-        var cantTint = colorIni + ((parseInt('0xFFFFFF') - colorIni) * k);
-        var resto = cantTint % parseInt('0x010101');
-        card.tint = cantTint - resto ;
-        return k;
-      }, true);
-      tintTween.onComplete.addOnce(function isFinished(){card.inputEnabled = true; card.cardSelector.actualizaAspecto(); console.log("Carta lista para usar de nuevo");}, this);
-      this.boardRef.spManager.cardSelector.lastCardUsed = null;
-  
-      this.boardRef.selectedPlant = null;
-      this.boardRef.disableBoard();
-      this.boardRef.spManager.cardSelector.deSelectAll();
   
       //Al crearse debe quitar el coste 
       this.boardRef.spManager.sunCounter.points -= plantType.cost;
       this.boardRef.spManager.sunCounter.updateCounter();
       //Actualiza el aspecto de las cartas
-      this.boardRef.spManager.cardSelector.actualizaAspecto();
+      //Si se planta, genera un coolDown en la Carta
+      var card = this.boardRef.spManager.cardSelector.lastCardUsed;
+      card.cardSelector.actualizaAspecto();
+      card.inputEnabled = false;
+      var tintTween = this.game.add.tween(card.coolDownTint).from({height: card.height}, card.plantRef.coolDownTime, Phaser.Easing.Linear.None, true);
+      tintTween.onComplete.addOnce(function isFinished(){card.inputEnabled = true; card.coolDownTint.height = 0; card.cardSelector.actualizaAspecto(); console.log("Carta lista para usar de nuevo");}, this);
+      
+  
+      this.boardRef.selectedPlant = null;
+      this.boardRef.disableBoard();
+      this.boardRef.spManager.cardSelector.deSelectAll();
   
     } else{
       console.log('Accion anulada');
