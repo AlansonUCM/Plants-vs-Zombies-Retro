@@ -54,6 +54,9 @@ var PreloaderScene = {
     //Soles y contador
     this.game.load.image('sunFrame', 'images/sunCounterFrame.png');
     this.game.load.image('sun', 'images/sun2.png');
+
+    //PauseButton
+    this.game.load.image('pause', 'images/pause.png');
     
   },
 

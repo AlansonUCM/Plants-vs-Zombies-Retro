@@ -26,6 +26,9 @@
 
     //Cursor Changer
     this.game.cursor = new MouseChanger(this.game, 0, 0, undefined);
+
+    //Menu de Pausa
+    this.pauseMenu = new PauseMenu(this.game);
   },
   
   update: function (){
@@ -48,15 +51,12 @@
 
     //Temporal (se comprobará cada zombie con cada planta de su fila)
     //Colision de Bullets con Zombies
-    for(let i = 0; i < this.bulletPool.length; i++)      
-    {
-      for(let j=0;j<this.zombie.length;j++)
-      this.game.physics.arcade.collide(this.bulletPool[i],  this.zombie.getChildAt(j),function bulletCollision(obj1,obj2) 
-      {    
-        obj2.takeDamage(obj1._dam);
-        obj1.Oncollision();
-      
-      });
+    for(let i = 0; i < this.bulletPool.length; i++) {
+      for(let j = 0; j < this.zombie.length; j++)
+        this.game.physics.arcade.collide(this.bulletPool[i], this.zombie.getChildAt(j), function bulletCollision(obj1, obj2) {    
+          obj2.takeDamage(obj1._dam);
+          obj1.Oncollision();      
+        });
     }
 
     //Temporal (se comprobará cada zombie con cada planta de su fila)
@@ -64,22 +64,26 @@
     for(let i = 0; i < this.zombie.length; i++) {
       var zomb = this.zombie.getChildAt(i);
       var col = false;
-      for(let j=0;j<this.spManager.board.plants.length;j++) {
-        col = this.game.physics.arcade.collide(zomb, this.spManager.board.plants[j], function zombieAttackPlant(obj1,obj2) { 
+      for(let j = 0; j < this.spManager.board.plants.length; j++) {
+        col = this.game.physics.arcade.collide(zomb, this.spManager.board.plants[j], function zombieAttackPlant(obj1, obj2) { 
           if(obj1.x > obj2.x + obj1.width / 2) {
             var dam = obj1.attack();
             var obj2IsDead = obj2.takeDamage(dam);
-            //obj1.isAttacking = !obj2IsDead;
+            obj1.isAttacking = !obj2IsDead;
           }
         });
       }
-      if(!col)
+      if(!col && zomb.isAttacking)
         zomb.isAttacking = false;
     }
   },
-  render: function (){
-    //this.game.cursor.move();
+  paused: function (){
+    this.pauseMenu.display();
+  },
+  pauseUpdate:  function(){
+    //this.pauseMenu.updatePause();
   }
+
 };
 
 module.exports = PlayScene;
