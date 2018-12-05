@@ -1,50 +1,98 @@
-function PauseMenu(_game){
+function PauseMenu(_game, _spManager){
     //No hereda de nada como tal, pero es conteneedora
     this.game = _game;
+    this.spManager = _spManager;
     var x = this.game.world.centerX;
     var y = this.game.world.centerY;
 
-    this.isOpened = false;
+    this.botonPausa = new PauseButton(this.game, 2 * x - 5, 5, this.pauseGame, this);
+    this.botonReset = new Phaser.Button(this.game, x, y + 50,"boton", this.pauseGame, this,1,0,2,3);
+    this.game.world.addChild(this.botonReset);
+    this.botonReset.scale.setTo(0.5);
+    this.botonReset.anchor.setTo(0.5);
+    this.botonReset.visible = false;
 
-    //Boton de pausa (Temporal)
-    this.pauseButton = new PauseButton(this.game, 2 * x - 5, 5, this.openMenu, this);
-    //Menu de Pausa
-    this.menu = this.game.add.group();
+    this.volumeSliderBar = new SliderBar(this.game,x,y - 50);
+    this.volumeSliderBar.visible = false;
+    
 
 }
 PauseMenu.constructor = PauseMenu;
 
 //Metodos
-PauseMenu.prototype.openMenu = function(){
-    if(this.isOpened)
-        this.close();
-    else if (!this.isOpened)
-        this.open();
+PauseMenu.prototype.display = function(){    
+    this.botonReset.visible = this.volumeSliderBar.visible = this.volumeSliderBar.slider.visible = this.game.isPaused;
+    
 }
-PauseMenu.prototype.close = function(){
-    console.log("Menu de pausa cerrado");
-    this.isOpened = false;
-    this.game.paused = false;
-
-}
-PauseMenu.prototype.open = function(){
-    console.log("Menu de pausa abierto");
-    this.isOpened = true;
-    this.game.paused = true;
-}
-PauseMenu.prototype.display = function(){
-    console.log("Menu de pausa DESPLEGADO");
-    this.open();
-    this.trial = new PauseButton(this.game,400,300, this.openMenu, this);
-}
-PauseMenu.prototype.updatePause = function(){
-    for(let i = 0; i < this.menu.lenght; i++)
-        this.menu.getChildAt(i).updateInPause();
+PauseMenu.prototype.updateMenu = function(){
+    this.game.sound.volume = this.volumeSliderBar.getValue();
 }
 
-PauseButton.prototype.unpause = function(event) {   
-    if (this.getBounds().contains(this.game.input.x, this.game.input.y)) {                 
-        this.game.input.onDown.remove(this.unpause, this);
-        this.game.paused = false;    
+PauseMenu.prototype.pauseGame = function(){
+    this.game.isPaused = !this.game.isPaused;
+
+    this.pauseAll(); this.playAll();
+    
+    this.display();
+
+    //Reactiva el boton de Pausa
+    this.botonPausa.input.enabled = true;
+
+    //Desplegamos el menu
+    //this.display();
+}
+
+PauseMenu.prototype.pauseAll = function(){
+    if(this.game.isPaused){
+        //Paro timers
+        this.game.time.gamePaused();
+        //Paro tweens
+        this.game.tweens.pauseAll();
+        //Paro animationes y botones
+        //Cartas
+        this.spManager.cardSelector.cards.forEach(c => {
+            c.input.enabled = false;
+        });
+        //Soles
+        this.spManager.sunPool.forEach(s => {
+            s.input.enabled = false;
+        });
+        //Shovel
+        this.spManager.shovel.input.enabled = false;
+        //Zombies
+        this.spManager.zombies.forEach(z => {
+            z.animations.paused = true;
+        });
+        //Plantas
+        this.spManager.board.plants.forEach(p => {
+            p.animations.paused = true;
+        });
     }
 }
+
+PauseMenu.prototype.playAll = function(){
+    if(!this.game.isPaused){
+        //Paro timers
+        this.game.time.gameResumed();
+        //Paro tweens
+        this.game.tweens.resumeAll();
+        //Paro animationes y botones
+        //Cartas
+        this.spManager.cardSelector.actualizaAspecto();
+        //Soles
+        this.spManager.sunPool.forEach(s => {
+            s.input.enabled = true;
+        });
+        //Shovel
+        this.spManager.shovel.input.enabled = true;
+        //Zombies
+        this.spManager.zombies.forEach(z => {
+            z.animations.paused = false;
+        });
+        //Plantas
+        this.spManager.board.plants.forEach(p => {
+            p.animations.paused = false;
+        });
+    }
+}
+

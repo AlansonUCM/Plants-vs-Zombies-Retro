@@ -7,6 +7,7 @@ function LanzaGuisantes(game, x, y, _boardRef){
     //Atributos propios
     //----------------
     this.firerate = 1000;
+    this.timeCount = 0;
     this.animations.add('try', [0, 1, 0], 3, true);
     this.animations.add('shootin', [2, 0], 2, false);
     this._life = 3;
@@ -41,7 +42,8 @@ function LanzaGuisantes(game, x, y, _boardRef){
    this.checkRayCast(this.boardRef.spManager.zombies);
    if(this.alive  && this.rayCastLine.collides){
     this.rayCastLine.collides = false;
-      if(this.game.time.now > this.timeCount){
+      if(this.timeCount >= this.firerate){
+        this.timeCount = 0;
         if(_bulletPool.length == 0) {
           _bulletPool.push(new Bullet(this.game, this.x + 60, this.y + 13, 'bullet', 180, this._force));
           _bulletPool[0].scale.setTo(2);
@@ -66,7 +68,7 @@ function LanzaGuisantes(game, x, y, _boardRef){
         _bulletPool.push(new Bullet(this.game, this.x + 60, this.y + 13, 'bullet', 180, this._force));   
         _bulletPool[i].scale.setTo(2);
         }
-        this.timeCount=this.game.time.now + this.firerate;
-      }  
+      }
+      this.timeCount += this.game.time.elapsedMS; 
     }
   }

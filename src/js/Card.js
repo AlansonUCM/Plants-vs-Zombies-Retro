@@ -6,6 +6,8 @@ function Card (game, x, y, tag, funcionPlanta, _cardSelector){
     this.plantRef = funcionPlanta;
     this.plantRef.cost = funcionPlanta.cost;
   
+    this.isUsed = false;
+
     this.cardSelector = _cardSelector;
   
     this.onInputUp.add(this.up, this);

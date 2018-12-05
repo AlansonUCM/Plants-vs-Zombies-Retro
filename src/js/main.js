@@ -57,6 +57,8 @@ var PreloaderScene = {
 
     //PauseButton
     this.game.load.image('pause', 'images/pause.png');
+    this.game.load.spritesheet('boton', 'images/button.png',300,100,4);
+    this.game.load.image('bar', 'images/bar.png');
     
   },
 
