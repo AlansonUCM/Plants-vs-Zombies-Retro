@@ -12,6 +12,9 @@ function LanzaGuisantes(game, x, y, _boardRef){
     this.animations.add('shootin', [2, 0], 2, false);
     this._life = 3;
     this._force = 1;
+
+    this.sfx=this.game.add.audio('shoot');
+    this.sfx.volume=0.2;
     //----------------
     this.rayCastLine = new Phaser.Sprite(this.game, x, y);
     this.game.world.addChild(this.rayCastLine);
@@ -69,6 +72,7 @@ function LanzaGuisantes(game, x, y, _boardRef){
         _bulletPool[i].scale.setTo(2);
         }
       }
+      this.sfx.play();
       this.timeCount += this.game.time.elapsedMS; 
     }
   }

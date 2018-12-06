@@ -5,7 +5,8 @@ function Box (game, xPos, yPos, _boardRef){
     this.game.world.addChild(this);
     this.scale.setTo(0.5);
     this.alpha = 0.3;
-  
+    this.sfx=this.game.add.audio('plantar');
+    this.shovelSound=this.game.add.audio('shovel');
     this.plantPlaced = false;
   
     this.boardRef = _boardRef;
@@ -43,6 +44,7 @@ function Box (game, xPos, yPos, _boardRef){
   Box.prototype.clearBox = function (){
     if(this.plantPlaced){
       //Busca la planta y la borra
+      this.shovelSound.play();
       var plant = this.boardRef.searchPlant(this.x, this.y);
       //Eliminado
       var index = this.boardRef.plants.indexOf(plant);
@@ -69,7 +71,7 @@ function Box (game, xPos, yPos, _boardRef){
       this.boardRef.spManager.cardSelector.deSelectAll();
     } else if(!this.plantPlaced && this.boardRef.selectedPlant != null){
       console.log('Planta plantada');
-  
+      this.sfx.play();
       //Habra que retocar para que dependiendo de la planta use un sprite u otro
       var plantType = this.boardRef.selectedPlant;
   

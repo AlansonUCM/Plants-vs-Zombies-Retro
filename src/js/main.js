@@ -62,6 +62,18 @@ var PreloaderScene = {
     this.game.load.image('sliderBar', 'images/sliderBar.png');    
     this.game.load.spritesheet('boton', 'images/button.png',140,44,3);
     
+
+    this.game.load.audio('shoot','sounds/shoot .mp3');
+
+    this.game.load.audio('hit','sounds/golpe a zombie(casi seguro).mp3');
+    this.game.load.audio('bite','sounds/zombie eating plant.mp3');
+    this.game.load.audio('plantar','sounds/plantar.mp3');
+    this.game.load.audio('sun','sounds/points.mp3');
+    this.game.load.audio('explosion','sounds/explosion(1).mp3');
+    this.game.load.audio('shovel','sounds/shovel.mp3');
+
+    this.game.load.audio('music','sounds/music-8-bit-style.mp3');
+  
   },
 
   create: function () {

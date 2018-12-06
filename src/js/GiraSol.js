@@ -2,7 +2,7 @@
 //Clase GiraSol
 function GiraSol(_game, _xPos, _yPos, _boardRef){
     Plant.apply(this,[_game, _xPos, _yPos, 'giraSol', _boardRef]);
-    
+    this._life = 2;
     this.animations.add('idle', [0, 1, 0], 3, true);
     this.animations.add('shoot', [2, 0], 2, false);
   
