@@ -1,9 +1,9 @@
 
 //Clase CardSelector
-function CardSelector (game, xPos, yPos, yOffset, numCards,tagsArray,plantsArray, _spManager){
-    this.cards = [];
-  
-    this.game = game;
+function CardSelector (game, parent, xPos, yPos, yOffset, numCards,tagsArray,plantsArray, _spManager){
+    Phaser.Group.apply(this, [game, parent, "cardSelector"]);
+    this.cards = this.game.add.group(this, "Cards");
+
     this.spManager = _spManager;
 
     this.lastCardUsed = null;
@@ -13,25 +13,27 @@ function CardSelector (game, xPos, yPos, yOffset, numCards,tagsArray,plantsArray
     var tempPlantsArray =[LanzaGuisantes, GiraSol, Cereza, Nuez, LanzaGuisantes];
   
     for(let i = 0; i < numCards; i++)
-      this.cards.push(new Card(game, xPos, yPos +  i * yOffset, tempTagsArray[i], tempPlantsArray[i], this));    // Se tendra que modificar mas tarde
+      this.cards.add(new Card(game, xPos, yPos +  i * yOffset, tempTagsArray[i], tempPlantsArray[i], this));    // Se tendra que modificar mas tarde
   }
   CardSelector.constructor = CardSelector;
+  CardSelector.prototype = Object.create(Phaser.Group.prototype);
+
   //Metodos de CardSelector
   CardSelector.prototype.deSelectAll = function(){
     this.game.cursor.clearCursor();
     for(let i = 0; i < this.cards.length; i++)
-      this.cards[i].deSelect();
+      this.cards.getChildAt(i).deSelect();
   }
   CardSelector.prototype.actualizaAspecto = function(){
     for(let i = 0; i < this.cards.length; i++){
-      if(this.cards[i].plantRef.cost <= this.spManager.sunCounter.points){
-        this.cards[i].tint = parseInt('0xFFFFFF');
-        if(!this.cards[i].isUsed)
-          this.cards[i].input.enabled = true;
+      if(this.cards.getChildAt(i).plantRef.cost <= this.spManager.sunCounter.points){
+        this.cards.getChildAt(i).tint = parseInt('0xFFFFFF');
+        if(!this.cards.getChildAt(i).isUsed)
+          this.cards.getChildAt(i).input.enabled = true;
       }
-      else if(this.cards[i].plantRef.cost > this.spManager.sunCounter.points){
-        this.cards[i].tint = parseInt('0xBBBBBB');
-        this.cards[i].input.enabled = false;
+      else if(this.cards.getChildAt(i).plantRef.cost > this.spManager.sunCounter.points){
+        this.cards.getChildAt(i).tint = parseInt('0xBBBBBB');
+        this.cards.getChildAt(i).input.enabled = false;
       }
     }
   }

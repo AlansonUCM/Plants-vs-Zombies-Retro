@@ -5,6 +5,7 @@ function Plant (game, x, y, tag, _boardRef){
     Character.apply(this,[game, x, y, tag, _boardRef]);
   
     this.boardRef = _boardRef;
+    this.rayCast = null;
   
     this.timeCount = 0;
   }
@@ -20,8 +21,12 @@ function Plant (game, x, y, tag, _boardRef){
       box.plantPlaced = false;
       
       this.destroy();
-      var index = this.boardRef.plants.indexOf(this);
-      this.boardRef.plants.splice(index, 1);
+      //var index = this.boardRef.plants.indexOf(this);
+      this.boardRef.plants.removeChild(this);
+      if(this.rayCast != null){
+        this.removeChild(this.rayCast);
+        this.rayCast.destroy();
+      }
     }
     return !this.alive;
   }

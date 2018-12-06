@@ -1,20 +1,19 @@
 function Cereza(game, x , y, _boardRef){
-    Plant.apply(this,[game, x, y, 'cherryBoom', _boardRef]);  
+    Plant.apply(this,[game, x, y, '__default', _boardRef]);  
     //Atributos propios    
     this._life = 4;
     this._force = 100;
     this.sfx=this.game.add.audio('explosion');
-    this.rayCastSquare = new Phaser.Sprite(this.game, x-this.width*1.5, y-this.height*1.5,'cherryBoomBOOMBOOM');
-    this.game.world.addChild(this.rayCastSquare);
-    this.rayCastSquare.width =  this.width*4;
-    this.rayCastSquare.height = this.height*4;    
+    this.rayCast = new Phaser.Sprite(this.game, this.width, this.height,'cherryBoomBOOMBOOM',1);
+    this.rayCast.anchor.setTo(0.5);
+    this.addChild(this.rayCast);  
 
-    this.rayCastSquare.animations.add('boom', [1,2,3,4,5,6,7,8,9], 9, false);
-    this.rayCastSquare.collides = false;
-    this.rayCastSquare.damage=this._force;
-    this.game.physics.arcade.enable(this.rayCastSquare);
+    this.rayCast.animations.add('boom', [1,2,3,4,5,6,7,8,9], 9, false);
+    this.rayCast.collides = false;
+    this.rayCast.damage=this._force;
+    this.game.physics.arcade.enable(this.rayCast);
     
-    this.rayCastSquare.animations.play('boom');
+    this.rayCast.animations.play('boom');
     
     var t = this.game.time.create(true)
     t.repeat(20,10,shake,this.game);
@@ -26,18 +25,18 @@ Cereza.constructor = Cereza;
 Cereza.cost = 40;
 Cereza.coolDownTime = (18 * 1000);
 
-Cereza.prototype.shoot=function() {   
-    this.alpha=0;
+Cereza.prototype.shoot=function() { 
    if(this.timeCount > 1000){
         for(let j=0;j<this.boardRef.spManager.zombies.length;j++) {
-            this.rayCastSquare.collides=this.game.physics.arcade.collide(this.rayCastSquare,this.boardRef.spManager.zombies.getChildAt(j));
-            if(this.rayCastSquare.collides) {
-                this.boardRef.spManager.zombies.getChildAt(j).takeDamage(this.rayCastSquare.damage);
+            var zomb = this.boardRef.spManager.zombies.getChildAt(j);
+            this.rayCast.collides=this.game.physics.arcade.collide(this.rayCast,zomb);
+            if(this.rayCast.collides) {
+                zomb.takeDamage(this.rayCast.damage);
             }
         }
         this.sfx.play();
         this.takeDamage(5);
-        this.rayCastSquare.destroy();
+        this.rayCast.destroy();
     }
     else
         this.timeCount+= this.game.time.elapsedMS;

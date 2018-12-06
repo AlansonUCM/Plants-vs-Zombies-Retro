@@ -9,8 +9,8 @@ function Zombie (game, x, y, tag, _damage, _velocity, _attacksPerSec,spManager){
     this.isAttacking = false;
     this.velocity = _velocity;
     this.timeCount = 1001;
-    this.sfx=this.game.add.audio('bite');
-    this.sfx.volume=0.5;
+    this.sfx = this.game.add.audio('bite');
+    this.sfx.volume = 0.5;
     this.manager=spManager;
 
     this.animations.add('move',[0,1,0]);

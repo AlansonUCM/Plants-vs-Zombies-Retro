@@ -28,19 +28,19 @@ function GiraSol(_game, _xPos, _yPos, _boardRef){
         var i = 0;
         var isFound = false;
         while(i < this.boardRef.spManager.sunPool.length && !isFound){
-          if(this.boardRef.spManager.sunPool[i].alive)
+          if(this.boardRef.spManager.sunPool.getChildAt(i).alive)
             i++;
           else
             isFound = true;
         }      
         //Si no encuentra algun sol, entonces lo crea y lo spawnea
         if(!isFound){
-          this.boardRef.spManager.sunPool.push(new Sun(this.game, this.x, this.y, 'sun', 20, this.boardRef.spManager));
-          this.boardRef.spManager.sunPool[this.boardRef.spManager.sunPool.length - 1].drop(this.x + this.width, this.y);
+          this.boardRef.spManager.sunPool.add(new Sun(this.game, this.x, this.y, 'sun', 20, this.boardRef.spManager));
+          this.boardRef.spManager.sunPool.getChildAt(this.boardRef.spManager.sunPool.length - 1).drop(this.x + this.width, this.y);
         }
         //Si lo encuentra, lo Spawnea
         else if(isFound)
-        this.boardRef.spManager.sunPool[i].drop(this.x + this.width, this.y);
+        this.boardRef.spManager.sunPool.getChildAt(i).drop(this.x + this.width, this.y);
         //--------------
         this.timeCount = 0;
       }
