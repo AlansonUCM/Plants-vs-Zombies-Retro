@@ -1,72 +1,65 @@
 function PauseMenu(_game, _spManager){
-    //No hereda de nada como tal, pero es conteneedora
-    this.game = _game;
+    Phaser.Group.apply(this,[_game,undefined, "PauseMenu"]);
+
     //Para pausar le paso, el que tiene toda la logica de luego
     this.spManager = _spManager;
     var x = this.game.world.centerX;
     var y = this.game.world.centerY;
 
     //MenuFondo
-    this.backGround = new Phaser.Sprite(this.game, x, y, 'pauseMenu');
-    this.game.world.addChild(this.backGround);
+    this.backGround = this.game.add.sprite( x, y, 'pauseMenu', 0,this);
     this.backGround.anchor.setTo(0.5);
     this.backGround.visible = false;    
-    this.backGround.text = new Phaser.Text(this.game,this.backGround.x, this.backGround.y - this.backGround.height/2 + 35, 'PAUSA',{ font: "bold 32px Arial", fill: "#f5ff9a", align: "center" });
+    this.backGround.text = this.game.add.text(this.backGround.x, this.backGround.y - this.backGround.height/2 + 35, 'PAUSA',{ font: "bold 32px Arial", fill: "#f5ff9a", align: "center" },this);
     this.backGround.text.anchor.setTo(0.5);
     this.backGround.text.visible = false;
-    this.game.world.addChild(this.backGround.text);
     //Boton Pause InGame
-    this.botonPausa = new PauseButton(this.game, 2 * x - 5, 5, this.pauseGame, this);
+    this.botonPausa = new PauseButton(this.game, 2 * x - 5, 5, this.pauseGame, this, this);
     //Boton Reiniciar
-    this.botonReset = new Phaser.Button(this.game, x + 75, y + 35,"boton", this.reset, this,1,0,2,3);
-    this.game.world.addChild(this.botonReset);
+    this.botonReset = this.game.add.button( x + 75, y + 35,"boton", this.reset, this,1,0,2,3, this);
     this.botonReset.anchor.setTo(0.5);
     this.botonReset.visible = false;
-    this.botonReset.text = new Phaser.Text(this.game,this.botonReset.x, this.botonReset.y + 3, 'Reiniciar nivel',{ font: "bold 16px Arial", fill: "#1df75d", align: "center" });
+    this.botonReset.text = this.game.add.text(this.botonReset.x, this.botonReset.y + 3, 'Reiniciar nivel',{ font: "bold 16px Arial", fill: "#1df75d", align: "center" },this);
     this.botonReset.text.anchor.setTo(0.5);
     this.botonReset.text.visible = false;
-    this.game.world.addChild(this.botonReset.text);
     //Boton Reanudar
-    this.botonCountinue = new Phaser.Button(this.game, x - 75, y + 35,"boton", this.pauseGame, this,1,0,2,3);
-    this.game.world.addChild(this.botonCountinue);
+    this.botonCountinue = this.game.add.button( x - 75, y + 35,"boton", this.pauseGame, this,1,0,2,3,this);
     this.botonCountinue.anchor.setTo(0.5);
     this.botonCountinue.visible = false;
-    this.botonCountinue.text = new Phaser.Text(this.game,this.botonCountinue.x, this.botonCountinue.y + 3, 'Reanudar',{ font: "bold 16px Arial", fill: "#1df75d", align: "center" });
+    this.botonCountinue.text = this.game.add.text(this.botonCountinue.x, this.botonCountinue.y + 3, 'Reanudar',{ font: "bold 16px Arial", fill: "#1df75d", align: "center" },this);
     this.botonCountinue.text.anchor.setTo(0.5);
     this.botonCountinue.text.visible = false;
-    this.game.world.addChild(this.botonCountinue.text);
     //Boton Salir al Menu
-    this.botonExit = new Phaser.Button(this.game, x, y + 90,"boton", this.exit, this,1,0,2,3);
-    this.game.world.addChild(this.botonExit);
+    this.botonExit = this.game.add.button( x, y + 90,"boton", this.exit, this,1,0,2,3,this);
     this.botonExit.anchor.setTo(0.5);
     this.botonExit.visible = false;
-    this.botonExit.text = new Phaser.Text(this.game,this.botonExit.x, this.botonExit.y + 3, 'Abandonar partida',{ font: "bold 13px Arial", fill: "#1df75d", align: "center" });
+    this.botonExit.text = this.game.add.text(this.botonExit.x, this.botonExit.y + 3, 'Abandonar partida',{ font: "bold 13px Arial", fill: "#1df75d", align: "center" },this);
     this.botonExit.text.anchor.setTo(0.5);
     this.botonExit.text.visible = false;
-    this.game.world.addChild(this.botonExit.text);
 
     //Slider del Volumen
-    this.volumeSliderBar = new SliderBar(this.game,x + 60,y - 40, this.changeVolume);
+    this.volumeSliderBar = new SliderBar(this.game,x + 60,y - 40, this.changeVolume, this);
     this.volumeSliderBar.visible = false; 
-    this.volumeSliderBar.text = new Phaser.Text(this.game,this.volumeSliderBar.x - 160, this.volumeSliderBar.y + 3, 'Volumen',{ font: "bold 21px Arial", fill: "#1df75d", align: "center" });
+    this.volumeSliderBar.text = this.game.add.text(this.volumeSliderBar.x - 160, this.volumeSliderBar.y + 3, 'Volumen',{ font: "bold 21px Arial", fill: "#1df75d", align: "center" },this);
     this.volumeSliderBar.text.anchor.setTo(0.5);
     this.volumeSliderBar.text.visible = false;
-    this.game.world.addChild(this.volumeSliderBar.text);
+    
 }
 PauseMenu.constructor = PauseMenu;
+PauseMenu.prototype = Object.create(Phaser.Group.prototype);
 
 //Metodos
 PauseMenu.prototype.exit = function (){
     this.game.camera.fade('0x000000', 1000);
     this.game.camera.onFadeComplete.add(function(){   
         this.game.state.start('mainMenu');
-    }, this);
+    }, this.spManager);
 }
 PauseMenu.prototype.reset = function (){
     this.game.camera.fade('0x000000', 1000);
     this.game.camera.onFadeComplete.add(function(){        
         this.game.state.start(this.game.state.current);
-    }, this);
+    }, this.spManager);
 }
 
 
@@ -82,9 +75,6 @@ PauseMenu.prototype.display = function(){
     this.botonExit.text.visible = this.botonCountinue.text.visible = this.botonReset.text.visible = this.backGround.text.visible = this.game.isPaused;
 
     this.botonPausa.changeAspect(this.game.isPaused);
-}
-PauseMenu.prototype.updateMenu = function(){
-    this.game.sound.volume = this.volumeSliderBar.getValue();
 }
 
 PauseMenu.prototype.pauseGame = function(){

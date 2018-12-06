@@ -1,15 +1,14 @@
-function SliderBar(game, x, y, _func){
+function SliderBar(game, x, y, _func, parent){
     CanvasObject.apply(this, [game, x, y, "sliderBar"]);
-
+    parent.addChild(this);
     this.anchor.setTo(0.5);
     //Valor de 0-1
     this.value;
     this.func = _func;
 
-    this.slider = new Phaser.Button(game, x, y, "sliderBoton", undefined, undefined ,1, 0, 0);
+    this.slider = this.game.add.button(x, y, "sliderBoton", undefined, undefined ,1, 0, 0, 0, parent);
     this.slider.anchor.setTo(0.5);
-    
-    this.game.world.addChild(this.slider);
+
     this.slider.alignIn(this, Phaser.CENTER);
     this.slider.input.enableDrag(true);
     this.slider.visible = false;

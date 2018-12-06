@@ -29,7 +29,7 @@ var PreloaderScene = {
 
     //Sprites de botones
     this.game.load.image('shovel', 'images/palaSuelta.png');
-    this.game.load.spritesheet('shovelFrame', 'images/palaFrame.png', 64, 64, 4);
+    this.game.load.image('shovelFrame', 'images/palaFrame.png');
     
     //Sprites plantas
     //LanzaGuisantes

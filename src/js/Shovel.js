@@ -1,7 +1,7 @@
 //CLASE Shovel
-function Shovel (game, x, y, _spManager){
+function Shovel (game, x, y, _spManager, parent){
     Phaser.Button.apply(this,[game, x, y, 'shovelFrame', this.onInputUp, , 0, 1]);
-    this.game.world.addChild(this);
+    parent.addChild(this);
   
     this.isSelected = false;
   

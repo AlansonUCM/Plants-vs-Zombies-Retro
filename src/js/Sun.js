@@ -1,7 +1,6 @@
 //CLASE Sun
 function Sun (game, x, y, tag, _value, _spManager){
-    Phaser.Button.apply(this,[game, x, y, tag]);  
-    this.game.world.addChild(this);
+    Phaser.Button.apply(this,[game, x, y, tag]);
   
     this.anchor.setTo(0.5);
   

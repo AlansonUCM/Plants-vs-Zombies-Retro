@@ -1,8 +1,8 @@
 
 //Clase MouseChanger
-function MouseChanger(game, x, y, tag){
+function MouseChanger(game, x, y, tag, parent){
     Phaser.Sprite.call(this, game, x, y, tag);
-    this.game.world.addChild(this);
+    parent.addChild(this);
   
     this.x = this.game.input.mouse.event.x;
     this.y = this.game.input.mouse.event.y;
@@ -17,7 +17,7 @@ function MouseChanger(game, x, y, tag){
   
   //Metodos
   MouseChanger.prototype.move = function (pointer, x, y, click){
-    if(this.key != '__default') {
+    if(this.key != '__default' && !this.game.isPaused) {
         this.x = this.game.input.mouse.event.x;
         this.y = this.game.input.mouse.event.y;
     }

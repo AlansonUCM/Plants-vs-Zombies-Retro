@@ -1,19 +1,20 @@
 
 //Clase SPManager
-function SPManager (_game, _bulletPool, _sunPool, _timeToSpawnSun, _zombies){  
-    this.game = Object.create(_game);
-    
-    this.sunCounter = new SunCounter(_game, 5, 5);  
-    this.cardSelector = new CardSelector(_game, 5, 64, 72, 5,[],[], this);
-    this.board = new Board(_game, 130, 128, 5, 5, 100, this);
-    this.shovel = new Shovel(this.game, 205 + 10, 5, this);
+function SPManager (_game, _boardGroup, _bulletGroup, _plantsGroup, _zombiesGroup, _HUDGroup, _sunGroup, _timeToSpawnSun){  
+    this.game = _game;
+
+    this.sunCounter = new SunCounter(_game,_HUDGroup, 5, 5);  
+    this.cardSelector = new CardSelector(_game, _HUDGroup, 5, 64, 72, 5,[],[], this);
+    this.shovel = new Shovel(this.game, 205 + 10, 5, this, _HUDGroup);
+
+    this.board = new Board(_game, _boardGroup, _plantsGroup, 130, 128, 5, 5, 100, this);
   
     //Pools
-    this.sunPool = _sunPool;
-    this.bulletPool = _bulletPool;
+    this.sunPool = _sunGroup;
+    this.bulletPool = _bulletGroup;
 
     //Zombies
-    this.zombies = _zombies;
+    this.zombies = _zombiesGroup;
 
     //Tiempo de Spawn de soles
     this.timeToSpawnSun = _timeToSpawnSun;
@@ -40,19 +41,19 @@ function SPManager (_game, _bulletPool, _sunPool, _timeToSpawnSun, _zombies){
       var i = 0;
       var isFound = false;
       while(i < this.sunPool.length && !isFound){
-        if(this.sunPool[i].alive)
+        if(this.sunPool.getChildAt(i).alive)
           i++;
         else
           isFound = true;
       }      
       //Si no encuentra algun sol, entonces lo crea y lo spawnea
       if(!isFound){
-        this.sunPool.push(new Sun(this.game, this.game.world._width - 40, -20, 'sun', 20, this));
-        this.sunPool[this.sunPool.length - 1].reSpawn();
+        this.sunPool.add(new Sun(this.game, this.game.world._width - 40, -20, 'sun', 20, this));
+        this.sunPool.getChildAt(this.sunPool.length - 1).reSpawn();
       }
       //Si lo encuentra, lo Spawnea
       else if(isFound)
-        this.sunPool[i].reSpawn();
+        this.sunPool.getChildAt(i).reSpawn();
       //--------------
       this.timeCount = 0;
     }
@@ -62,7 +63,7 @@ function SPManager (_game, _bulletPool, _sunPool, _timeToSpawnSun, _zombies){
   SPManager.prototype.updateSuns = function(){
    //Update de los soles
    for(let i = 0; i < this.sunPool.length; i++)
-    this.sunPool[i].fall();
+    this.sunPool.getChildAt(i).fall();
   }
   
   SPManager.prototype.addSunPoints = function(_points){

@@ -14,7 +14,8 @@ function Box (game, xPos, yPos, _boardRef){
     this.x = xPos;
     this.y = yPos;
   
-    this.inputEnabled = false;
+    //this.input.enabled = false;
+    
     this.onInputOver.add(this.over, this);
     this.onInputOut.add(this.out, this);
     this.onInputUp.add(this.up, this);
@@ -46,10 +47,9 @@ function Box (game, xPos, yPos, _boardRef){
       //Busca la planta y la borra
       this.shovelSound.play();
       var plant = this.boardRef.searchPlant(this.x, this.y);
-      //Eliminado
-      var index = this.boardRef.plants.indexOf(plant);
+      // var index = this.boardRef.plants.indexOf(plant);
       plant.destroy();
-      this.boardRef.plants.splice(index, 1);
+      this.boardRef.plants.removeChild(plant);
       //Deja libre esta caja
       this.plantPlaced = false;
     }
@@ -75,7 +75,7 @@ function Box (game, xPos, yPos, _boardRef){
       //Habra que retocar para que dependiendo de la planta use un sprite u otro
       var plantType = this.boardRef.selectedPlant;
   
-      this.boardRef.plants.push(new plantType(this.game, this.x, this.y, this.boardRef));    
+      this.boardRef.plants.add(new plantType(this.game, this.x, this.y, this.boardRef));    
       this.plantPlaced = true;
   
       //Al crearse debe quitar el coste 
