@@ -6,6 +6,8 @@
     //   this.game.world.centerX, this.game.world.centerY, 'logo');
     // logo.anchor.setTo(0.5, 0.5);
     // logo.scale.setTo(0.7);
+    this.game.camera.flash(0x000000, 1000);
+
     this.game.world.setBounds(-20, -20, this.game.width+40, this.game.height+40);
     
     this.game.stage.backgroundColor = '#ffffff';    
@@ -75,8 +77,6 @@
         if(!col && zomb.isAttacking)
           zomb.isAttacking = false;
       }   
-    }else{
-      this.pauseMenu.updateMenu();
     }
   },
 

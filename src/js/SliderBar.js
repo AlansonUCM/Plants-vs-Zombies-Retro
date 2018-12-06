@@ -1,19 +1,19 @@
-function SliderBar(game, x, y){
-    CanvasObject.apply(this, [game, x, y, "bar"]);
+function SliderBar(game, x, y, _func){
+    CanvasObject.apply(this, [game, x, y, "sliderBar"]);
 
-    this.scale.setTo(0.5 ,0.1);
     this.anchor.setTo(0.5);
     //Valor de 0-1
     this.value;
+    this.func = _func;
 
-    this.slider = new Phaser.Button(game, x, y, "boton");
+    this.slider = new Phaser.Button(game, x, y, "sliderBoton", undefined, undefined ,1, 0, 0);
     this.slider.anchor.setTo(0.5);
     
     this.game.world.addChild(this.slider);
     this.slider.alignIn(this, Phaser.CENTER);
     this.slider.input.enableDrag(true);
     this.slider.visible = false;
-    this.slider.scale.setTo(0.1, 0.5);
+
     this.slider.onInputDown.add(this.fixPos, this);
     this.slider.events.onDragUpdate.add(this.fixPos, this);
 
@@ -36,7 +36,9 @@ SliderBar.prototype.fixPos = function () {
 }
 
 SliderBar.prototype.calculateValue = function(){
-    this.value = ((this.slider.x - this.x) / (this.width / 2)) / 2 + 0.5;
+    var v = ((this.slider.x - this.x) / (this.width / 2)) / 2 + 0.5;
+    this.value = v;
+    this.func(v);
 }
 
 SliderBar.prototype.getValue = function (){
