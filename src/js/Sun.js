@@ -9,6 +9,7 @@ function Sun (game, x, y, tag, _value, _spManager){
     this.value = _value; //Pixeles/seg
     this.isTaken = false;
     
+    this.sfx=this.game.add.audio('sun');
     //Ref al manager
     this.spManager = _spManager;
     //Por ser boton
@@ -55,6 +56,7 @@ function Sun (game, x, y, tag, _value, _spManager){
   }
   Sun.prototype.takeSun = function(){
     //El sol debe ir al contador
+    this.sfx.play();
     this.goToCounter();
     //return this.value;
   }
