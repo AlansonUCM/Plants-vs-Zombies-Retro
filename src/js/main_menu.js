@@ -10,7 +10,9 @@ var MainMenu = {
     var logo = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'logo');
     logo.anchor.setTo(0.5);
     logo.scale.setTo(0.7);
-
+    
+    
+    this.game.camera.flash(0x000000, 1000);
     this.game.stage.backgroundColor = '#ffffff'
 
     this.button = new StartButton(this.game,this.game.world.centerX, this.game.world.centerY, 'startButton');

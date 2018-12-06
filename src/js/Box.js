@@ -85,9 +85,10 @@ function Box (game, xPos, yPos, _boardRef){
       //Si se planta, genera un coolDown en la Carta
       var card = this.boardRef.spManager.cardSelector.lastCardUsed;
       card.cardSelector.actualizaAspecto();
-      card.inputEnabled = false;
+      card.input.enabled = false;
+      card.isUsed = true;
       var tintTween = this.game.add.tween(card.coolDownTint).from({height: card.height}, card.plantRef.coolDownTime, Phaser.Easing.Linear.None, true);
-      tintTween.onComplete.addOnce(function isFinished(){card.inputEnabled = true; card.coolDownTint.height = 0; card.cardSelector.actualizaAspecto(); console.log("Carta lista para usar de nuevo");}, this);
+      tintTween.onComplete.addOnce(function isFinished(){card.isUsed = false; card.input.enabled = true; card.coolDownTint.height = 0; card.cardSelector.actualizaAspecto(); console.log("Carta lista para usar de nuevo");}, this);
       
   
       this.boardRef.selectedPlant = null;

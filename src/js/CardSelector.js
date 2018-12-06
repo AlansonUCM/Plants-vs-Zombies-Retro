@@ -24,9 +24,14 @@ function CardSelector (game, xPos, yPos, yOffset, numCards,tagsArray,plantsArray
   }
   CardSelector.prototype.actualizaAspecto = function(){
     for(let i = 0; i < this.cards.length; i++){
-      if(this.cards[i].plantRef.cost <= this.spManager.sunCounter.points)
+      if(this.cards[i].plantRef.cost <= this.spManager.sunCounter.points){
         this.cards[i].tint = parseInt('0xFFFFFF');
-      else if(this.cards[i].plantRef.cost > this.spManager.sunCounter.points)
+        if(!this.cards[i].isUsed)
+          this.cards[i].input.enabled = true;
+      }
+      else if(this.cards[i].plantRef.cost > this.spManager.sunCounter.points){
         this.cards[i].tint = parseInt('0xBBBBBB');
+        this.cards[i].input.enabled = false;
+      }
     }
   }
