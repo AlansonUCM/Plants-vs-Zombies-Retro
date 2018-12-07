@@ -1,10 +1,10 @@
 
 //Clase Box
 function Box (game, xPos, yPos, _boardRef){
-    Phaser.Button.apply(this,[game, xPos, yPos, 'frame', this.onInputUp]);
+    Phaser.Button.apply(this,[game, xPos, yPos, 'casilla', this.onInputUp]);
     this.game.world.addChild(this);
-    this.anchor.setTo(0.5)
-    this.scale.setTo(0.5);
+    this.anchor.setTo(0.5, 0.75);
+    // this.scale.setTo(0.5);
     this.alpha = 0.3;
     this.sfx=this.game.add.audio('plantar');
     this.shovelSound=this.game.add.audio('shovel');
@@ -34,21 +34,20 @@ function Box (game, xPos, yPos, _boardRef){
     }
   }
   Box.prototype.down = function(){
-    this.scale.setTo(0.37);
+    this.scale.setTo(0.5);
   }
   Box.prototype.over = function(){
     if(!this.plantPlaced)
-      this.scale.setTo(0.42);
+      this.scale.setTo(0.75);
   }
   Box.prototype.out = function(){
-    this.scale.setTo(0.5);
+    this.scale.setTo(1);
   }
   Box.prototype.clearBox = function (){
     if(this.plantPlaced){
       //Busca la planta y la borra
       this.shovelSound.play();
       var plant = this.boardRef.searchPlant(this.x, this.y);
-      // var index = this.boardRef.plants.indexOf(plant);
       plant.destroy();
       this.boardRef.plants.removeChild(plant);
       //Deja libre esta caja
@@ -106,5 +105,5 @@ function Box (game, xPos, yPos, _boardRef){
   
       this.boardRef.spManager.cardSelector.deSelectAll();
     }
-    this.scale.setTo(0.5);
+    this.scale.setTo(1);
   }

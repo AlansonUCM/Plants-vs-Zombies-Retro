@@ -4,8 +4,8 @@ function Cereza(game, x , y, _boardRef){
     this._life = 4;
     this._force = 100;
     this.sfx=this.game.add.audio('explosion');
-    this.rayCast = new Phaser.Sprite(this.game, this.width, this.height,'cherryBoomBOOMBOOM',1);
-    this.rayCast.anchor.setTo(0.5);
+    this.rayCast = new Phaser.Sprite(this.game, 0, 3 * this.height/2, 'cherryBoomBOOMBOOM',1);
+    this.rayCast.anchor.setTo(0.5, 1);
     this.addChild(this.rayCast);  
 
     this.rayCast.animations.add('boom', [1,2,3,4,5,6,7,8,9], 9, false);

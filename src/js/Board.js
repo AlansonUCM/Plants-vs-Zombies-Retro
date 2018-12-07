@@ -1,20 +1,19 @@
 
 //CLASE Board
-function Board (game, parent, plantsParent, _xPos, _yPos,numXBoxes, numYBoxes, _boxTam, _spManager){
+function Board (game, parent, plantsParent, _xPos, _yPos,numXBoxes, numYBoxes, _boxTamX, _boxTamY, _spManager){
     Phaser.Group.apply(this,[game, parent, "BoardGroup"]);
     this.boxes = game.add.group(this,"Boxes");
     this.plants = plantsParent;
-    this.boxTam = _boxTam;
   
     this.spManager = _spManager;
   
     this.selectedPlant = null;
   
   
-    for(let i = 0; i < numXBoxes; i++){
-      this.boxes.add(game.add.group());;
-      for(let j = 0;j < numYBoxes; j++)
-        this.boxes.getChildAt(i).add(new Box(game, _xPos + this.boxTam* i, _yPos + this.boxTam* j, this));
+    for(let i = 0; i < numYBoxes; i++){
+      this.boxes.add(game.add.group());
+      for(let j = 0;j < numXBoxes; j++)
+        this.boxes.getChildAt(i).add(new Box(game, _xPos + _boxTamX * i, _yPos + _boxTamY * j, this));
     }
 
     this.disableBoard();

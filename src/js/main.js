@@ -54,8 +54,10 @@ var PreloaderScene = {
     this.game.load.spritesheet("zombieCono", "images/zombieCono.png",46,67,2);
     this.game.load.image('cono', 'images/cono.png');
 
+    //Fondo/Casillas
+    this.game.load.image('casilla', 'images/casilla.png');
 
-    this.game.load.image('frame', 'images/frame.png');
+    //Balas
     this.game.load.image('lanzaGuisantesBala', 'images/balaLanzaGuisantes.png');    
     this.game.load.image('hielaGuisantesBala', 'images/balaHielaGuisantes.png');
     //Soles y contador

@@ -7,7 +7,7 @@ function SPManager (_game, _boardGroup, _bulletGroup, _plantsGroup, _zombiesGrou
     this.cardSelector = new CardSelector(_game, _HUDGroup, 5, 64, 72, 5,[],[], this);
     this.shovel = new Shovel(_game, 205 + 10, 5, this, _HUDGroup);
     this.sunManager = new SunManager(_game, _sunGroup, _timeToSpawnSun, this);
-    this.board = new Board(_game, _boardGroup, _plantsGroup, 130 + 32, 128 + 16, 5, 5, 100, this);
+    this.board = new Board(_game, _boardGroup, _plantsGroup, 162, 200, 5, 9, 74, 86, this);
   
     //Pools
     this.sunPool = _sunGroup;
