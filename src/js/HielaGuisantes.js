@@ -28,6 +28,6 @@ function HielaGuisantes(game, x, y, _boardRef){
   }
   HielaGuisantes.prototype = Object.create(LanzaGuisantes.prototype);
   HielaGuisantes.constructor = HielaGuisantes;
-  HielaGuisantes.cost = 1;
-  HielaGuisantes.coolDownTime = (1 * 1000);
+  HielaGuisantes.cost = 100;
+  HielaGuisantes.coolDownTime = (15 * 1000);
   
