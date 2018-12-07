@@ -9,8 +9,8 @@ function CardSelector (game, parent, xPos, yPos, yOffset, numCards,tagsArray,pla
     this.lastCardUsed = null;
     
     //Temporal
-    var tempTagsArray = ['lanzaGuisantes','giraSol','cherryBoom','nuez','lanzaGuisantes'];
-    var tempPlantsArray =[LanzaGuisantes, GiraSol, Cereza, Nuez, LanzaGuisantes];
+    var tempTagsArray = ['lanzaGuisantes','giraSol','cherryBoom','nuez','hielaGuisantes'];
+    var tempPlantsArray =[LanzaGuisantes, GiraSol, Cereza, Nuez, HielaGuisantes];
   
     for(let i = 0; i < numCards; i++)
       this.cards.add(new Card(game, xPos, yPos +  i * yOffset, tempTagsArray[i], tempPlantsArray[i], this));    // Se tendra que modificar mas tarde

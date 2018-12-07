@@ -1,7 +1,7 @@
 //CLASE Card
 function Card (game, x, y, tag, funcionPlanta, _cardSelector){
     Phaser.Button.apply(this,[game, x, y, tag + "Frame", this.up, , 1, 0, 1]);
-    this.game.world.addChild(this);
+    _cardSelector.addChild(this);
     this.isSelected = false;
     this.plantRef = funcionPlanta;
     this.plantRef.cost = funcionPlanta.cost;
@@ -13,7 +13,9 @@ function Card (game, x, y, tag, funcionPlanta, _cardSelector){
     this.onInputUp.add(this.up, this);
 
     //Texto del coste
-    this.costText = this.game.add.text(x + 80, y + 35, "" + this.plantRef.cost, { font: "bold 24px Arial", fill: "#000000", align: "center" }, _cardSelector);
+    this.costText = this.game.add.text(this.width - 20,this.height - 10, "" + this.plantRef.cost, { font: "bold 24px Arial", fill: "#000000", align: "center" }, );
+    this.addChild(this.costText);
+    this.costText.anchor.setTo(0.5);
     //Pantalla de coolDown(inicializacion)
     this.coolDownTint = this.game.add.sprite(this.x, this.y + this.height, tag + "Frame",0,_cardSelector);
     this.coolDownTint.anchor.setTo(0, 1);
@@ -45,8 +47,6 @@ function Card (game, x, y, tag, funcionPlanta, _cardSelector){
     this.cardSelector.spManager.shovel.deselectShovel();
     
     this.isSelected = true;
-    //this.inputEnabled = false;
-    //this.freezeFrames = true;
     
     //Cambio de imagen de cursor (para quitar la parte "Frame" del tag)
     var str = this.key;
@@ -63,8 +63,6 @@ function Card (game, x, y, tag, funcionPlanta, _cardSelector){
   }
   Card.prototype.deSelect = function(){
     this.isSelected = false; 
-    //this.freezeFrames = false;
-    //this.inputEnabled = true;
     
     this.cardSelector.lastCardUsed = null;
 

@@ -13,9 +13,13 @@
     this.game.stage.backgroundColor = '#ffffff';  
 
     //Layers/Grupos
-    this.boardLayer = this.game.add.group(undefined ,"BoardLayer");  
-    this.bulletPool = this.game.add.group(undefined, "BulletPool");
-    this.plantsLayer = this.game.add.group(undefined,"PlantsLayer");  
+    this.boardLayer = this.game.add.group(undefined ,"BoardLayer");
+    this.plantsLayer = this.game.add.group(undefined,"PlantsLayer");    
+    this.bulletPool = this.game.add.group(undefined, "BulletLayer");
+    //Guisantes
+    this.peaPool = this.game.add.group(this.bulletPool, "GuisantesNormales");
+    //GuisantesHielo
+    this.frozenPeaPool = this.game.add.group(this.bulletPool, "GuisantesHelados");
     this.zombieGroup =this.game.add.group(undefined, "ZombiesGroup");    
     this.HUDLayer = this.game.add.group(undefined , "HUDLayer"); 
     this.sunGroup = this.game.add.group(undefined, "SunGroup"); 
@@ -53,11 +57,16 @@
 
       //Update de las Plantas
       for(let i =0;i<this.plantsLayer.length;i++)
-        this.plantsLayer.getChildAt(i).shoot(this.bulletPool);
+        this.plantsLayer.getChildAt(i).shoot();
 
       //Update de las Bullets
-      for(let i = 0; i < this.bulletPool.length; i++)
-        this.bulletPool.getChildAt(i).move();;
+      for(let i = 0; i < this.bulletPool.length; i++){
+        var bulletType = this.bulletPool.getChildAt(i);
+        for(let j = 0; j < bulletType.length; j++){
+          bulletType.getChildAt(j).move();
+        }
+      }
+        
 
       //Update de SPManager
       this.spManager.updateSPM();
@@ -65,11 +74,19 @@
       //Temporal (se comprobará cada zombie con cada planta de su fila)
       //Colision de Bullets con Zombies
       for(let i = 0; i < this.bulletPool.length; i++) {
-        for(let j = 0; j < this.zombieGroup.length; j++)
-          this.game.physics.arcade.collide(this.bulletPool.getChildAt(i), this.zombieGroup.getChildAt(j), function bulletCollision(obj1, obj2) {    
-            obj2.takeDamage(obj1._dam);
-            obj1.Oncollision();      
+        var bulletType = this.bulletPool.getChildAt(i);
+        for(let t = 0; t < bulletType.length; t++){          
+          var bullet = bulletType.getChildAt(t);
+          for(let j = 0; j < this.zombieGroup.length; j++)
+          this.game.physics.arcade.collide(bullet, this.zombieGroup.getChildAt(j), function bulletCollision(obj1, obj2) {    
+            var fx = obj1.Oncollision();
+            if(fx != null){
+              obj2.takeEffect(fx);
+            }   
+            obj2.takeDamage(obj1._dam);              
           });
+        }
+        
       }
 
       //Temporal (se comprobará cada zombie con cada planta de su fila)
