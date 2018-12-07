@@ -8,6 +8,9 @@ function Zombie (game, x, y, tag, _damage, _velocity, _attacksPerSec,spManager){
     this.attacksPerSec = _attacksPerSec;
     this.isAttacking = false;
     this.velocity = _velocity;
+
+    this.fx = null;
+
     this.timeCount = 1001;
     this.sfx = this.game.add.audio('bite');
     this.sfx.volume = 0.5;
@@ -24,6 +27,21 @@ function Zombie (game, x, y, tag, _damage, _velocity, _attacksPerSec,spManager){
   Zombie.prototype.move = function () {
     this.x -= this.velocity * this.game.time.elapsedMS/1000;
   }
+
+  Zombie.prototype.takeEffect = function(_fx){
+    //Si ya tiene un efecto, se lo quita para ponerle el nuevo
+    if (this.fx != null){
+      this.fx.timer.destroy();
+      this.fx.deactivate(this);
+    }
+    this.fx = _fx;
+    this.fx.activate(this);
+
+    this.fx.timer = this.game.time.create(true)
+    this.fx.timer.repeat(this.fx.effectTime, 1, this.fx.deactivate,this.fx, this);
+    this.fx.timer.start();
+  }
+
   Zombie.prototype.takeDamage = function (damage) {
     this._life -= damage;
     if(this._life <= 0)

@@ -31,8 +31,8 @@ function Nuez(game, x , y, _boardRef){
       box.plantPlaced = false;
       
       this.destroy();
-      var index = this.boardRef.plants.indexOf(this);
-      this.boardRef.plants.splice(index, 1);
+      //var index = this.boardRef.plants.indexOf(this);
+      this.boardRef.plants.removeChild(this);
     }
     return !this.alive;
   }

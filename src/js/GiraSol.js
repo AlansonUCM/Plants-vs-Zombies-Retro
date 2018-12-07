@@ -22,7 +22,7 @@ function GiraSol(_game, _xPos, _yPos, _boardRef){
         //SpawnSun
         console.log('Sol Disparado');
         this.animations.play('shoot');
-        this.events.onAnimationComplete.add(function(){this.animations.play('idle')}, this);
+        this.events.onAnimationComplete.add(function(){this.animations.play('idle');}, this);
         //Implementacion    
         //Busca el primer sol disponible que pueda desplegarse
         var i = 0;

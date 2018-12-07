@@ -45,12 +45,16 @@ var PreloaderScene = {
     //Nuez
     this.game.load.spritesheet('nuez','images/nuez.png',64,64,9);
     this.game.load.image('nuezFrame', 'images/nuezFrame.png');
+    //HielaGuisantes
+    this.game.load.spritesheet('hielaGuisantes','images/hielaGuisantes.png',64,64,3);
+    this.game.load.image('hielaGuisantesFrame', 'images/hielaGuisantesFrame.png');
 
     // Carga de los zombies
     this.game.load.spritesheet("zombies", "images/firstZombie.png",46,56,2);
 
     this.game.load.image('frame', 'images/frame.png');
-    this.game.load.image('bullet', 'images/BasicBullet.png');
+    this.game.load.image('lanzaGuisantesBala', 'images/balaLanzaGuisantes.png');    
+    this.game.load.image('hielaGuisantesBala', 'images/balaHielaGuisantes.png');
     //Soles y contador
     this.game.load.image('sunFrame', 'images/sunCounterFrame.png');
     this.game.load.image('sun', 'images/sun2.png');

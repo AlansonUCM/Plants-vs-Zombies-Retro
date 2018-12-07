@@ -11,7 +11,7 @@ function SPManager (_game, _boardGroup, _bulletGroup, _plantsGroup, _zombiesGrou
   
     //Pools
     this.sunPool = _sunGroup;
-    this.bulletPool = _bulletGroup;
+    this.bulletGroup = _bulletGroup;
 
     //Zombies
     this.zombies = _zombiesGroup;
