@@ -57,8 +57,8 @@ function Sun (game, x, y, tag, _value, _spManager){
     this.goToCounter();
   }
   Sun.prototype.goToCounter = function() {
-    var tween = this.game.add.tween(this).to({x:this.spManager.sunCounter.x + 130, y: this.spManager.sunCounter.y + 27}, 500, Phaser.Easing.Default, true);
-    tween.onComplete.addOnce(function whenFinished(){this.kill(); this.spManager.addSunPoints(this.value);}, this);
+    var tween = this.game.add.tween(this).to({x:this.spManager.sunCounter.x + 130, y: this.spManager.sunCounter.y + 27}, 500, Phaser.Easing.Linear.None, true);
+    tween.onComplete.addOnce(function whenFinished(){this.kill(); this.spManager.sunManager.addSunPoints(this.value);}, this);
   }
   Sun.prototype.drop = function(_xPos, _yPos){
     this.velocity = 0;
