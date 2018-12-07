@@ -36,13 +36,11 @@ function Sun (game, x, y, tag, _value, _spManager){
   
   Sun.prototype.over = function (){
     //Hará algo, a lo mejor hacemos que con que el cursor pase por encima, ya recoja el sol
-    //this.spManager.addSunPoints(this.takeSun());
     if(!this.isTaken){
       this.isTaken = true;
       this.takeSun();
       console.log('Sol recogido y suma realizada');
-  }
-    //this.inputEnable = false;
+    }
   }
   Sun.prototype.down = function(){
     //Hara algo, o no
@@ -57,7 +55,6 @@ function Sun (game, x, y, tag, _value, _spManager){
     //El sol debe ir al contador
     this.sfx.play();
     this.goToCounter();
-    //return this.value;
   }
   Sun.prototype.goToCounter = function() {
     var tween = this.game.add.tween(this).to({x:this.spManager.sunCounter.x + 130, y: this.spManager.sunCounter.y + 27}, 500, Phaser.Easing.Default, true);

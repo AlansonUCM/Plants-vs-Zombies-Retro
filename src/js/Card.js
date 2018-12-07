@@ -47,8 +47,6 @@ function Card (game, x, y, tag, funcionPlanta, _cardSelector){
     this.cardSelector.spManager.shovel.deselectShovel();
     
     this.isSelected = true;
-    //this.inputEnabled = false;
-    //this.freezeFrames = true;
     
     //Cambio de imagen de cursor (para quitar la parte "Frame" del tag)
     var str = this.key;
@@ -65,8 +63,6 @@ function Card (game, x, y, tag, funcionPlanta, _cardSelector){
   }
   Card.prototype.deSelect = function(){
     this.isSelected = false; 
-    //this.freezeFrames = false;
-    //this.inputEnabled = true;
     
     this.cardSelector.lastCardUsed = null;
 
