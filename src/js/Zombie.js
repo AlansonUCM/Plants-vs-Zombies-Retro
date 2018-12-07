@@ -1,9 +1,9 @@
 
 //CLASE ZOMBIE
-function Zombie (game, x, y, tag, _damage, _velocity, _attacksPerSec,spManager){
+function Zombie (game, x, y, tag, _life, _damage, _velocity, _attacksPerSec,spManager){
     Character.apply(this,[game, x, y, tag]);
     //this.game.add.sprite(100,100,tag);
-    this._life = 12;
+    this.life = _life;
     this.damage = _damage; 
     this.attacksPerSec = _attacksPerSec;
     this.isAttacking = false;
@@ -11,7 +11,7 @@ function Zombie (game, x, y, tag, _damage, _velocity, _attacksPerSec,spManager){
 
     this.fx = null;
 
-    this.timeCount = 1001;
+    this.timeCount = 1000;
     this.sfx = this.game.add.audio('bite');
     this.sfx.volume = 0.5;
     this.manager=spManager;
@@ -43,8 +43,8 @@ function Zombie (game, x, y, tag, _damage, _velocity, _attacksPerSec,spManager){
   }
 
   Zombie.prototype.takeDamage = function (damage) {
-    this._life -= damage;
-    if(this._life <= 0)
+    this.life -= damage;
+    if(this.life <= 0)
       this.manager.zombies.remove(this,true);
   
   }
@@ -71,9 +71,5 @@ function Zombie (game, x, y, tag, _damage, _velocity, _attacksPerSec,spManager){
       if(this.timeCount > 0)
         this.timeCount = 0;
       this.move(this.velocity);
-    }else{
-      //Animacion de atacar
-      //------------
-      console.log("Zombie parado para ataca");
     }
   }

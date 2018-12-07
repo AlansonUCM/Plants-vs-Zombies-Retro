@@ -1,6 +1,6 @@
 
 //CLASE Board
-function Board (game, parent,plantsParent, _xPos, _yPos,numXBoxes, numYBoxes, _boxTam, _spManager){
+function Board (game, parent, plantsParent, _xPos, _yPos,numXBoxes, numYBoxes, _boxTam, _spManager){
     Phaser.Group.apply(this,[game, parent, "BoardGroup"]);
     this.boxes = game.add.group(this,"Boxes");
     this.plants = plantsParent;

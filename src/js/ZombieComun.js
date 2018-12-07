@@ -1,13 +1,8 @@
 
 //ZombieComun
-function ZombieComun(game, x, y, tag){
-    Zombie.apply(this,[game, x, y, tag]);
-    //Atributos propios
-    //----------------
-    this._life = 12;
-    this._force = 1;
-    this._vel = 50;
-    //----------------
+function ZombieComun(game, x, y, spManager){
+    Zombie.apply(this,[game, x, y, 'zombieComun', 12, 1, 30, 1, spManager]);
+
   }
   ZombieComun.prototype = Object.create(Zombie.prototype);
   ZombieComun.constructor = ZombieComun;

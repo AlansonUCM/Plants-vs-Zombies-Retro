@@ -3,6 +3,7 @@
 function Box (game, xPos, yPos, _boardRef){
     Phaser.Button.apply(this,[game, xPos, yPos, 'frame', this.onInputUp]);
     this.game.world.addChild(this);
+    this.anchor.setTo(0.5)
     this.scale.setTo(0.5);
     this.alpha = 0.3;
     this.sfx=this.game.add.audio('plantar');

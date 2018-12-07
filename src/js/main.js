@@ -50,7 +50,10 @@ var PreloaderScene = {
     this.game.load.image('hielaGuisantesFrame', 'images/hielaGuisantesFrame.png');
 
     // Carga de los zombies
-    this.game.load.spritesheet("zombies", "images/firstZombie.png",46,56,2);
+    this.game.load.spritesheet("zombieComun", "images/zombieComun.png",46,52,2);
+    this.game.load.spritesheet("zombieCono", "images/zombieCono.png",46,67,2);
+    this.game.load.image('cono', 'images/cono.png');
+
 
     this.game.load.image('frame', 'images/frame.png');
     this.game.load.image('lanzaGuisantesBala', 'images/balaLanzaGuisantes.png');    

@@ -33,9 +33,14 @@
     this.music.play();
     this.music.volume=0.2;
    
+    //Logica del juego
     this.spManager = new SPManager(this.game, this.boardLayer, this.bulletPool, this.plantsLayer, this.zombieGroup, this.HUDLayer, this.sunGroup, 4);
-    this.zombieGroup.add(new Zombie(this.game, 800, 300-100, "zombies", 1, 30, 1,this.spManager));
+
+    //Creacion de zombies
+    this.zombieGroup.add(new ZombieComun(this.game, 800, 300, this.spManager));
     this.zombieGroup.getChildAt(0).scale.setTo(1.8); 
+    this.zombieGroup.add(new ZombieCono(this.game, 800, 300-100, this.spManager));
+    this.zombieGroup.getChildAt(1).scale.setTo(1.8);
 
     //Cursor Changer
     this.game.cursor = new MouseChanger(this.game, 0, 0, undefined, this.cursorLayer);
