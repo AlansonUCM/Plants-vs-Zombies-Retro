@@ -13,14 +13,21 @@ function Bullet (game, x, y, tag,vel,dam, _effect = null){
   Bullet.constructor = Bullet;
   
   Bullet.prototype.move = function () {
-    this.x += this._vel * this.game.time.elapsedMS/1000;
+    if(this.alive){
+      this.x += this._vel * this.game.time.elapsedMS/1000;
+      //Si esta fuera de pantalla/mundo se mata
+      if(this.x > this.game.world._width){
+        this.kill();
+        console.log('Bala ha muerto fuera del campo de vision');
+      }
+    }
   }
   
   
   Bullet.prototype.Oncollision = function () {
     this.sfx.play();
     this.kill();
-    
+
     return this.effect;
   }
   
