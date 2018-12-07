@@ -13,13 +13,13 @@
     this.game.stage.backgroundColor = '#ffffff';  
 
     //Layers/Grupos
-    this.boardLayer = this.game.add.group(undefined ,"BoardLayer");  
+    this.boardLayer = this.game.add.group(undefined ,"BoardLayer");
+    this.plantsLayer = this.game.add.group(undefined,"PlantsLayer");    
     this.bulletPool = this.game.add.group(undefined, "BulletLayer");
     //Guisantes
     this.peaPool = this.game.add.group(this.bulletPool, "GuisantesNormales");
     //GuisantesHielo
     this.frozenPeaPool = this.game.add.group(this.bulletPool, "GuisantesHelados");
-    this.plantsLayer = this.game.add.group(undefined,"PlantsLayer");  
     this.zombieGroup =this.game.add.group(undefined, "ZombiesGroup");    
     this.HUDLayer = this.game.add.group(undefined , "HUDLayer"); 
     this.sunGroup = this.game.add.group(undefined, "SunGroup"); 
