@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="readme_src/PvZ_8BITS_LOGO.png" alt="Plants vs Zombies: 8 bits" />
+  <img src="readme_src/PvZ_8BITS_LOGO.png" alt="Plants vs Zombies: Retro" />
 </h1>
 
 <h2 align ="center">
@@ -7,7 +7,7 @@
 </h2>
 
 <p>
-  Plants vs Zombies: 8 bits is an adaptation of the famous game Plants vs Zombies with a retro aesthetic,
+  Plants vs Zombies: Retro is an adaptation of the famous game Plants vs Zombies with a retro aesthetic,
   whose idea will be developed by LosZombiesSonVeganos.
 </p>
 
