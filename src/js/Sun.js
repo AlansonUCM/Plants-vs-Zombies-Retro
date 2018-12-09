@@ -60,11 +60,11 @@ function Sun (game, x, y, tag, _value, _spManager){
     var tween = this.game.add.tween(this).to({x:this.spManager.sunCounter.x + 130, y: this.spManager.sunCounter.y + 27}, 500, Phaser.Easing.Linear.None, true);
     tween.onComplete.addOnce(function whenFinished(){this.kill(); this.spManager.sunManager.addSunPoints(this.value);}, this);
   }
-  Sun.prototype.drop = function(_xPos, _yPos){
+  Sun.prototype.drop = function(_xPos, _yPos, _yDist){
     this.velocity = 0;
     this.reset(_xPos, _yPos);
     this.isTaken = false;
-    var tween = this.game.add.tween(this).to({y: _yPos + 25}, 1500, Phaser.Easing.Bounce.In, true);
+    var tween = this.game.add.tween(this).to({y: _yPos + _yDist - this.height / 4}, 1500, Phaser.Easing.Bounce.Out, true);
   }
   Sun.prototype.reSpawn = function(){
     this.isTaken = false;
