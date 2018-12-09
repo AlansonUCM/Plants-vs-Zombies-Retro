@@ -16,6 +16,9 @@ function Zombie (game, x, y, tag, _life, _damage, _velocity, _attacksPerSec,spMa
     this.sfx.volume = 0.5;
     this.manager=spManager;
 
+    //BoxCollider ajustes
+    this.body.setSize(this.width/2, this.height/2, 0, this.height/2 - 10);
+
     this.animations.add('move',[0,1,0]);
     this.animations.play('move',5,true);
     this.soundCount=0;
@@ -46,7 +49,8 @@ function Zombie (game, x, y, tag, _life, _damage, _velocity, _attacksPerSec,spMa
     this.life -= damage;
     if(this.life <= 0)
       this.manager.zombies.remove(this,true);
-  
+    
+    return !this.alive;
   }
   Zombie.prototype.attack = function () {
     this.isAttacking = true;

@@ -16,18 +16,16 @@ function HielaGuisantes(game, x, y, _boardRef){
     this.sfx=this.game.add.audio('shoot');
     this.sfx.volume=0.2;
     
-    this.rayCast = new Phaser.Sprite(this.game, 0, this.height / 2,"__default");
-    this.addChild(this.rayCast);
-    this.rayCast.width =  this.game._width - x;
-    this.rayCast.height = 10;
-    this.rayCast.collides = false;
-    this.game.physics.arcade.enable(this.rayCast);
+    this.rayCast;
+    this.createRaycast();
+
+    
     this.isAttacking = false;
 
     this.animations.play('try');
   }
   HielaGuisantes.prototype = Object.create(LanzaGuisantes.prototype);
   HielaGuisantes.constructor = HielaGuisantes;
-  HielaGuisantes.cost = 100;
+  HielaGuisantes.cost = 30;
   HielaGuisantes.coolDownTime = (15 * 1000);
   

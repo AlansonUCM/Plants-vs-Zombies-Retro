@@ -85,10 +85,13 @@
           for(let j = 0; j < this.zombieGroup.length; j++)
           this.game.physics.arcade.collide(bullet, this.zombieGroup.getChildAt(j), function bulletCollision(obj1, obj2) {    
             var fx = obj1.Oncollision();
+            t--;
             if(fx != null){
               obj2.takeEffect(fx);
             }   
-            obj2.takeDamage(obj1._dam);              
+            var isDead = obj2.takeDamage(obj1._dam); 
+            if(isDead)
+              j--;
           });
         }
         
@@ -106,6 +109,8 @@
               var dam = obj1.attack();
               var obj2IsDead = obj2.takeDamage(dam);
               obj1.isAttacking = !obj2IsDead;
+              if(obj2IsDead)
+                j--;
             }
           });
         }
@@ -114,6 +119,11 @@
       }   
     }
   },
+  /*render: function(){
+    for(let i = 0; i< this.zombieGroup.length; i++){
+      this.game.debug.body(this.zombieGroup.getChildAt(i));
+    }
+  },*/
 
   paused: function (){
     //Para cerciorar que esta pausado por codigo

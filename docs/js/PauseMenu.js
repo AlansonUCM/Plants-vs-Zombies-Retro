@@ -49,17 +49,19 @@ PauseMenu.constructor = PauseMenu;
 PauseMenu.prototype = Object.create(Phaser.Group.prototype);
 
 //Metodos
-PauseMenu.prototype.exit = function (){
+PauseMenu.prototype.exit = function (){    
+    this.game.sound.stopAll();
     this.game.camera.fade('0x000000', 1000);
     this.game.camera.onFadeComplete.add(function(){   
         this.game.state.start('mainMenu');
     }, this.spManager);
 }
 PauseMenu.prototype.reset = function (){
+    this.game.sound.stopAll();
     this.game.camera.fade('0x000000', 1000);
     this.game.camera.onFadeComplete.add(function(){        
         this.game.state.start(this.game.state.current);
-    }, this.spManager);
+    }, this.spManager);    
 }
 
 
@@ -137,5 +139,8 @@ PauseMenu.prototype.playAll = function(){
             p.animations.paused = false;
         });
     }
+}
+PauseMenu.prototype.stopMusic = function(){
+    this.game.sound.destroy();
 }
 
