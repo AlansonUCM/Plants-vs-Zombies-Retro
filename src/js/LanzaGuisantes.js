@@ -18,7 +18,7 @@ function LanzaGuisantes(game, x, y, _boardRef){
     this.sfx=this.game.add.audio('shoot');
     this.sfx.volume=0.2;
     //----------------
-    this.rayCast = new Phaser.Sprite(this.game, 0, this.height / 2,"__default");
+    this.rayCast = new Phaser.Sprite(this.game, 0, -this.height / 2,"__default");
     this.addChild(this.rayCast);
     this.rayCast.width =  this.game._width - x;
     this.rayCast.height = 10;
