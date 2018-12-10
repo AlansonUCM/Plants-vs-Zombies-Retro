@@ -28,6 +28,9 @@ var PreloaderScene = {
     this.game.load.image('void', 'images/void.png');
     this.game.load.image('logo', 'images/logo.png');
 
+    //Fondo
+    this.game.load.image('backGround', 'images/levelGround.png');
+
     //Sprites de botones
     this.game.load.image('shovel', 'images/palaSuelta.png');
     this.game.load.image('shovelFrame', 'images/palaFrame.png');

@@ -39,6 +39,7 @@ function PauseMenu(_game, _spManager){
 
     //Slider del Volumen
     this.volumeSliderBar = new SliderBar(this.game,x + 60,y - 40, this.changeVolume, this);
+    this.volumeSliderBar.setValue(this.game.sound.volume);
     this.volumeSliderBar.visible = false; 
     this.volumeSliderBar.text = this.game.add.text(this.volumeSliderBar.x - 160, this.volumeSliderBar.y + 3, 'Volumen',{ font: "bold 21px Arial", fill: "#1df75d", align: "center" },this);
     this.volumeSliderBar.text.anchor.setTo(0.5);
@@ -105,9 +106,10 @@ PauseMenu.prototype.pauseAll = function(){
         //Shovel
         this.spManager.shovel.input.enabled = false;
         //Zombies
-        //Zombies
-        for(let i = 0; i < this.spManager.zombies.getChildAt(0).length; i++){
-            this.spManager.zombies.getChildAt(0).getChildAt(i).animations.paused = true;
+        if(this.spManager.zombies.length > 0){
+            for(let i = 0; i < this.spManager.zombies.getChildAt(0).length; i++){
+                this.spManager.zombies.getChildAt(0).getChildAt(i).animations.paused = true;
+            }
         }
         //Plantas
         this.spManager.board.plants.forEach(p => {
@@ -132,8 +134,10 @@ PauseMenu.prototype.playAll = function(){
         //Shovel
         this.spManager.shovel.input.enabled = true;
         //Zombies
-        for(let i = 0; i < this.spManager.zombies.getChildAt(0).length; i++){
-            this.spManager.zombies.getChildAt(0).getChildAt(i).animations.paused = false;
+        if(this.spManager.zombies.length > 0){
+            for(let i = 0; i < this.spManager.zombies.getChildAt(0).length; i++){
+                this.spManager.zombies.getChildAt(0).getChildAt(i).animations.paused = false;
+            }
         }
         //Plantas
         this.spManager.board.plants.forEach(p => {

@@ -34,18 +34,46 @@
     this.music.volume=0.2;
    
     //Creacion de oleadas
+    this.wave = this.game.add.group(this.zombieGroup, "VoidWave");
     this.wave0 = this.game.add.group(this.zombieGroup, "Wave 0");
     this.wave1 = this.game.add.group(this.zombieGroup, "Wave 1");
-    this.currentWave = this.wave0;
+    this.wave2 = this.game.add.group(this.zombieGroup, "Wave 2");
+
+    //Fondo
+    this.game.add.sprite(0,0,'backGround',0,this.boardLayer);
 
     //Logica del juego
-    this.spManager = new SPManager(this.game, this.boardLayer, this.bulletPool, this.plantsLayer, this.zombieGroup, this.currentWave, this.HUDLayer, this.sunGroup, 4);
+    this.spManager = new SPManager(this.game, this.boardLayer, this.bulletPool, this.plantsLayer, this.zombieGroup, this.HUDLayer, this.sunGroup, 4);
 
     //Creacion de zombies por oleadas
     //Oleada 1
-    this.wave0.add(new ZombieComun(this.game, 800, 300, this.spManager));
+    this.wave0.add(new ZombieComun(this.game, 1000, 200, this.spManager));    
+    this.wave0.add(new ZombieComun(this.game, 1150, 200 + 86, this.spManager));
+    this.wave0.add(new ZombieComun(this.game, 1100, 200, this.spManager));
+    this.wave0.add(new ZombieComun(this.game, 1000, 200 + 86 * 2, this.spManager));
+    //Ordeno
+    this.wave0.sort('y', Phaser.Group.SORT_ASCENDING);
+    
     //Oleada 2
-    this.wave1.add(new ZombieCono(this.game, 800, 300-100, this.spManager));
+    this.wave1.add(new ZombieCono(this.game, 1000, 200 + 86 * 2, this.spManager));
+    this.wave1.add(new ZombieCono(this.game, 1000, 200, this.spManager));
+    this.wave1.add(new ZombieComun(this.game, 1200, 200 + 86 * 2, this.spManager));
+    this.wave1.add(new ZombieComun(this.game, 1500, 200 + 86 * 3, this.spManager));
+    this.wave1.add(new ZombieComun(this.game, 1250, 200, this.spManager));
+    //Ordeno
+    this.wave1.sort('y', Phaser.Group.SORT_ASCENDING);
+
+    //Oleada 3    
+    this.wave2.add(new ZombieCono(this.game, 1000, 200 + 86 * 3, this.spManager));
+    this.wave2.add(new ZombieCono(this.game, 1350, 200 + 86, this.spManager));
+    this.wave2.add(new ZombieCono(this.game, 1600, 200 + 86 * 4, this.spManager));
+    this.wave2.add(new ZombieCono(this.game, 1250, 200 + 86 * 2, this.spManager));
+    this.wave2.add(new ZombieComun(this.game, 1000, 200, this.spManager));
+    this.wave2.add(new ZombieComun(this.game, 1400, 200 + 86 * 2, this.spManager));
+    this.wave2.add(new ZombieComun(this.game, 1400, 200, this.spManager));
+    //Ordeno
+    this.wave2.sort('y', Phaser.Group.SORT_ASCENDING);
+
 
     //Cursor Changer
     this.game.cursor = new MouseChanger(this.game, 0, 0, undefined, this.cursorLayer);
@@ -64,10 +92,6 @@
       for(let j = 0; j < this.zombieGroup.getChildAt(0).length; j++)
       this.zombieGroup.getChildAt(0).getChildAt(j).updateZombie();
       
-
-      //Update de las Plantas
-      for(let i =0;i<this.plantsLayer.length;i++)
-        this.plantsLayer.getChildAt(i).shoot();
 
       //Update de las Bullets
       for(let i = 0; i < this.bulletPool.length; i++){
@@ -119,23 +143,26 @@
           zomb.isAttacking = false;
       }      
       
+      //Update de las Plantas
+      for(let i =0;i<this.plantsLayer.length;i++)
+        this.plantsLayer.getChildAt(i).shoot();
       
       //Update de SPManager
       this.spManager.updateSPM();
     }
   },
-  render: function(){
-    // for(let i = 0; i< this.zombieGroup.getChildAt(0).length; i++){
-    //   this.game.debug.body(this.zombieGroup.getChildAt(0).getChildAt(i));
-    // }
-    // for(let i = 0; i < this.plantsLayer.length;i++){
-    //   var plant = this.plantsLayer.getChildAt(i);
-    //   this.game.debug.body(plant);
-    //   if(plant.children.length > 0){
-    //     this.game.debug.body(plant.getChildAt(0));
-    //   }
-    // }
-  },
+  // render: function(){
+  //   for(let i = 0; i< this.zombieGroup.getChildAt(0).length; i++){
+  //     this.game.debug.body(this.zombieGroup.getChildAt(0).getChildAt(i));
+  //   }
+  //   for(let i = 0; i < this.plantsLayer.length;i++){
+  //     var plant = this.plantsLayer.getChildAt(i);
+  //     this.game.debug.body(plant);
+  //     if(plant.children.length > 0){
+  //       this.game.debug.body(plant.getChildAt(0));
+  //     }
+  //   }
+  // },
 
   paused: function (){
     //Para cerciorar que esta pausado por codigo

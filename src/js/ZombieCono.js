@@ -1,5 +1,5 @@
 function ZombieCono(game, x, y, spManager){
-    Zombie.apply(this,[game, x, y, 'zombieCono', 12 * 2, 1, 30, 1, spManager]);
+    Zombie.apply(this,[game, x, y, 'zombieCono', 12 * 2, 1, 15, 1, spManager]);
     
     this.animations.add('move2',[2,3,2]);
 

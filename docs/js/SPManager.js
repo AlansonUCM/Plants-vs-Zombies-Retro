@@ -8,6 +8,7 @@ function SPManager (_game, _boardGroup, _bulletGroup, _plantsGroup, _zombiesGrou
     this.shovel = new Shovel(_game, 205 + 10, 5, this, _HUDGroup);
     this.sunManager = new SunManager(_game, _sunGroup, _timeToSpawnSun, this);
     this.board = new Board(_game, _boardGroup, _plantsGroup, 162, 200, 5, 9, 74, 86, this);
+    this.waveManager = new WaveManager(_game,_zombiesGroup);
   
     //Pools
     this.sunPool = _sunGroup;
@@ -23,4 +24,5 @@ function SPManager (_game, _boardGroup, _bulletGroup, _plantsGroup, _zombiesGrou
   SPManager.prototype.updateSPM = function(){ 
     this.sunManager.sunSpawnControl();
     this.sunManager.updateSuns();
+    this.waveManager.checkWave();
   }
