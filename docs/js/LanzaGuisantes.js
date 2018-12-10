@@ -71,7 +71,7 @@ LanzaGuisantes.prototype.shoot=function(){
   this.timeCount += this.game.time.elapsedMS; 
 }
 LanzaGuisantes.prototype.createRaycast = function(){
-  var cast = this.game.add.sprite(0, -this.height / 2,"__missing", 0);
+  var cast = this.game.add.sprite(0, -this.height / 2,"__default", 0);
   this.game.physics.arcade.enable(cast);
 
   this.addChild(cast);
