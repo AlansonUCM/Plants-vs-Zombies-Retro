@@ -18,8 +18,7 @@ function LanzaGuisantes(game, x, y, _boardRef){
   this.sfx=this.game.add.audio('shoot');
   this.sfx.volume=0.2;
   //----------------
-  this.rayCast;
-  this.createRaycast();
+  this.rayCast = this.createRaycast();
 
   this.isAttacking = false;
 
@@ -72,14 +71,16 @@ LanzaGuisantes.prototype.shoot=function(){
   this.timeCount += this.game.time.elapsedMS; 
 }
 LanzaGuisantes.prototype.createRaycast = function(){
-  this.rayCast = new Phaser.Sprite(this.game, 0, -this.height / 2,"__default");
-  this.game.physics.arcade.enable(this.rayCast);
+  var cast = this.game.add.sprite(0, -this.height / 2,"__missing", 0);
+  this.game.physics.arcade.enable(cast);
 
-  this.addChild(this.rayCast);
+  this.addChild(cast);
 
-  this.rayCast.x = 0;
-  this.rayCast.y = -this.height / 2;
-  this.rayCast.width =  this.game._width - this.x;
-  this.rayCast.height = 10;
-  this.rayCast.collides = false;
+  cast.x = 0;
+  cast.y = -this.height / 2;
+  cast.width =  this.game._width - this.x;
+  cast.height = 10;
+  cast.collides = false;
+
+  return cast;
 }

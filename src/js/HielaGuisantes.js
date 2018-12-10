@@ -16,8 +16,7 @@ function HielaGuisantes(game, x, y, _boardRef){
     this.sfx=this.game.add.audio('shoot');
     this.sfx.volume=0.2;
     
-    this.rayCast;
-    this.createRaycast();
+    this.rayCast = this.createRaycast();
 
     
     this.isAttacking = false;
