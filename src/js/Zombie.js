@@ -3,6 +3,8 @@
 function Zombie (game, x, y, tag, _life, _damage, _velocity, _attacksPerSec,spManager){
     Character.apply(this,[game, x, y, tag]);
     //this.game.add.sprite(100,100,tag);
+
+
     this.life = _life;
     this.damage = _damage; 
     this.attacksPerSec = _attacksPerSec;
@@ -18,6 +20,7 @@ function Zombie (game, x, y, tag, _life, _damage, _velocity, _attacksPerSec,spMa
 
     //BoxCollider ajustes
     this.body.setSize(this.width/2, this.height/2, 0, this.height/2 - 10);
+    this.scale.setTo(1.8);
 
     this.animations.add('move',[0,1,0]);
     this.animations.play('move',5,true);
@@ -48,7 +51,7 @@ function Zombie (game, x, y, tag, _life, _damage, _velocity, _attacksPerSec,spMa
   Zombie.prototype.takeDamage = function (damage) {
     this.life -= damage;
     if(this.life <= 0)
-      this.manager.zombies.remove(this,true);
+      this.manager.zombies.getChildAt(0).remove(this,true);
     
     return !this.alive;
   }

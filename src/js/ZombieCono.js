@@ -17,5 +17,5 @@ ZombieCono.prototype.takeDamage = function(_damage){
         this.animations.play('move2',5,true);
     }
     if(this.life <= 0)
-        this.manager.zombies.remove(this,true);  
+        this.manager.zombies.getChildAt(0).remove(this,true);  
 }

@@ -21,8 +21,9 @@ Cereza.coolDownTime = (18 * 1000);
 
 Cereza.prototype.shoot=function() { 
    if(this.timeCount > 1000){
-        for(let j = 0; j < this.boardRef.spManager.zombies.length; j++) {
-            var zomb = this.boardRef.spManager.zombies.getChildAt(j);
+       var currentZombs = this.boardRef.spManager.zombies.getChildAt(0);
+        for(let j = 0; j < currentZombs.length; j++) {
+            var zomb = currentZombs.getChildAt(j);
             var col = this.game.physics.arcade.collide(this, zomb);
             if(col) {
                 zomb.takeDamage(this._force);

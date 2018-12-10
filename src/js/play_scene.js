@@ -33,14 +33,19 @@
     this.music.play();
     this.music.volume=0.2;
    
-    //Logica del juego
-    this.spManager = new SPManager(this.game, this.boardLayer, this.bulletPool, this.plantsLayer, this.zombieGroup, this.HUDLayer, this.sunGroup, 4);
+    //Creacion de oleadas
+    this.wave0 = this.game.add.group(this.zombieGroup, "Wave 0");
+    this.wave1 = this.game.add.group(this.zombieGroup, "Wave 1");
+    this.currentWave = this.wave0;
 
-    //Creacion de zombies
-    this.zombieGroup.add(new ZombieComun(this.game, 800, 300, this.spManager));
-    this.zombieGroup.getChildAt(0).scale.setTo(1.8); 
-    this.zombieGroup.add(new ZombieCono(this.game, 800, 300-100, this.spManager));
-    this.zombieGroup.getChildAt(1).scale.setTo(1.8);
+    //Logica del juego
+    this.spManager = new SPManager(this.game, this.boardLayer, this.bulletPool, this.plantsLayer, this.zombieGroup, this.currentWave, this.HUDLayer, this.sunGroup, 4);
+
+    //Creacion de zombies por oleadas
+    //Oleada 1
+    this.wave0.add(new ZombieComun(this.game, 800, 300, this.spManager));
+    //Oleada 2
+    this.wave1.add(new ZombieCono(this.game, 800, 300-100, this.spManager));
 
     //Cursor Changer
     this.game.cursor = new MouseChanger(this.game, 0, 0, undefined, this.cursorLayer);
@@ -54,10 +59,10 @@
   },
   
   update: function (){
-    if(!this.game.isPaused){
+    if(!this.game.isPaused && 0 < this.zombieGroup.length){
       //Update de los Zombies
-      for(let j = 0; j < this.zombieGroup.length; j++)
-      this.zombieGroup.getChildAt(j).updateZombie();
+      for(let j = 0; j < this.zombieGroup.getChildAt(0).length; j++)
+      this.zombieGroup.getChildAt(0).getChildAt(j).updateZombie();
       
 
       //Update de las Plantas
@@ -71,10 +76,6 @@
           bulletType.getChildAt(j).move();
         }
       }
-        
-
-      //Update de SPManager
-      this.spManager.updateSPM();
 
       //Temporal (se comprobará cada zombie con cada planta de su fila)
       //Colision de Bullets con Zombies
@@ -82,8 +83,8 @@
         var bulletType = this.bulletPool.getChildAt(i);
         for(let t = 0; t < bulletType.length; t++){          
           var bullet = bulletType.getChildAt(t);
-          for(let j = 0; j < this.zombieGroup.length; j++)
-          this.game.physics.arcade.collide(bullet, this.zombieGroup.getChildAt(j), function bulletCollision(obj1, obj2) {    
+          for(let j = 0; j < this.zombieGroup.getChildAt(0).length; j++)
+          this.game.physics.arcade.collide(bullet, this.zombieGroup.getChildAt(0).getChildAt(j), function bulletCollision(obj1, obj2) {    
             var fx = obj1.Oncollision();
             t--;
             if(fx != null){
@@ -99,8 +100,8 @@
 
       //Temporal (se comprobará cada zombie con cada planta de su fila)
       //Colision de Zombies con Plants
-      for(let i = 0; i < this.zombieGroup.length; i++) {
-        var zomb = this.zombieGroup.getChildAt(i);
+      for(let i = 0; i < this.zombieGroup.getChildAt(0).length; i++) {
+        var zomb = this.zombieGroup.getChildAt(0).getChildAt(i);
         var col = false;
         for(let j = 0; j < this.plantsLayer.length && !col; j++) {
           var plant = this.plantsLayer.getChildAt(j);
@@ -116,14 +117,25 @@
         }
         if(!col && zomb.isAttacking)
           zomb.isAttacking = false;
-      }   
+      }      
+      
+      
+      //Update de SPManager
+      this.spManager.updateSPM();
     }
   },
-  /*render: function(){
-    for(let i = 0; i< this.zombieGroup.length; i++){
-      this.game.debug.body(this.zombieGroup.getChildAt(i));
-    }
-  },*/
+  render: function(){
+    // for(let i = 0; i< this.zombieGroup.getChildAt(0).length; i++){
+    //   this.game.debug.body(this.zombieGroup.getChildAt(0).getChildAt(i));
+    // }
+    // for(let i = 0; i < this.plantsLayer.length;i++){
+    //   var plant = this.plantsLayer.getChildAt(i);
+    //   this.game.debug.body(plant);
+    //   if(plant.children.length > 0){
+    //     this.game.debug.body(plant.getChildAt(0));
+    //   }
+    // }
+  },
 
   paused: function (){
     //Para cerciorar que esta pausado por codigo

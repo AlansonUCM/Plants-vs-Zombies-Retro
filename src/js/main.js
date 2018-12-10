@@ -25,6 +25,7 @@ var PreloaderScene = {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
     // TODO: load here the assets for the game
+    this.game.load.image('void', 'images/void.png');
     this.game.load.image('logo', 'images/logo.png');
 
     //Sprites de botones
