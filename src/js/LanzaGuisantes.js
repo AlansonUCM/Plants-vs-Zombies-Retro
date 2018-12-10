@@ -40,7 +40,7 @@ LanzaGuisantes.prototype.checkRayCast = function(_zombiesArray){
 }
 
 LanzaGuisantes.prototype.shoot=function(){
-  this.checkRayCast(this.boardRef.spManager.zombies);
+  this.checkRayCast(this.boardRef.spManager.zombies.getChildAt(0));
   if(this.alive  && this.rayCast.collides && this.timeCount >= this.firerate){
     this.timeCount = 0;
     if(this.bulletPool.length == 0) {
@@ -71,16 +71,16 @@ LanzaGuisantes.prototype.shoot=function(){
   this.timeCount += this.game.time.elapsedMS; 
 }
 LanzaGuisantes.prototype.createRaycast = function(){
-  var cast = this.game.add.sprite(0, -this.height / 2,"__default", 0);
+  var cast = this.game.add.sprite(0, -this.height / 2,"void", 0);
   this.game.physics.arcade.enable(cast);
-
-  this.addChild(cast);
 
   cast.x = 0;
   cast.y = -this.height / 2;
   cast.width =  this.game._width - this.x;
   cast.height = 10;
   cast.collides = false;
+
+  this.addChild(cast);
 
   return cast;
 }

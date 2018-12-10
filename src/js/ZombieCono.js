@@ -1,5 +1,5 @@
 function ZombieCono(game, x, y, spManager){
-    Zombie.apply(this,[game, x, y, 'zombieCono', 12 * 2, 1, 30, 1, spManager]);
+    Zombie.apply(this,[game, x, y, 'zombieCono', 12 * 2, 1, 15, 1, spManager]);
     
     this.animations.add('move2',[2,3,2]);
 
@@ -17,5 +17,5 @@ ZombieCono.prototype.takeDamage = function(_damage){
         this.animations.play('move2',5,true);
     }
     if(this.life <= 0)
-        this.manager.zombies.remove(this,true);  
+        this.manager.zombies.getChildAt(0).remove(this,true);  
 }

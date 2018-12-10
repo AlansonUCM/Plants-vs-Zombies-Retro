@@ -65,10 +65,12 @@ function Sun (game, x, y, tag, _value, _spManager){
     this.reset(_xPos, _yPos);
     this.isTaken = false;
     var tween = this.game.add.tween(this).to({y: _yPos + _yDist - this.height / 4}, 1500, Phaser.Easing.Bounce.Out, true);
+    this.events.onInputOver.add(function(){ tween.stop();});
   }
   Sun.prototype.reSpawn = function(){
     this.isTaken = false;
     this.velocity = 100;
     var xSpw = this.game.rnd.integerInRange(this.game.world._width/3, this.game.world._width - 40);
     this.reset(xSpw, -25);
+    this.events.onInputOver.add(function(){});
   }
