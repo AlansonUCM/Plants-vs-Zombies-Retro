@@ -41,7 +41,7 @@ Cereza.prototype.shoot=function() {
             }
         }
         this.sfx.play();
-        this.takeDamage(5);
+        this.takeDamage(this._life + 1);
     }else
         this.timeCount += this.game.time.elapsedMS;
 }
