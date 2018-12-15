@@ -1,12 +1,12 @@
 
 //Clase SPManager
-function SPManager (_game, _boardGroup, _bulletGroup, _plantsGroup, _zombiesGroup, _HUDGroup, _sunGroup, _timeToSpawnSun){  
+function SPManager (_game, _boardGroup, _bulletGroup, _plantsGroup, _zombiesGroup, _HUDGroup, _sunGroup){  
     this.game = _game;
 
     this.sunCounter = new SunCounter(_game,_HUDGroup, 5, 5);  
     this.cardSelector = new CardSelector(_game, _HUDGroup, 5, 64, 72, 5,[],[], this);
     this.shovel = new Shovel(_game, 205 + 10, 5, this, _HUDGroup);
-    this.sunManager = new SunManager(_game, _sunGroup, _timeToSpawnSun, this);
+    this.sunManager = new SunManager(_game, _sunGroup, this);
     this.board = new Board(_game, _boardGroup, _plantsGroup, 162, 200, 5, 9, 74, 86, this);
     this.waveManager = new WaveManager(_game,_zombiesGroup, _boardGroup);
   

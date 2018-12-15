@@ -10,8 +10,8 @@ function HielaGuisantes(game, x, y, _boardRef){
     this.timeCount = 0;
     this.animations.add('try', [0, 1, 0], 3, true);
     this.animations.add('shootin', [2, 0], 2, false);
-    this._life = 3;
-    this._force = 1;
+    this._life = 300;
+    this._force = 20;
 
     this.sfx=this.game.add.audio('shoot');
     this.sfx.volume=0.2;
@@ -25,6 +25,6 @@ function HielaGuisantes(game, x, y, _boardRef){
   }
   HielaGuisantes.prototype = Object.create(LanzaGuisantes.prototype);
   HielaGuisantes.constructor = HielaGuisantes;
-  HielaGuisantes.cost = 30;
-  HielaGuisantes.coolDownTime = (15 * 1000);
+  HielaGuisantes.cost = 175;
+  HielaGuisantes.coolDownTime = (7.5 * 1000);
   
