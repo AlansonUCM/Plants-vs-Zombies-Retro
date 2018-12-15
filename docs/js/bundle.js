@@ -68,6 +68,12 @@ var PreloaderScene = {
     //Soles y contador
     this.game.load.image('sunFrame', 'images/sunCounterFrame.png');
     this.game.load.image('sun', 'images/sun2.png');
+    //ProgressBar
+    this.game.load.image('progressBar', 'images/progressBar.png');
+    this.game.load.image('progressBar2', 'images/progressBar2.png');
+    this.game.load.image('progressFrame', 'images/progressFrame.png');
+    this.game.load.image('flag', 'images/flag.png');
+    this.game.load.image('head', 'images/head.png');
     //MenuDePausa
     //PauseButton
     this.game.load.image('pauseMenu', 'images/pauseMenu.png');
