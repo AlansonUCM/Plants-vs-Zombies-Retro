@@ -1,8 +1,8 @@
 function Cereza(game, x , y, _boardRef){
     Plant.apply(this,[game, x, y, 'cherryBoomBOOMBOOM', _boardRef]);  
     //Atributos propios  
-    this._life = 4;
-    this._force = 100;
+    this._life = 2000;
+    this._force = 1800;
     this.sfx = this.game.add.audio('explosion');
     this.anchor.setTo(0.5, (this.height - 99)/this.height);
     this.body.setSize(64, 64, this.width / 2 - 32, this.height / 2 - 32);
@@ -19,8 +19,8 @@ function Cereza(game, x , y, _boardRef){
 }
 Cereza.prototype = Object.create(Plant.prototype);
 Cereza.constructor = Cereza;
-Cereza.cost = 50;
-Cereza.coolDownTime = (18 * 1000);
+Cereza.cost = 150;
+Cereza.coolDownTime = (50 * 1000);
 
 Cereza.prototype.shoot=function() { 
     if(this.timeCount > 900 && !this.exp){

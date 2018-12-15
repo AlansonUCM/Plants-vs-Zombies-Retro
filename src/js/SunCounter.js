@@ -5,7 +5,7 @@ function SunCounter (game, parent,  x, y){
     //Sprite del contador
     this.im = this.game.add.sprite(x, y,'sunFrame',0,this);  
     //Puntos
-    this.points = 0;
+    this.points = 50;
   
     //Texto
     this.text = game.add.text(x + 130, y + 32, "" + this.points, { font: "bold 32px Arial", fill: "#000000", align: "center" },this);

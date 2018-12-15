@@ -8,12 +8,12 @@ function LanzaGuisantes(game, x, y, _boardRef){
   //----------------
   this.bulletPool = _boardRef.spManager.bulletGroup.getChildAt(0);
   this.bulletType = NormalPea;
-  this.firerate = 1000;
+  this.firerate = 1430;
   this.timeCount = 0;
   this.animations.add('try', [0, 1, 0], 3, true);
   this.animations.add('shootin', [2, 0], 2, false);
-  this._life = 3;
-  this._force = 1;
+  this._life = 300;
+  this._force = 20;
 
   this.sfx=this.game.add.audio('shoot');
   this.sfx.volume=0.2;
@@ -26,8 +26,8 @@ function LanzaGuisantes(game, x, y, _boardRef){
 }
 LanzaGuisantes.prototype = Object.create(Plant.prototype);
 LanzaGuisantes.constructor = LanzaGuisantes;
-LanzaGuisantes.cost = 20;
-LanzaGuisantes.coolDownTime = (10 * 1000);
+LanzaGuisantes.cost = 100;
+LanzaGuisantes.coolDownTime = (7.5 * 1000);
 //Metodos
 LanzaGuisantes.prototype.checkRayCast = function(_zombiesArray){
   var aux = false;
@@ -44,7 +44,7 @@ LanzaGuisantes.prototype.shoot=function(){
   if(this.alive  && this.rayCast.collides && this.timeCount >= this.firerate){
     this.timeCount = 0;
     if(this.bulletPool.length == 0) {
-      this.bulletPool.add(new this.bulletType(this.game, this.x + this.width, this.y , this.key + 'Bala', 180, this._force));
+      this.bulletPool.add(new this.bulletType(this.game, this.x + this.width, this.y , this.key + 'Bala', 350, this._force));
       this.bulletPool.getChildAt(0).kill();        
     }
     var i = 0;
@@ -54,7 +54,7 @@ LanzaGuisantes.prototype.shoot=function(){
         this.animations.play('shootin');
         this.events.onAnimationComplete.add(function(){this.animations.play('try')}, this);
         this.bulletPool.getChildAt(i).revive();
-        this.bulletPool.getChildAt(i).relocate(this._force,180,this.x + this.width,this.y);
+        this.bulletPool.getChildAt(i).relocate(this._force,350,this.x + this.width,this.y);
       
         shooted=true;    
       }
@@ -63,7 +63,7 @@ LanzaGuisantes.prototype.shoot=function(){
     if(!shooted)   {
     this.animations.play('shootin');
     this.events.onAnimationComplete.add(function(){this.animations.play('try')}, this);
-    this.bulletPool.add(new this.bulletType(this.game, this.x + this.width, this.y , this.key + 'Bala', 180, this._force));
+    this.bulletPool.add(new this.bulletType(this.game, this.x + this.width, this.y , this.key + 'Bala', 350, this._force));
     }
     this.sfx.play();
   }

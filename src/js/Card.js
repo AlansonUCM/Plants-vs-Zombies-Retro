@@ -69,3 +69,11 @@ function Card (game, x, y, tag, funcionPlanta, _cardSelector){
     this.game.cursor.changeSprite(undefined);
     console.log("Card deselected");
   }
+  Card.prototype.setUsed = function(){
+    this.cardSelector.actualizaAspecto();
+    this.input.enabled = false;
+    this.isUsed = true;
+    var tintTween = this.game.add.tween(this.coolDownTint).from({height: this.height}, this.plantRef.coolDownTime, Phaser.Easing.Linear.None, true);
+    tintTween.onComplete.addOnce(function isFinished(){this.isUsed = false; this.input.enabled = true; this.coolDownTint.height = 0; this.cardSelector.actualizaAspecto(); console.log("Carta lista para usar de nuevo");}, this);
+      
+  }
