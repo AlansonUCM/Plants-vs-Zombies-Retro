@@ -6,7 +6,7 @@ function Nuez(game, x , y, _boardRef){
     this.animations.add('idleMid',[3, 4, 5], 3, true);
     this.animations.add('idleDown',[6, 7, 8], 3, true);
 
-    this._life = 10;
+    this._life = 3600;
     this.iniLife = this._life;
 
     this.animations.play('idleTop');
@@ -14,8 +14,8 @@ function Nuez(game, x , y, _boardRef){
   Nuez.prototype = Object.create(Plant.prototype);
   Nuez.constructor = Nuez;
   //Coste
-  Nuez.cost = 15;
-  Nuez.coolDownTime = (40 * 1000);
+  Nuez.cost = 50;
+  Nuez.coolDownTime = (30 * 1000);
   //Metodos
   Nuez.prototype.takeDamage = function(_damage){
     this._life -= _damage;

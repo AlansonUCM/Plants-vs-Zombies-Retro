@@ -211,34 +211,45 @@ module.exports = MainMenu;
     this.game.add.sprite(0,0,'backGround',0,this.boardLayer);
 
     //Logica del juego
-    this.spManager = new SPManager(this.game, this.boardLayer, this.bulletPool, this.plantsLayer, this.zombieGroup, this.HUDLayer, this.sunGroup, 4);
+    this.spManager = new SPManager(this.game, this.boardLayer, this.bulletPool, this.plantsLayer, this.zombieGroup, this.HUDLayer, this.sunGroup);
 
     //Creacion de zombies por oleadas
     //Oleada 1
     this.wave0.add(new ZombieComun(this.game, 1000, 200, this.spManager));    
     this.wave0.add(new ZombieComun(this.game, 1150, 200 + 86, this.spManager));
     this.wave0.add(new ZombieComun(this.game, 1100, 200, this.spManager));
-    this.wave0.add(new ZombieComun(this.game, 1000, 200 + 86 * 2, this.spManager));
+    // this.wave0.add(new ZombieComun(this.game, 1000, 200 + 86 * 2, this.spManager));
     //Ordeno
     this.wave0.sort('y', Phaser.Group.SORT_ASCENDING);
     
     //Oleada 2
-    this.wave1.add(new ZombieCono(this.game, 1000, 200 + 86 * 2, this.spManager));
+    this.wave1.add(new ZombieCono(this.game, 1265, 200 + 86 * 2, this.spManager));
     this.wave1.add(new ZombieCono(this.game, 1000, 200, this.spManager));
     this.wave1.add(new ZombieComun(this.game, 1200, 200 + 86 * 2, this.spManager));
-    this.wave1.add(new ZombieComun(this.game, 1500, 200 + 86 * 3, this.spManager));
+    // this.wave1.add(new ZombieComun(this.game, 1500, 200 + 86 * 3, this.spManager));
     this.wave1.add(new ZombieComun(this.game, 1250, 200, this.spManager));
     //Ordeno
     this.wave1.sort('y', Phaser.Group.SORT_ASCENDING);
 
     //Oleada 3    
-    this.wave2.add(new ZombieCono(this.game, 1000, 200 + 86 * 3, this.spManager));
-    this.wave2.add(new ZombieCono(this.game, 1350, 200 + 86, this.spManager));
-    this.wave2.add(new ZombieCono(this.game, 1600, 200 + 86 * 4, this.spManager));
-    this.wave2.add(new ZombieCono(this.game, 1250, 200 + 86 * 2, this.spManager));
     this.wave2.add(new ZombieComun(this.game, 1000, 200, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1400, 200 + 86 * 2, this.spManager));
     this.wave2.add(new ZombieComun(this.game, 1400, 200, this.spManager));
+    this.wave2.add(new ZombieComun(this.game, 1000, 200, this.spManager));
+    this.wave2.add(new ZombieComun(this.game, 1150, 200, this.spManager));
+    this.wave2.add(new ZombieComun(this.game, 1000, 200 + 86, this.spManager));
+    this.wave2.add(new ZombieComun(this.game, 1100, 200 + 86, this.spManager));
+    this.wave2.add(new ZombieCono(this.game, 1350, 200 + 86, this.spManager));
+    this.wave2.add(new ZombieComun(this.game, 1400, 200 + 86, this.spManager));
+    this.wave2.add(new ZombieCono(this.game, 1250, 200 + 86 * 2, this.spManager));
+    this.wave2.add(new ZombieComun(this.game, 1050, 200 + 86 * 2, this.spManager));
+    this.wave2.add(new ZombieComun(this.game, 1200, 200 + 86 * 2, this.spManager));
+    this.wave2.add(new ZombieComun(this.game, 1300, 200 + 86 * 2, this.spManager));
+    this.wave2.add(new ZombieCono(this.game, 1000, 200 + 86 * 3, this.spManager));
+    this.wave2.add(new ZombieComun(this.game, 1150, 200 + 86 * 3, this.spManager));
+    this.wave2.add(new ZombieComun(this.game, 1300, 200 + 86 * 3, this.spManager));
+    this.wave2.add(new ZombieCono(this.game, 1450, 200 + 86 * 4, this.spManager));
+    this.wave2.add(new ZombieComun(this.game, 1250, 200 + 86 * 4, this.spManager));
+    this.wave2.add(new ZombieComun(this.game, 1100, 200 + 86 * 4, this.spManager));
     //Ordeno
     this.wave2.sort('y', Phaser.Group.SORT_ASCENDING);
 
