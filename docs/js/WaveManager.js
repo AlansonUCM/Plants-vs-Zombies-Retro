@@ -1,7 +1,10 @@
-function WaveManager(_game, _zombiesGroup){
+function WaveManager(_game, _zombiesGroup, parent){
     this.game = _game;
     this.zombiesGroup = _zombiesGroup;
     this.timeToNext = 4000;
+
+    this.progressBar = new ProgressBar(this.game, 365, 7, this.zombiesGroup, parent);
+
 }
 WaveManager.constructor = WaveManager;
 
@@ -20,9 +23,12 @@ WaveManager.prototype.checkWave = function(){
         if(this.timeToNext <= 0){            
             this.zombiesGroup.getChildAt(0).destroy();
             this.timeToNext = 4000; // 4 segundos
+            this.progressBar.prepareForNextWave();
         }else{
             this.timeToNext -= this.game.time.elapsedMS;
         }
     }
-    
+
+    if(this.progressBar.lastWaveZombie != null)
+        this.progressBar.updateProgress();
 }
