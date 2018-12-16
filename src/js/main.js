@@ -54,8 +54,8 @@ var PreloaderScene = {
     this.game.load.image('hielaGuisantesFrame', 'images/hielaGuisantesFrame.png');
 
     // Carga de los zombies
-    this.game.load.spritesheet("zombieComun", "images/zombieComun.png",46,52,2);
-    this.game.load.spritesheet("zombieCono", "images/zombieCono.png",46,67,4);
+    this.game.load.spritesheet("zombieComun", "images/zombieComun.png",46,52,4);
+    this.game.load.spritesheet("zombieCono", "images/zombieCono.png",46,67,8);
     this.game.load.image('cono', 'images/cono.png');
 
     //Fondo/Casillas
