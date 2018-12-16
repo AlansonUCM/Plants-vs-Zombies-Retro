@@ -22,7 +22,12 @@ function Zombie (game, x, y, tag, _life, _damage, _velocity, _attacksPerSec,spMa
     this.body.setSize(this.width/2, this.height/2, 0, this.height/2 - 10);
     this.scale.setTo(1.8);
 
+    this.moving=true;
+
+    this.currAnim='atack';
+    this.currMovAnim='move';
     this.animations.add('move',[0,1,0]);
+    this.animations.add('atack',[2,3]);
     this.animations.play('move',5,true);
     this.soundCount=0;
   }
@@ -31,6 +36,7 @@ function Zombie (game, x, y, tag, _life, _damage, _velocity, _attacksPerSec,spMa
   
   // Metodos en Zombies
   Zombie.prototype.move = function () {
+
     this.x -= this.velocity * this.game.time.elapsedMS/1000;
   }
 
@@ -60,13 +66,15 @@ function Zombie (game, x, y, tag, _life, _damage, _velocity, _attacksPerSec,spMa
     if(this.timeCount > 1000 / this.attacksPerSec){  
       if(this.soundCount==0)
       { 
+       
       this.sfx.play(); 
       this.soundCount=1;
       }
       else
       this.soundCount=0;
+      this.animations.play(this.currAnim,4,false)
       this.timeCount = 0;
-      
+      this.moving=false;
       return this.damage;
     }
     this.timeCount += this.game.time.elapsedMS;
@@ -75,6 +83,10 @@ function Zombie (game, x, y, tag, _life, _damage, _velocity, _attacksPerSec,spMa
   }
   Zombie.prototype.updateZombie = function(){
     if(!this.isAttacking){
+      if(!this.moving)
+      {
+        this.animations.play(this.currMovAnim,5,true);
+      }
       if(this.timeCount > 0)
         this.timeCount = 0;
       this.move(this.velocity);
