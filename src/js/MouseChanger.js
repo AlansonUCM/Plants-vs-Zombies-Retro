@@ -25,6 +25,7 @@ function MouseChanger(game, parent){
 
   MouseChanger.prototype.changeSprite = function(_tag, _frameNum){
     this.loadTexture(_tag, _frameNum);
+    this.move();
   }
   
   MouseChanger.prototype.clearCursor = function (){
