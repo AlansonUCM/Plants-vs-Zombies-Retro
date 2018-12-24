@@ -55,8 +55,8 @@
     this.wave0.sort('y', Phaser.Group.SORT_ASCENDING);
     
     //Oleada 2
-    this.wave1.add(new ZombieCono(this.game, 1265, 200 + 86 * 2, this.spManager));
-    this.wave1.add(new ZombieCono(this.game, 1000, 200, this.spManager));
+    this.wave1.add(new ZombieCubo(this.game, 1265, 200 + 86 * 2, this.spManager));
+    this.wave1.add(new ZombiePuerta(this.game, 1000, 200, this.spManager));
     this.wave1.add(new ZombieComun(this.game, 1200, 200 + 86 * 2, this.spManager));
     // this.wave1.add(new ZombieComun(this.game, 1500, 200 + 86 * 3, this.spManager));
     this.wave1.add(new ZombieComun(this.game, 1250, 200, this.spManager));
