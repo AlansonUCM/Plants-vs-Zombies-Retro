@@ -41,7 +41,7 @@ SunManager.prototype.sunSpawnControl = function(){
   SunManager.prototype.updateSuns = function(){
    //Update de los soles
    for(let i = 0; i < this.sunPool.length; i++)
-   this.sunPool.getChildAt(i).fall();
+    this.sunPool.getChildAt(i).fall();
   }
   
   SunManager.prototype.addSunPoints = function(_points){

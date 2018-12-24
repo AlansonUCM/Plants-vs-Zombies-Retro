@@ -26,6 +26,7 @@ CardSelector.prototype.deSelectAll = function(){
   for(let i = 0; i < this.cards.length; i++)
     this.cards.getChildAt(i).deSelect();
 }
+
 CardSelector.prototype.actualizaAspecto = function(){
   for(let i = 0; i < this.cards.length; i++){
     var card = this.cards.getChildAt(i);
@@ -40,6 +41,7 @@ CardSelector.prototype.actualizaAspecto = function(){
     }
   }
 }
+
 CardSelector.prototype.forceFirstPlant = function(){
   for (let i = 0; i < this.cards.length; i++){
     var card = this.cards.getChildAt(i);
