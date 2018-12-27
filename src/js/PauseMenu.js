@@ -65,12 +65,10 @@ PauseMenu.prototype.reset = function (){
     }, this.spManager);    
 }
 
-
 PauseMenu.prototype.changeVolume = function(_value){
     this.game.sound.volume = _value;
     console.log('Volumen: ' + this.game.sound.volume);
 }
-
 
 PauseMenu.prototype.display = function(){    
     this.backGround.visible = this.botonExit.visible = this.botonCountinue.visible = this.botonReset.visible = 
@@ -95,6 +93,8 @@ PauseMenu.prototype.pauseAll = function(){
         //Paro tweens
         this.game.tweens.pauseAll();
         //Paro animationes y botones
+        //Tablero
+        this.spManager.board.disableBoard();
         //Cartas
         this.spManager.cardSelector.cards.forEach(c => {
             c.input.enabled = false;
@@ -125,6 +125,9 @@ PauseMenu.prototype.playAll = function(){
         //Sigue tweens
         this.game.tweens.resumeAll();
         //Sigue animationes y botones
+        //Tablero
+        if(this.game.cursor.key != 'void')
+            this.spManager.board.ableBoard();
         //Cartas
         this.spManager.cardSelector.actualizaAspecto();
         //Soles

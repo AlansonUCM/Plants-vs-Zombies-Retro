@@ -7,7 +7,10 @@ var PlayScene = require('./play_scene.js');
 var BootScene = {
   preload: function () {
     // load here assets required for the loading screen
-    this.game.load.image('preloader_bar', 'images/preloader_bar.png');
+    this.game.load.image('preloader_bar', 'images/progressBar2.png');
+    this.game.load.image('logo', 'images/logo.png');
+    this.game.load.image('menuBG', 'images/menuBG.png');
+    
   },
 
   create: function () {
@@ -18,7 +21,8 @@ var BootScene = {
 
 var PreloaderScene = {
   preload: function () {
-    this.loadingBar = this.game.add.sprite(0, 240, 'preloader_bar');
+    this.bg = this.game.add.sprite(0, 0,'menuBG');
+    this.loadingBar = this.game.add.sprite(240, this.game.world.centerY, 'preloader_bar');
     this.loadingBar.anchor.setTo(0, 0.5);
     this.load.setPreloadSprite(this.loadingBar);
 
@@ -26,14 +30,14 @@ var PreloaderScene = {
 
     // TODO: load here the assets for the game
     this.game.load.image('void', 'images/void.png');
-    this.game.load.image('logo', 'images/logo.png');
 
     //Fondo
-    this.game.load.image('backGround', 'images/levelGround.png');
+    this.game.load.image('backGround', 'images/bg.png');
+    this.game.load.image('pixelLogo','images/logoPixel.png');
 
     //Sprites de botones
     this.game.load.image('shovel', 'images/palaSuelta.png');
-    this.game.load.image('shovelFrame', 'images/palaFrame.png');
+    this.game.load.spritesheet('shovelFrame', 'images/palaFrame.png', 108, 54, 2);
     
     //Sprites plantas
     //LanzaGuisantes

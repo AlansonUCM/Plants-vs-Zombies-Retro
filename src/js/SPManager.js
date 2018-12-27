@@ -7,8 +7,9 @@ function SPManager (_game, _boardGroup, _bulletGroup, _plantsGroup, _zombiesGrou
     this.cardSelector = new CardSelector(_game, _HUDGroup, 5, 64, 72, 5,[],[], this);
     this.shovel = new Shovel(_game, 205 + 10, 5, this, _HUDGroup);
     this.sunManager = new SunManager(_game, _sunGroup, this);
-    this.board = new Board(_game, _boardGroup, _plantsGroup, 162, 200, 5, 9, 74, 86, this);
+    this.board = new Board(_game, _boardGroup, _plantsGroup, 162, 230, 5, 9, 67, 81, this);
     this.waveManager = new WaveManager(_game,_zombiesGroup, _boardGroup);
+    this.endLine = new EndLine(_game, 65, 0);
   
     //Pools
     this.sunPool = _sunGroup;
@@ -22,6 +23,7 @@ function SPManager (_game, _boardGroup, _bulletGroup, _plantsGroup, _zombiesGrou
   SPManager.constructor =  SPManager;
   //Metodos
   SPManager.prototype.updateSPM = function(){ 
+    this.endLine.checkEndLine(this.zombies.getChildAt(0));
     this.sunManager.sunSpawnControl();
     this.sunManager.updateSuns();
     this.waveManager.checkWave();

@@ -4,8 +4,7 @@
 function LanzaGuisantes(game, x, y, _boardRef){
   Plant.apply(this,[game, x, y, 'lanzaGuisantes', _boardRef]);
 
-  //Atributos propios
-  //----------------
+  
   this.bulletPool = _boardRef.spManager.bulletGroup.getChildAt(0);
   this.bulletType = NormalPea;
   this.firerate = 1430;
@@ -17,7 +16,7 @@ function LanzaGuisantes(game, x, y, _boardRef){
 
   this.sfx=this.game.add.audio('shoot');
   this.sfx.volume=0.2;
-  //----------------
+  
   this.rayCast = this.createRaycast();
 
   this.isAttacking = false;
@@ -66,9 +65,10 @@ LanzaGuisantes.prototype.shoot=function(){
     this.bulletPool.add(new this.bulletType(this.game, this.x + this.width, this.y , this.key + 'Bala', 350, this._force));
     }
     this.sfx.play();
+  }else if (this.rayCast.collides){
+    this.timeCount += this.game.time.elapsedMS; 
   }
   this.rayCast.collides = false;
-  this.timeCount += this.game.time.elapsedMS; 
 }
 LanzaGuisantes.prototype.createRaycast = function(){
   var cast = this.game.add.sprite(0, -this.height / 2,"void", 0);
