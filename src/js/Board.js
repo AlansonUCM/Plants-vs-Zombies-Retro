@@ -51,5 +51,5 @@ Board.prototype.ableBoard = function (){
   for(let i = 0; i < this.boxes.length; i++)
     for(let j = 0;j < this.boxes.getChildAt(i).length; j++)
       this.boxes.getChildAt(i).getChildAt(j).input.enabled = true;
-  console.log("Tablero preparado para posicionar planta")
+  console.log("Tablero preparado para posicionar planta");
 }

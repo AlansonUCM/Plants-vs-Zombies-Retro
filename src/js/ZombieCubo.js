@@ -4,7 +4,7 @@ function ZombieCubo(game, x, y, spManager){
     this.animations.add('move2',[4,5,4]);
     this.animations.add('atack2',[6,7]);
 
-    this.iniLife = 400;
+    this.iniLife = this.life;
     this.isTaken = false;
     
     this.animations.play('move',5,true);
