@@ -19,6 +19,7 @@ var PlayScene = {
     this.zombieGroup =this.game.add.group(undefined, "ZombiesGroup");    
     this.HUDLayer = this.game.add.group(undefined , "HUDLayer"); 
     this.sunGroup = this.game.add.group(undefined, "SunGroup"); 
+    this.upperLayer = this.game.add.group(undefined, 'UpperLayer');
 
     this.cursorLayer = this.game.add.group(undefined,"CursorChanger");
     this.pauseMenuLayer = this.game.add.group(undefined, "PauseMenu");
@@ -40,7 +41,7 @@ var PlayScene = {
     //bg.alpha = 0.7;
 
     //Logica del juego
-    this.spManager = new SPManager(this.game, this.boardLayer, this.bulletPool, this.plantsLayer, this.zombieGroup, this.HUDLayer, this.sunGroup);
+    this.spManager = new SPManager(this.game, this.boardLayer, this.bulletPool, this.plantsLayer, this.zombieGroup, this.HUDLayer, this.sunGroup, this.upperLayer);
 
     //Creacion de zombies por oleadas
     //Oleada 1
@@ -158,6 +159,13 @@ var PlayScene = {
       this.spManager.updateSPM();
     }
   },
+
+  // render: function (){
+  //   var rect = this.spManager.canvasText.getBounds();
+  //   this.game.debug.geom(rect,'rgba(255,0,0,1)');
+
+  //   this.game.debug.geom(this.game.camera.bounds);
+  // },
   
   paused: function (){
     //Para cerciorar que esta pausado por codigo
