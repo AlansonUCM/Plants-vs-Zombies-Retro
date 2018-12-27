@@ -39,8 +39,10 @@ Box.prototype.up = function(){
   this.game.cursor.alpha = 0.6;
 }
 Box.prototype.over = function(){
-  this.prevIm.loadTexture(this.game.cursor.key);
-  this.game.cursor.alpha = 0;
+  if(!this.plantPlaced || this.game.cursor.key == 'shovel'){
+    this.prevIm.loadTexture(this.game.cursor.key);
+    this.game.cursor.alpha = 0;
+  }
 }
 Box.prototype.out = function(){
   this.prevIm.loadTexture('void');

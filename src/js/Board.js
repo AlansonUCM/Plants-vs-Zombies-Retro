@@ -3,6 +3,7 @@
 function Board (game, parent, plantsParent, _xPos, _yPos,numXBoxes, numYBoxes, _boxTamX, _boxTamY, _spManager){
   Phaser.Group.apply(this,[game, parent, "BoardGroup"]);
   this.boxes = game.add.group(this,"Boxes");
+
   this.plants = plantsParent;
 
   this.spManager = _spManager;

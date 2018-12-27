@@ -93,7 +93,7 @@ var PlayScene = {
   },
 
   update: function (){
-    if(!this.game.isPaused /*&& 0 < this.zombieGroup.length*/){
+    if(!this.game.isPaused){
       //Update de los Zombies
       for(let j = 0; j < this.zombieGroup.getChildAt(0).length; j++)
       this.zombieGroup.getChildAt(0).getChildAt(j).updateZombie();
@@ -157,7 +157,7 @@ var PlayScene = {
       this.spManager.updateSPM();
     }
   },
-
+  
   paused: function (){
     //Para cerciorar que esta pausado por codigo
     if(!this.game.isPaused)
