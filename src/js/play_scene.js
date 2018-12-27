@@ -51,10 +51,11 @@ var PlayScene = {
     this.wave0.sort('y', Phaser.Group.SORT_ASCENDING);
     
     //Oleada 2
-    this.wave1.add(new ZombieCono(this.game, 1265, 230 + 86 * 2, this.spManager));
-    this.wave1.add(new ZombieCono(this.game, 1000, 230, this.spManager));
+    this.wave1.add(new ZombieCubo(this.game, 1265, 230 + 86 * 2, this.spManager));
+    this.wave1.add(new ZombieMini(this.game, 1000, 230, this.spManager));
     this.wave1.add(new ZombieComun(this.game, 1200, 230 + 86 * 2, this.spManager));
     this.wave1.add(new ZombieComun(this.game, 1250, 230, this.spManager));
+    
     //Ordeno
     this.wave1.sort('y', Phaser.Group.SORT_ASCENDING);
 
