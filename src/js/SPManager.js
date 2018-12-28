@@ -1,8 +1,11 @@
 
 //Clase SPManager
-function SPManager (_game, _boardGroup, _bulletGroup, _plantsGroup, _zombiesGroup, _HUDGroup, _sunGroup, _upperGroup){  
+function SPManager (_game, _boardGroup, _bulletGroup, _plantsGroup, _zombiesGroup, _HUDGroup, _sunGroup, _upperGroup, levelNum){  
     this.game = _game;
-
+    //Creamos oleadas
+    this.levelManager = new LevelManager(this.game, _zombiesGroup, this, levelNum);
+    
+    //Creamos el resto
     this.canvasText = new CanvasText(_game,_upperGroup);
     this.sunCounter = new SunCounter(_game,_HUDGroup, 5, 5);  
     this.cardSelector = new CardSelector(_game, _HUDGroup, 5, 64, 72, 5,[],[], this);

@@ -34,7 +34,7 @@ WaveManager.prototype.checkWave = function(){
                 this.timeToNext = 6000; // 6 segundos
                 this.progressBar.prepareForNextWave();
                 //Si es la ultima ronda
-                if(this.zombiesGroup.length == 3){
+                if(this.zombiesGroup.length == 1){
                     this.spManager.canvasText.displayArray(['Una gran oleada de zombis se aproxima', 'OLEADA FINAL'], 2500);     
                 }
             }else{
