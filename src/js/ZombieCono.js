@@ -6,6 +6,7 @@ function ZombieCono(game, x, y, spManager){
 
     this.iniLife = this.life;
     this.isTaken = false;
+    this.half=false;
     
     this.animations.play('move',5,true);
 }
@@ -14,9 +15,12 @@ ZombieCono.constructor = ZombieCono;
 
 ZombieCono.prototype.takeDamage = function(_damage){
     this.life -= _damage;
-    if(this.life <= this.iniLife/2 && !this.isTaken){
+    if(this.life <= this.iniLife/2 && !this.isTaken&&!this.half){
+        this.half=true;
         this.currMovAnim='move2';
-        this.animations.play('move2',5,true);
+        if( !this.isAttacking){
+            this.animations.play('move2',5,true);
+            }
         this.currAnim='atack2';
     }
     if(this.life <= 0)
