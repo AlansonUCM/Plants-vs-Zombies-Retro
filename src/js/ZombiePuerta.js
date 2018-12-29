@@ -1,5 +1,5 @@
 function ZombiePuerta(game, x, y, spManager){
-    Zombie.apply(this,[game, x, y, 'zombiePuerta', 1600, 100, 7, 1, spManager]);
+    Zombie.apply(this,[game, x, y, 'zombiePuerta', 1300, 100, 14, 1, spManager]);
     
     this.animations.add('move2',[4,5,4]);
     this.animations.add('atack2',[6,7]);

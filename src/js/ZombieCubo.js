@@ -1,10 +1,10 @@
 function ZombieCubo(game, x, y, spManager){
-    Zombie.apply(this,[game, x, y, 'zombieCubo', 800, 100, 14, 1, spManager]);
+    Zombie.apply(this,[game, x, y, 'zombieCubo', 1300, 100, 14, 1, spManager]);
     
     this.animations.add('move2',[4,5,4]);
     this.animations.add('atack2',[6,7]);
 
-    this.iniLife = this.life;
+    this.iniLife = 400;
     this.isTaken = false;
     this.half=false;
     

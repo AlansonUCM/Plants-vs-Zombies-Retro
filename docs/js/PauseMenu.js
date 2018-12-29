@@ -52,6 +52,9 @@ PauseMenu.prototype = Object.create(Phaser.Group.prototype);
 //Metodos
 PauseMenu.prototype.exit = function (){    
     this.game.sound.stopAll();
+    this.game.tweens.removeAll();
+    this.game.time.events.resume();
+    this.game.time.events.removeAll();
     this.game.camera.fade('0x000000', 1000);
     this.game.camera.onFadeComplete.add(function(){   
         this.game.state.start('mainMenu');
@@ -59,18 +62,19 @@ PauseMenu.prototype.exit = function (){
 }
 PauseMenu.prototype.reset = function (){
     this.game.sound.stopAll();
+    this.game.tweens.removeAll();
+    this.game.time.events.resume();
+    this.game.time.events.removeAll();
     this.game.camera.fade('0x000000', 1000);
     this.game.camera.onFadeComplete.add(function(){        
         this.game.state.start(this.game.state.current);
     }, this.spManager);    
 }
 
-
 PauseMenu.prototype.changeVolume = function(_value){
     this.game.sound.volume = _value;
     console.log('Volumen: ' + this.game.sound.volume);
 }
-
 
 PauseMenu.prototype.display = function(){    
     this.backGround.visible = this.botonExit.visible = this.botonCountinue.visible = this.botonReset.visible = 
@@ -91,10 +95,12 @@ PauseMenu.prototype.pauseGame = function(){
 PauseMenu.prototype.pauseAll = function(){
     if(this.game.isPaused){
         //Paro timers
-        this.game.time.gamePaused();
+        this.game.time.events.pause();
         //Paro tweens
         this.game.tweens.pauseAll();
         //Paro animationes y botones
+        //Tablero
+        this.spManager.board.disableBoard();
         //Cartas
         this.spManager.cardSelector.cards.forEach(c => {
             c.input.enabled = false;
@@ -121,10 +127,13 @@ PauseMenu.prototype.pauseAll = function(){
 PauseMenu.prototype.playAll = function(){
     if(!this.game.isPaused){
         //Sigue timers
-        this.game.time.gameResumed();
+        this.game.time.events.resume();
         //Sigue tweens
         this.game.tweens.resumeAll();
         //Sigue animationes y botones
+        //Tablero
+        if(this.game.cursor.key != 'void')
+            this.spManager.board.ableBoard();
         //Cartas
         this.spManager.cardSelector.actualizaAspecto();
         //Soles

@@ -8,7 +8,10 @@ var PlayScene = require('./play_scene.js');
 var BootScene = {
   preload: function () {
     // load here assets required for the loading screen
-    this.game.load.image('preloader_bar', 'images/preloader_bar.png');
+    this.game.load.image('preloader_bar', 'images/progressBar2.png');
+    this.game.load.image('logo', 'images/logo.png');
+    this.game.load.image('menuBG', 'images/menuBG.png');
+    
   },
 
   create: function () {
@@ -19,7 +22,8 @@ var BootScene = {
 
 var PreloaderScene = {
   preload: function () {
-    this.loadingBar = this.game.add.sprite(0, 240, 'preloader_bar');
+    this.bg = this.game.add.sprite(0, 0,'menuBG');
+    this.loadingBar = this.game.add.sprite(240, this.game.world.centerY, 'preloader_bar');
     this.loadingBar.anchor.setTo(0, 0.5);
     this.load.setPreloadSprite(this.loadingBar);
 
@@ -27,14 +31,14 @@ var PreloaderScene = {
 
     // TODO: load here the assets for the game
     this.game.load.image('void', 'images/void.png');
-    this.game.load.image('logo', 'images/logo.png');
 
     //Fondo
-    this.game.load.image('backGround', 'images/levelGround.png');
+    this.game.load.image('backGround', 'images/bg.png');
+    this.game.load.image('pixelLogo','images/logoPixel.png');
 
     //Sprites de botones
     this.game.load.image('shovel', 'images/palaSuelta.png');
-    this.game.load.image('shovelFrame', 'images/palaFrame.png');
+    this.game.load.spritesheet('shovelFrame', 'images/palaFrame.png', 108, 54, 2);
     
     //Sprites plantas
     //LanzaGuisantes
@@ -57,6 +61,9 @@ var PreloaderScene = {
     // Carga de los zombies
     this.game.load.spritesheet("zombieComun", "images/zombieComun.png",46,52,4);
     this.game.load.spritesheet("zombieCono", "images/zombieCono.png",46,67,8);
+    this.game.load.spritesheet("zombieCubo", "images/zombieCubo.png",46,67,8);
+    this.game.load.spritesheet("zombiePuerta", "images/zombies Puerta.png",46,67,8);
+    this.game.load.spritesheet("miniZombie", "images/minizombie.png",24,35,5);
     this.game.load.image('cono', 'images/cono.png');
 
     //Fondo/Casillas
@@ -93,6 +100,8 @@ var PreloaderScene = {
     this.game.load.audio('shovel','sounds/shovel.mp3');
 
     this.game.load.audio('music','sounds/music-8-bit-style.mp3');
+
+    this.game.levelIndex = 0;
   
   },
 
@@ -117,63 +126,57 @@ window.onload = function () {
 'use strict';
 
 var MainMenu = {
-    preload: function () {
-        this.game.load.image('logo', 'images/logo.png');
-        this.game.load.image('startButton', 'images/startButton.png');
-    },
-    
-    create: function () {
-    var logo = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'logo');
-    logo.anchor.setTo(0.5);
-    logo.scale.setTo(0.7);
-    
-    
-    this.game.camera.flash(0x000000, 1000);
+  create: function () {
+    this.game.add.sprite(0, 0, 'menuBG');
+    var logo = this.game.add.sprite(-50, 0, 'pixelLogo');
+    logo.scale.setTo(0.35);  
+  
+    //this.game.camera.flash(0x000000, 1000);
     this.game.stage.backgroundColor = '#ffffff'
 
-    this.button = new StartButton(this.game,this.game.world.centerX, this.game.world.centerY, 'startButton');
-    } 
+    this.startButton = new TextButton(this.game,this.game.world.centerX, this.game.world.centerY + 75, 'Empezar',newGame);
+    this.startButton.scale.setTo(1.2);
+
+    if(this.game.levelIndex > 0){
+      this.botonContinue = new TextButton(this.game,this.game.world.centerX, this.game.world.centerY + 150, 'Continuar', reanudar);
+      this.botonContinue.scale.setTo(1.2);
+    }
+  } 
 };
 
 //CLASE StartButton
-function StartButton (game, x, y, tag){
-    Phaser.Button.apply(this,[game, x, y, tag, this.onInputUp, , 0, 0, 0]);
+function TextButton (game, x, y, text, callBack){
+    Phaser.Button.apply(this,[game, x, y, 'boton', this.onInputUp, , 1, 0, 2]);
     this.game.world.addChild(this);
     //Escala y ancla
     this.anchor.setTo(0.5);
-    this.scale.setTo(0.30);
+
+    var text = this.game.add.text(0, 2, text,{ font: "bold 21px Arial", fill: "#fff", align: "center" });
+    text.anchor.setTo(0.5);
+    this.addChild(text);
+
     //Florituras
-    this.onInputOver.add(this.over, this);
-    this.onInputOut.add(this.out, this);
-    this.onInputUp.add(this.up, this);
-    this.onInputDown.add(this.down,this);
-  }
-  StartButton.prototype = Object.create(Phaser.Button.prototype);
-  StartButton.constructor = StartButton;
-  //Metodos
-  StartButton.prototype.down = function(){
-    this.scale.setTo(0.40);
-  }
-  StartButton.prototype.over = function(){
-    this.scale.setTo(0.35);
-  }
-  StartButton.prototype.out = function(){
-    this.scale.setTo(0.30);
-  }
-  StartButton.prototype.up = function(){
-    this.game.state.start('play');
-  }
+    this.onInputUp.add(callBack, this);
+}
+TextButton.prototype = Object.create(Phaser.Button.prototype);
+TextButton.constructor = TextButton;
+
+//CallBack
+function reanudar(){
+  this.game.state.start('play');
+}
+
+function newGame(){
+  this.game.levelIndex = 0;
+  this.game.state.start('play');
+}
 
 module.exports = MainMenu;
 },{}],3:[function(require,module,exports){
 'use strict';
 
-  var PlayScene = {
+var PlayScene = {
   create: function () {
-    // var logo = this.game.add.sprite(
-    //   this.game.world.centerX, this.game.world.centerY, 'logo');
-    // logo.anchor.setTo(0.5, 0.5);
-    // logo.scale.setTo(0.7);
     this.game.camera.flash(0x000000, 1000);
 
     this.game.world.setBounds(-20, -20, this.game.width+40, this.game.height+40);
@@ -191,71 +194,25 @@ module.exports = MainMenu;
     this.zombieGroup =this.game.add.group(undefined, "ZombiesGroup");    
     this.HUDLayer = this.game.add.group(undefined , "HUDLayer"); 
     this.sunGroup = this.game.add.group(undefined, "SunGroup"); 
+    this.upperLayer = this.game.add.group(undefined, 'UpperLayer');
 
     this.cursorLayer = this.game.add.group(undefined,"CursorChanger");
     this.pauseMenuLayer = this.game.add.group(undefined, "PauseMenu");
 
-    
+    //Musica
     this.music=this.game.add.audio('music');
     this.music.loop=true;    
     this.music.play();
-    this.music.volume=0.2;
-   
-    //Creacion de oleadas
-    this.wave = this.game.add.group(this.zombieGroup, "VoidWave");
-    this.wave0 = this.game.add.group(this.zombieGroup, "Wave 0");
-    this.wave1 = this.game.add.group(this.zombieGroup, "Wave 1");
-    this.wave2 = this.game.add.group(this.zombieGroup, "Wave 2");
+    this.music.volume = 0.2;
 
     //Fondo
-    this.game.add.sprite(0,0,'backGround',0,this.boardLayer);
+    var bg = this.game.add.sprite(-60, 0,'backGround',0,this.boardLayer);
 
     //Logica del juego
-    this.spManager = new SPManager(this.game, this.boardLayer, this.bulletPool, this.plantsLayer, this.zombieGroup, this.HUDLayer, this.sunGroup);
-
-    //Creacion de zombies por oleadas
-    //Oleada 1
-    this.wave0.add(new ZombieComun(this.game, 1000, 200, this.spManager));    
-    this.wave0.add(new ZombieComun(this.game, 1150, 200 + 86, this.spManager));
-    this.wave0.add(new ZombieComun(this.game, 1100, 200, this.spManager));
-    // this.wave0.add(new ZombieComun(this.game, 1000, 200 + 86 * 2, this.spManager));
-    //Ordeno
-    this.wave0.sort('y', Phaser.Group.SORT_ASCENDING);
-    
-    //Oleada 2
-    this.wave1.add(new ZombieCono(this.game, 1265, 200 + 86 * 2, this.spManager));
-    this.wave1.add(new ZombieCono(this.game, 1000, 200, this.spManager));
-    this.wave1.add(new ZombieComun(this.game, 1200, 200 + 86 * 2, this.spManager));
-    // this.wave1.add(new ZombieComun(this.game, 1500, 200 + 86 * 3, this.spManager));
-    this.wave1.add(new ZombieComun(this.game, 1250, 200, this.spManager));
-    //Ordeno
-    this.wave1.sort('y', Phaser.Group.SORT_ASCENDING);
-
-    //Oleada 3    
-    this.wave2.add(new ZombieComun(this.game, 1000, 200, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1400, 200, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1000, 200, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1150, 200, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1000, 200 + 86, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1100, 200 + 86, this.spManager));
-    this.wave2.add(new ZombieCono(this.game, 1350, 200 + 86, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1400, 200 + 86, this.spManager));
-    this.wave2.add(new ZombieCono(this.game, 1250, 200 + 86 * 2, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1050, 200 + 86 * 2, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1200, 200 + 86 * 2, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1300, 200 + 86 * 2, this.spManager));
-    this.wave2.add(new ZombieCono(this.game, 1000, 200 + 86 * 3, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1150, 200 + 86 * 3, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1300, 200 + 86 * 3, this.spManager));
-    this.wave2.add(new ZombieCono(this.game, 1450, 200 + 86 * 4, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1250, 200 + 86 * 4, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1100, 200 + 86 * 4, this.spManager));
-    //Ordeno
-    this.wave2.sort('y', Phaser.Group.SORT_ASCENDING);
-
+    this.spManager = new SPManager(this.game, this.boardLayer, this.bulletPool, this.plantsLayer, this.zombieGroup, this.HUDLayer, this.sunGroup, this.upperLayer, this.game.levelIndex);
 
     //Cursor Changer
-    this.game.cursor = new MouseChanger(this.game, 0, 0, undefined, this.cursorLayer);
+    this.game.cursor = new MouseChanger(this.game, this.cursorLayer);
 
     //Menu de Pausa
     this.pauseMenu = new PauseMenu(this.game, this.spManager);
@@ -264,9 +221,9 @@ module.exports = MainMenu;
     
     //this.input.keyboard.addKey(Phaser.Keyboard.ESC).onDown.add(this.pauseMenu.pauseGame,this.pauseMenu);
   },
-  
+
   update: function (){
-    if(!this.game.isPaused && 0 < this.zombieGroup.length){
+    if(!this.game.isPaused){
       //Update de los Zombies
       for(let j = 0; j < this.zombieGroup.getChildAt(0).length; j++)
       this.zombieGroup.getChildAt(0).getChildAt(j).updateZombie();
@@ -330,26 +287,13 @@ module.exports = MainMenu;
       this.spManager.updateSPM();
     }
   },
-  // render: function(){
-  //   for(let i = 0; i< this.zombieGroup.getChildAt(0).length; i++){
-  //     this.game.debug.body(this.zombieGroup.getChildAt(0).getChildAt(i));
-  //   }
-  //   for(let i = 0; i < this.plantsLayer.length;i++){
-  //     var plant = this.plantsLayer.getChildAt(i);
-  //     this.game.debug.body(plant);
-  //     if(plant.children.length > 0){
-  //       this.game.debug.body(plant.getChildAt(0));
-  //     }
-  //   }
-  // },
-
+  
   paused: function (){
     //Para cerciorar que esta pausado por codigo
     if(!this.game.isPaused)
       this.pauseMenu.pauseGame();
   },
 };
-
 
 module.exports = PlayScene;
 

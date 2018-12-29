@@ -1,5 +1,5 @@
 function ZombieMini(game, x, y, spManager){
-    Zombie.apply(this,[game, x, y, 'miniZombie', 150, 300, 40, 1, spManager]);
+    Zombie.apply(this,[game, x, y, 'miniZombie', 150, 200, 40, 1, spManager]);
     
     this.animations.add('move2',[0,1,2]);
     this.animations.add('atack2',[3,4]);

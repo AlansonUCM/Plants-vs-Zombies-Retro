@@ -1,11 +1,7 @@
 'use strict';
 
-  var PlayScene = {
+var PlayScene = {
   create: function () {
-    // var logo = this.game.add.sprite(
-    //   this.game.world.centerX, this.game.world.centerY, 'logo');
-    // logo.anchor.setTo(0.5, 0.5);
-    // logo.scale.setTo(0.7);
     this.game.camera.flash(0x000000, 1000);
 
     this.game.world.setBounds(-20, -20, this.game.width+40, this.game.height+40);
@@ -23,71 +19,25 @@
     this.zombieGroup =this.game.add.group(undefined, "ZombiesGroup");    
     this.HUDLayer = this.game.add.group(undefined , "HUDLayer"); 
     this.sunGroup = this.game.add.group(undefined, "SunGroup"); 
+    this.upperLayer = this.game.add.group(undefined, 'UpperLayer');
 
     this.cursorLayer = this.game.add.group(undefined,"CursorChanger");
     this.pauseMenuLayer = this.game.add.group(undefined, "PauseMenu");
 
-    
+    //Musica
     this.music=this.game.add.audio('music');
     this.music.loop=true;    
     this.music.play();
-    this.music.volume=0.2;
-   
-    //Creacion de oleadas
-    this.wave = this.game.add.group(this.zombieGroup, "VoidWave");
-    this.wave0 = this.game.add.group(this.zombieGroup, "Wave 0");
-    this.wave1 = this.game.add.group(this.zombieGroup, "Wave 1");
-    this.wave2 = this.game.add.group(this.zombieGroup, "Wave 2");
+    this.music.volume = 0.2;
 
     //Fondo
-    this.game.add.sprite(0,0,'backGround',0,this.boardLayer);
+    var bg = this.game.add.sprite(-60, 0,'backGround',0,this.boardLayer);
 
     //Logica del juego
-    this.spManager = new SPManager(this.game, this.boardLayer, this.bulletPool, this.plantsLayer, this.zombieGroup, this.HUDLayer, this.sunGroup);
-
-    //Creacion de zombies por oleadas
-    //Oleada 1
-    this.wave0.add(new ZombieComun(this.game, 1000, 200, this.spManager));    
-    this.wave0.add(new ZombieComun(this.game, 1150, 200 + 86, this.spManager));
-    this.wave0.add(new ZombieComun(this.game, 1100, 200, this.spManager));
-    // this.wave0.add(new ZombieComun(this.game, 1000, 200 + 86 * 2, this.spManager));
-    //Ordeno
-    this.wave0.sort('y', Phaser.Group.SORT_ASCENDING);
-    
-    //Oleada 2
-    this.wave1.add(new ZombieCubo(this.game, 1265, 200 + 86 * 2, this.spManager));
-    this.wave1.add(new ZombieMini(this.game, 1000, 200, this.spManager));
-    this.wave1.add(new ZombieComun(this.game, 1200, 200 + 86 * 2, this.spManager));
-    // this.wave1.add(new ZombieComun(this.game, 1500, 200 + 86 * 3, this.spManager));
-    this.wave1.add(new ZombieComun(this.game, 1250, 200, this.spManager));
-    //Ordeno
-    this.wave1.sort('y', Phaser.Group.SORT_ASCENDING);
-
-    //Oleada 3    
-    this.wave2.add(new ZombieComun(this.game, 1000, 200, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1400, 200, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1000, 200, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1150, 200, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1000, 200 + 86, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1100, 200 + 86, this.spManager));
-    this.wave2.add(new ZombieCono(this.game, 1350, 200 + 86, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1400, 200 + 86, this.spManager));
-    this.wave2.add(new ZombieCono(this.game, 1250, 200 + 86 * 2, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1050, 200 + 86 * 2, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1200, 200 + 86 * 2, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1300, 200 + 86 * 2, this.spManager));
-    this.wave2.add(new ZombieCono(this.game, 1000, 200 + 86 * 3, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1150, 200 + 86 * 3, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1300, 200 + 86 * 3, this.spManager));
-    this.wave2.add(new ZombieCono(this.game, 1450, 200 + 86 * 4, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1250, 200 + 86 * 4, this.spManager));
-    this.wave2.add(new ZombieComun(this.game, 1100, 200 + 86 * 4, this.spManager));
-    //Ordeno
-    this.wave2.sort('y', Phaser.Group.SORT_ASCENDING);
-
+    this.spManager = new SPManager(this.game, this.boardLayer, this.bulletPool, this.plantsLayer, this.zombieGroup, this.HUDLayer, this.sunGroup, this.upperLayer, this.game.levelIndex);
 
     //Cursor Changer
-    this.game.cursor = new MouseChanger(this.game, 0, 0, undefined, this.cursorLayer);
+    this.game.cursor = new MouseChanger(this.game, this.cursorLayer);
 
     //Menu de Pausa
     this.pauseMenu = new PauseMenu(this.game, this.spManager);
@@ -96,9 +46,9 @@
     
     //this.input.keyboard.addKey(Phaser.Keyboard.ESC).onDown.add(this.pauseMenu.pauseGame,this.pauseMenu);
   },
-  
+
   update: function (){
-    if(!this.game.isPaused && 0 < this.zombieGroup.length){
+    if(!this.game.isPaused){
       //Update de los Zombies
       for(let j = 0; j < this.zombieGroup.getChildAt(0).length; j++)
       this.zombieGroup.getChildAt(0).getChildAt(j).updateZombie();
@@ -162,25 +112,12 @@
       this.spManager.updateSPM();
     }
   },
-  // render: function(){
-  //   for(let i = 0; i< this.zombieGroup.getChildAt(0).length; i++){
-  //     this.game.debug.body(this.zombieGroup.getChildAt(0).getChildAt(i));
-  //   }
-  //   for(let i = 0; i < this.plantsLayer.length;i++){
-  //     var plant = this.plantsLayer.getChildAt(i);
-  //     this.game.debug.body(plant);
-  //     if(plant.children.length > 0){
-  //       this.game.debug.body(plant.getChildAt(0));
-  //     }
-  //   }
-  // },
-
+  
   paused: function (){
     //Para cerciorar que esta pausado por codigo
     if(!this.game.isPaused)
       this.pauseMenu.pauseGame();
   },
 };
-
 
 module.exports = PlayScene;
