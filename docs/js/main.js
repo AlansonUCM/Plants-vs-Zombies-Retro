@@ -7,10 +7,9 @@ var PlayScene = require('./play_scene.js');
 var BootScene = {
   preload: function () {
     // load here assets required for the loading screen
-    this.game.load.image('preloader_bar', 'images/progressBar2.png');
-    this.game.load.image('logo', 'images/logo.png');
-    this.game.load.image('menuBG', 'images/menuBG.png');
+    this.game.load.image('preloader_bar', 'images/progressBar2.png'); 
     
+    this.game.load.image('menuBG', 'images/menuBG.png');   
   },
 
   create: function () {
@@ -20,7 +19,9 @@ var BootScene = {
 
 
 var PreloaderScene = {
-  preload: function () {
+  preload: function () {    
+    this.game.load.image('logo', 'images/logo.png');
+
     this.bg = this.game.add.sprite(0, 0,'menuBG');
     this.loadingBar = this.game.add.sprite(240, this.game.world.centerY, 'preloader_bar');
     this.loadingBar.anchor.setTo(0, 0.5);
@@ -61,8 +62,8 @@ var PreloaderScene = {
     this.game.load.spritesheet("zombieComun", "images/zombieComun.png",46,52,4);
     this.game.load.spritesheet("zombieCono", "images/zombieCono.png",46,67,8);
     this.game.load.spritesheet("zombieCubo", "images/zombieCubo.png",46,67,8);
-    this.game.load.spritesheet("zombiePuerta", "images/zombies Puerta.png",46,67,8);
-    this.game.load.spritesheet("miniZombie", "images/minizombie.png",24,35,5);
+    this.game.load.spritesheet("zombiePuerta", "images/zombiePuerta.png",46,67,8);
+    this.game.load.spritesheet("miniZombie", "images/zombieMini.png",24,35,5);
     this.game.load.image('cono', 'images/cono.png');
 
     //Fondo/Casillas
