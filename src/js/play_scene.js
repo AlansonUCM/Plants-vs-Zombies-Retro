@@ -28,13 +28,13 @@ var PlayScene = {
     this.music=this.game.add.audio('music');
     this.music.loop=true;    
     this.music.play();
-    this.music.volume=0.2;
+    this.music.volume = 0.2;
 
     //Fondo
     var bg = this.game.add.sprite(-60, 0,'backGround',0,this.boardLayer);
 
     //Logica del juego
-    this.spManager = new SPManager(this.game, this.boardLayer, this.bulletPool, this.plantsLayer, this.zombieGroup, this.HUDLayer, this.sunGroup, this.upperLayer, 0);
+    this.spManager = new SPManager(this.game, this.boardLayer, this.bulletPool, this.plantsLayer, this.zombieGroup, this.HUDLayer, this.sunGroup, this.upperLayer, this.game.levelIndex);
 
     //Cursor Changer
     this.game.cursor = new MouseChanger(this.game, this.cursorLayer);

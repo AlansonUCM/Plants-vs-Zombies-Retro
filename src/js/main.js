@@ -99,6 +99,8 @@ var PreloaderScene = {
     this.game.load.audio('shovel','sounds/shovel.mp3');
 
     this.game.load.audio('music','sounds/music-8-bit-style.mp3');
+
+    this.game.levelIndex = 0;
   
   },
 

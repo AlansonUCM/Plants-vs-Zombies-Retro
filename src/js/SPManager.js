@@ -3,7 +3,7 @@
 function SPManager (_game, _boardGroup, _bulletGroup, _plantsGroup, _zombiesGroup, _HUDGroup, _sunGroup, _upperGroup, levelNum){  
     this.game = _game;
     //Creamos oleadas
-    this.levelManager = new LevelManager(this.game, _zombiesGroup, this, levelNum);
+    this.levelLoader = new LevelLoader(this.game, _zombiesGroup, this, levelNum);
     
     //Creamos el resto
     this.canvasText = new CanvasText(_game,_upperGroup);
@@ -14,6 +14,15 @@ function SPManager (_game, _boardGroup, _bulletGroup, _plantsGroup, _zombiesGrou
     this.board = new Board(_game, _boardGroup, _plantsGroup, 162, 230, 5, 9, 67, 81, this);
     this.waveManager = new WaveManager(_game,_zombiesGroup, _boardGroup, this);
     this.endLine = new EndLine(_game, 65, 0, this);
+
+    //Texto del invel
+    this.levelText = this.game.add.text(this.game.camera.width, this.game.camera.height, 'Nivel ' + (levelNum + 1),{} ,_HUDGroup);
+    this.levelText.anchor.setTo(1);
+    this.levelText.fontSize = 27;
+    this.levelText.fill = '#ffffff';
+    this.levelText.stroke = '#000000';
+    this.levelText.strokeThickness = 5;
+    this.levelText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
   
     //Pools
     this.sunPool = _sunGroup;

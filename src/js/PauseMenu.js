@@ -52,6 +52,9 @@ PauseMenu.prototype = Object.create(Phaser.Group.prototype);
 //Metodos
 PauseMenu.prototype.exit = function (){    
     this.game.sound.stopAll();
+    this.game.tweens.removeAll();
+    this.game.time.events.resume();
+    this.game.time.events.removeAll();
     this.game.camera.fade('0x000000', 1000);
     this.game.camera.onFadeComplete.add(function(){   
         this.game.state.start('mainMenu');
@@ -59,6 +62,9 @@ PauseMenu.prototype.exit = function (){
 }
 PauseMenu.prototype.reset = function (){
     this.game.sound.stopAll();
+    this.game.tweens.removeAll();
+    this.game.time.events.resume();
+    this.game.time.events.removeAll();
     this.game.camera.fade('0x000000', 1000);
     this.game.camera.onFadeComplete.add(function(){        
         this.game.state.start(this.game.state.current);
@@ -89,7 +95,7 @@ PauseMenu.prototype.pauseGame = function(){
 PauseMenu.prototype.pauseAll = function(){
     if(this.game.isPaused){
         //Paro timers
-        this.game.time.gamePaused();
+        this.game.time.events.pause();
         //Paro tweens
         this.game.tweens.pauseAll();
         //Paro animationes y botones
@@ -121,7 +127,7 @@ PauseMenu.prototype.pauseAll = function(){
 PauseMenu.prototype.playAll = function(){
     if(!this.game.isPaused){
         //Sigue timers
-        this.game.time.gameResumed();
+        this.game.time.events.resume();
         //Sigue tweens
         this.game.tweens.resumeAll();
         //Sigue animationes y botones
