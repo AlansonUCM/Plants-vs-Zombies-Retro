@@ -20,7 +20,7 @@ function Zombie (game, x, y, tag, _life, _damage, _velocity, _attacksPerSec,spMa
 
     //BoxCollider ajustes
     this.body.setSize(this.width/2, this.height/2, 0, this.height/2 - 10);
-    this.scale.setTo(1.8);
+    this.scale.setTo(0.9);
 
     this.moving = true;
 
