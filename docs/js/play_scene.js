@@ -90,14 +90,12 @@ var PlayScene = {
         var col = false;
         for(let j = 0; j < this.plantsLayer.length && !col; j++) {
           var plant = this.plantsLayer.getChildAt(j);
-          col = this.game.physics.arcade.collide(zomb, plant, function zombieAttackPlant(obj1, obj2) { 
-            if(obj1.x > obj2.x + obj1.width / 2) {
-              var dam = obj1.attack();
-              var obj2IsDead = obj2.takeDamage(dam);
-              obj1.isAttacking = !obj2IsDead;
-              if(obj2IsDead)
-                j--;
-            }
+          col = this.game.physics.arcade.collide(zomb, plant, function zombieAttackPlant(obj1, obj2) {
+            var dam = obj1.attack();
+            var obj2IsDead = obj2.takeDamage(dam);
+            obj1.isAttacking = !obj2IsDead;
+            if(obj2IsDead)
+              j--;
           });
         }
         if(!col && zomb.isAttacking)
