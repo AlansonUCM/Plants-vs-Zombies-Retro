@@ -3,7 +3,7 @@
 </h1>
 
 <h2 align ="center">
-  Coming Soon!
+  <a href="https://alansonucm.github.io/Plants-vs-Zombies-Retro/" title="Plants vs Zombies: Retro">Play NOW!</a>
 </h2>
 
 <p>
@@ -45,15 +45,15 @@
 ***
 
 <h1 align="center">
-  <img src="readme_src/PvZ_8BITS_LOGO.png" alt="Plants vs Zombies: 8 bits" />
+  <img src="readme_src/PvZ_8BITS_LOGO.png" alt="Plants vs Zombies: Retro" />
 </h1>
 
 <h2 align ="center">
-  Próximamente!
+  <a href="https://alansonucm.github.io/Plants-vs-Zombies-Retro/" title="Plants vs Zombies: Retro">¡Juega AHORA!</a>
 </h2>
 
 <p>
-Plants vs Zombies: 8 bits es una adaptación del famoso juego Plants vs Zombies con una estética retro,
+Plants vs Zombies: Retro es una adaptación del famoso juego Plants vs Zombies con una estética retro,
 cuya idea será desarrollada por LosZombiesSonVeganos.
 </p>
 
